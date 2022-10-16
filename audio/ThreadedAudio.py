@@ -18,12 +18,11 @@
 #       • 
 # -----------------------------------------------------------------------------
 
-import os
 import wave
 import pyaudio
 import threading
 
-from utils import assert_recording_exists, assert_recording_readable
+from models.utils import assert_recording_exists, assert_recording_readable
 
 
 class ThreadedPlayer(threading.Thread):
