@@ -83,13 +83,12 @@ class App:
         fileMenu.add_command(label="New", command=self.Menu_File_New_commmand)
         fileMenu.add_command(label="Open", command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
-        recent_menu = tk.Menu(fileMenu, tearoff=0)
-        recent_menu.add_command(label='None', state=tk.DISABLED)
+        self.recent_menu = tk.Menu(fileMenu, tearoff=0)
+        self.recent_menu.add_command(label='None', state=tk.DISABLED)
         fileMenu.add_cascade(
             label="Recent",
-            menu=recent_menu
+            menu=self.recent_menu
         )
-        self.recent_menu = recent_menu
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=exit)
         menu.add_cascade(label="File", menu=fileMenu)
@@ -264,8 +263,12 @@ class App:
 
     def populate_recent(self, recents):
         for recent_name, recent_path in recents:
+            print(recent_name, recent_path)
             self.recent_menu.add_command(label=recent_name,
-                                         command=lambda: self.ctrl.direct_open(recent_path))
+                                         command=lambda path=recent_path: self.ctrl.direct_open(path))
+            print(recent_name, recent_path)
+
+        self.recent_menu.delete(0)
     #
     # Message boxes
     #

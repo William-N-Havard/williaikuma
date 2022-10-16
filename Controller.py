@@ -201,10 +201,18 @@ class Controller(object):
     def open(self):
         session_path = self.gui.dialog_open_file(initial_dir=os.path.expanduser('~/Documents'),
                                                  file_type='json')
-        self.session = Session.load(session_path)
-        self.start()
+        if not session_path: return
+
+        try:
+            self.session = Session.load(session_path)
+            self.start()
+        except:
+            self.gui.dialog_error('Error!', "Couldn't open this session!")
 
 
-    def direct_open(self, session_path):
-        self.session = Session.load(session_path)
-        self.start()
+    def direct_open(self, sess):
+        try:
+            self.session = Session.load(sess)
+            self.start()
+        except:
+            self.gui.dialog_error('Error!', "Couldn't open this session!")
