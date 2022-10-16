@@ -38,21 +38,16 @@
 #       •
 # -----------------------------------------------------------------------------
 
-import os
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.simpledialog
 import tkinter.filedialog
-from functools import partial
 from tkinter import PhotoImage, messagebox
 from PIL import Image
 from PIL.ImageTk import PhotoImage
-from datetime import datetime
 
-from ThreadedAudio import ThreadedRecorder, ThreadedPlayer
+
 from views.utils import TkinterButtons as TkButtons
-from models.utils import text_read, assert_recording_exists
-from consts import SAMPLING_RATE, NUM_CHANNELS
 
 class App:
     def __init__(self, root):
@@ -178,7 +173,7 @@ class App:
         Label_Sentence["font"] = ft
         Label_Sentence["fg"] = "#333333"
         Label_Sentence["justify"] = "center"
-        Label_Sentence["text"] = ""
+        Label_Sentence["text"] = "Create a new project or open an existing one."
         Label_Sentence.place(x=0,y=205,width=560,height=245)
         self.Label_Sentence = Label_Sentence
 
