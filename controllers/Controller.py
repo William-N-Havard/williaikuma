@@ -17,7 +17,7 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
-import json
+
 import os
 from datetime import datetime
 
@@ -35,7 +35,6 @@ class Controller(object):
 
         # Model
         self.session = None
-        self.session_path = 'sessions'
 
         # Audio
         self.recorder = None
@@ -45,10 +44,10 @@ class Controller(object):
         self._playing_status = False
 
         # Other
-        self._config_file = '.williaikuma.json'
-        self.config = None
+        self._config_file = '../.williaikuma.json'
+        self.config = self._read_config()
+        self.session_path = self.config.get('sentence_path', os.path.realpath('sessions'))
 
-        self._read_config()
         self.gui.populate_recent(self.config['recent'])
 
     def start(self):
@@ -109,6 +108,12 @@ class Controller(object):
             self.session.recordings_done -= 1
         self._update_sentence()
 
+    def select_default_session_directory(self):
+        new_dir = self.gui.dialog_chose_dir(os.path.realpath(self.session_path))
+        if not new_dir: return
+
+        self.session_path = new_dir
+        self._update_app_config(sentence_path=new_dir)
 
     # Refresh GUI
     def _update_sentence(self):
@@ -136,10 +141,10 @@ class Controller(object):
         config['recent'] = [(a,b) for a,b in config['recent'] if os.path.exists(b)]
         json_dump(self._config_file, config)
         
-        self.config = config
+        return config
 
     def _update_app_config(self, **kwargs):
-        config = json_read(self._config_file)
+        config = self.config
         for k, v in kwargs.items():
             if k == "recent":
                 config.setdefault(k, [])
@@ -206,7 +211,7 @@ class Controller(object):
 
 
     def open(self):
-        session_path = self.gui.dialog_open_file(initial_dir=os.path.expanduser('~/Documents'),
+        session_path = self.gui.dialog_open_file(initial_dir=self.session_path,
                                                  file_type='json')
         if not session_path: return
 

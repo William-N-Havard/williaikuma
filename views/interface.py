@@ -46,10 +46,9 @@ from tkinter import PhotoImage, messagebox
 from PIL import Image
 from PIL.ImageTk import PhotoImage
 
-
 from views.utils import TkinterButtons as TkButtons
 
-class App:
+class App(object):
     def __init__(self, root):
         self.root = root
         self.ctrl = None
@@ -79,19 +78,23 @@ class App:
         # Menus
         menu = tk.Menu(root)
         root.config(menu=menu)
+
+        # File Menu
         fileMenu = tk.Menu(menu, tearoff=False)
         fileMenu.add_command(label="New", command=self.Menu_File_New_commmand)
         fileMenu.add_command(label="Open", command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
         self.recent_menu = tk.Menu(fileMenu, tearoff=0)
         self.recent_menu.add_command(label='None', state=tk.DISABLED)
-        fileMenu.add_cascade(
-            label="Recent",
-            menu=self.recent_menu
-        )
+        fileMenu.add_cascade(label="Recent", menu=self.recent_menu)
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=exit)
         menu.add_cascade(label="File", menu=fileMenu)
+
+        # Preference Menu
+        preferenceMenu = tk.Menu(menu, tearoff=False)
+        preferenceMenu.add_command(label='Default session directory', command=self.Menu_Preference_Session_command)
+        menu.add_cascade(label="Preference", menu=preferenceMenu)
 
 
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
@@ -200,6 +203,10 @@ class App:
         self.ctrl.open()
 
 
+    def Menu_Preference_Session_command(self):
+        self.ctrl.select_default_session_directory()
+
+
     def Button_Previous_command(self):
         self.ctrl.previous()
 
@@ -270,10 +277,8 @@ class App:
 
     def populate_recent(self, recents):
         for recent_name, recent_path in recents:
-            print(recent_name, recent_path)
             self.recent_menu.add_command(label=recent_name,
                                          command=lambda path=recent_path: self.ctrl.direct_open(path))
-            print(recent_name, recent_path)
 
         self.recent_menu.delete(0)
     #
@@ -290,6 +295,10 @@ class App:
 
     def dialog_error(self, title, message):
         tk.messagebox.showerror(title, message)
+
+
+    def dialog_chose_dir(self, initial_dir = '/home/'):
+        return tkinter.filedialog.askdirectory(initialdir=initial_dir)
 
     #
     #   Utility methods
