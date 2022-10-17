@@ -53,6 +53,8 @@ class Session(object):
             raise Exception(e)
 
         found_recordings = [item for item in os.listdir(self.path) if item.endswith('.wav')]
+        max_line = max([int(rec.split('_')[0].split('-')[-1]) for rec in found_recordings])-1 if found_recordings else -1
+        self.index = max_line
         self.recordings_done = len(found_recordings)
 
 
@@ -76,8 +78,8 @@ class Session(object):
 
 
     def get_current_sentence_recording_path(self):
-        return os.path.join(self.path, 'sentid-{}_speaker-{}.wav'.format(self.current_sentence_id,
-                                                                         self.speaker))
+        return os.path.join(self.path, 'line-{}_sentid-{}_speaker-{}.wav'.format(
+            self.index+1, self.current_sentence_id, self.speaker))
 
 
     def save(self):
