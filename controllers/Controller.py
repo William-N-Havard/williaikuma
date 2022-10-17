@@ -154,7 +154,6 @@ class Controller(object):
                 config[k] = config[k][:5]
             else:
                 config[k] = v
-
         json_dump(self._config_file, config)
 
     #
