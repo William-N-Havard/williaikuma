@@ -44,7 +44,7 @@ class Controller(object):
         self._playing_status = False
 
         # Other
-        self._config_file = '../.williaikuma.json'
+        self._config_file = '.williaikuma.json'
         self.config = self._read_config()
         self.session_path = self.config.get('sentence_path', os.path.realpath('sessions'))
 
@@ -77,6 +77,7 @@ class Controller(object):
     def record(self):
         if self.recording_status:
             self.recorder.stop()
+            self.recorder.join()
             self.recording_status = False
             self.session.recordings_done += 1
         else:
@@ -138,7 +139,8 @@ class Controller(object):
                 })
 
         config = json_read(self._config_file)
-        config['recent'] = [(a,b) for a,b in config['recent'] if os.path.exists(b)]
+        config['recent'] = [(a,b) for a,b in set([(a_, b_) for a_,b_ in config['recent']])if os.path.exists(b)]
+        print(config['recent'])
         json_dump(self._config_file, config)
         
         return config
