@@ -176,6 +176,10 @@ class App:
         Label_Sentence.place(x=0,y=205,width=560,height=245)
         self.Label_Sentence = Label_Sentence
 
+        statusbar = tk.Label(root, text="Waiting...", bd=1, relief=tk.SUNKEN, anchor=tk.W)
+        statusbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.statusbar = statusbar
+
     @property
     def controller(self):
         return self.ctrl
@@ -226,6 +230,9 @@ class App:
 
     def set_label_progress(self, done, total):
         self.Label_Progress['text'] = '{}/{}'.format(done, total)
+
+    def set_status_bar(self, speaker, session):
+        self.statusbar['text'] = 'Speaker: {} | Session: {}'.format(speaker, session)
 
     def enable_directional_buttons(self):
         self.enable_widget(self.Button_Previous)

@@ -53,9 +53,16 @@ class Controller(object):
 
     def start(self):
         self._update_app_config(recent=self.session)
-        self.session.start()
+
+        try:
+            self.session.start()
+        except Exception as e:
+            self.gui.dialog_error('Error!', str(e))
+            return
+
         self.next()
         self.gui.enable_directional_buttons()
+        self.gui.set_status_bar(self.session.speaker, self.session.name)
 
 
     def next(self):

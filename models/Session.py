@@ -36,7 +36,7 @@ class Session(object):
         self.num_channels = num_channels
 
         self.index = -1
-        self.data = None
+        self.data = DataProvider(self.data_path)
 
         self.current_sentence_text = None
         self.current_sentence_id = None
@@ -47,7 +47,10 @@ class Session(object):
         self.save()
 
     def start(self):
-        self.data = DataProvider(self.data_path)
+        try:
+            self.data.load()
+        except Exception as e:
+            raise Exception(e)
 
         found_recordings = [item for item in os.listdir(self.path) if item.endswith('.wav')]
         self.recordings_done = len(found_recordings)

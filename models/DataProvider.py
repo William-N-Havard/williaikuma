@@ -25,11 +25,13 @@ from .utils import text_read
 class DataProvider(object):
     def __init__(self, path):
         self.path = path
-        self.load()
 
 
     def load(self):
-        self.data = list(text_read(self.path))
+        self.data = []
+        for i_line, line in enumerate(text_read(self.path), 1):
+            assert ' ## ' in line, ValueError("' ## ' not found on line {}.".format(i_line))
+            self.data.append(line)
 
 
     def __getitem__(self, index):
