@@ -85,6 +85,8 @@ class Session(object):
     def save(self):
         if os.path.exists(self.session_metadata_path):
             existing_metadata = json_read(self.session_metadata_path)
+        else:
+            existing_metadata = False
 
         metadata = {
             'name': self.name,
@@ -95,11 +97,12 @@ class Session(object):
             'num_channels': self.num_channels,
         }
 
-        for k, v in metadata.items():
-            assert existing_metadata[k] == v, \
-                ValueError('Value between existing metadata file and new metdata differ ({} v. {}'.format(
-                    existing_metadata[k], v
-                ))
+        if existing_metadata:
+            for k, v in metadata.items():
+                assert existing_metadata[k] == v, \
+                    ValueError('Value between existing metadata file and new metdata differ ({} v. {}'.format(
+                        existing_metadata[k], v
+                    ))
 
         json_dump(self.session_metadata_path, metadata)
 
