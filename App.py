@@ -17,3 +17,19 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
+
+import tkinter as tk
+
+from controllers.Controller import Controller
+from views.interface import MainView
+
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title('Williaikuma')
+
+        view = MainView(self)
+        controller = Controller(view)
+        view.set_controller(controller)
