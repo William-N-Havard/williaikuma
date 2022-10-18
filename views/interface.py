@@ -48,12 +48,10 @@ from PIL.ImageTk import PhotoImage
 
 from views.utils import TkinterButtons as TkButtons
 
-class App(object):
+class MainView(object):
     def __init__(self, root):
         self.root = root
         self.ctrl = None
-
-        root.title("Williaikuma")
 
         # Setting window size
         width=560
@@ -93,7 +91,7 @@ class App(object):
 
         # Preference Menu
         preferenceMenu = tk.Menu(menu, tearoff=False)
-        preferenceMenu.add_command(label='Default session directory', command=self.Menu_Preference_Session_command)
+        preferenceMenu.add_command(label='Default Session Directory', command=self.Menu_Preference_Session_command)
         menu.add_cascade(label="Preference", menu=preferenceMenu)
 
 
@@ -196,35 +194,35 @@ class App(object):
     #   Event method
     #
     def Menu_File_New_commmand(self):
-        self.ctrl.new()
+        self.ctrl.command_new()
 
 
     def Menu_File_Open_commmand(self):
-        self.ctrl.open()
+        self.ctrl.command_open()
 
 
     def Menu_Preference_Session_command(self):
-        self.ctrl.select_default_session_directory()
+        self.ctrl.command_select_session_directory()
 
 
     def Button_Previous_command(self):
-        self.ctrl.previous()
+        self.ctrl.command_previous()
 
 
     def Button_Record_command(self):
-        self.ctrl.record()
+        self.ctrl.command_record()
 
 
     def Button_Next_command(self):
-        self.ctrl.next()
+        self.ctrl.command_next()
 
 
     def Button_Delete_Command(self):
-        self.ctrl.delete()
+        self.ctrl.command_delete()
 
 
     def Button_Listen_Command(self):
-        self.ctrl.listen()
+        self.ctrl.command_listen()
 
     #
     # Update widgets (ugly but it works)
@@ -238,8 +236,8 @@ class App(object):
     def set_label_progress(self, done, total):
         self.Label_Progress['text'] = '{}/{}'.format(done, total)
 
-    def set_status_bar(self, speaker, session):
-        self.statusbar['text'] = 'Speaker: {} | Session: {}'.format(speaker, session)
+    def set_status_bar(self, index, speaker, session):
+        self.statusbar['text'] = 'Line: {} | Speaker: {} | Session: {}'.format(index, speaker, session)
 
     def enable_directional_buttons(self):
         self.enable_widget(self.Button_Previous)
@@ -278,26 +276,26 @@ class App(object):
     def populate_recent(self, recents):
         for recent_name, recent_path in recents:
             self.recent_menu.add_command(label=recent_name,
-                                         command=lambda path=recent_path: self.ctrl.direct_open(path))
+                                         command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
         self.recent_menu.delete(0)
     #
     # Message boxes
     #
-    def dialog_open_file(self, initial_dir = "/home/", file_type='txt'):
+    def action_open_file(self, initial_dir ="/home/", file_type='txt'):
         return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
                                    title="Elegir un archivo",
                                    filetypes=(("Files", "*.{}*".format(file_type)),))
 
-    def dialog_prompt(self):
-        return tk.simpledialog.askstring("Hablador?", "Quién está hablando?")
+    def action_prompt(self, title, message):
+        return tk.simpledialog.askstring(title, message)
 
 
-    def dialog_error(self, title, message):
-        tk.messagebox.showerror(title, message)
+    def action_error(self, title, message):
+        return tk.messagebox.showerror(title, message)
 
 
-    def dialog_chose_dir(self, initial_dir = '/home/'):
+    def action_choose_dir(self, initial_dir ='/home/'):
         return tkinter.filedialog.askdirectory(initialdir=initial_dir)
 
     #
@@ -321,3 +319,7 @@ class App(object):
         image = image.resize((50, 50), Image.ANTIALIAS)
         image = PhotoImage(image)
         return image
+
+
+    def set_controller(self, controller):
+        self.ctrl = controller
