@@ -83,6 +83,9 @@ class Session(object):
 
 
     def save(self):
+        if os.path.exists(self.session_metadata_path):
+            existing_metadata = json_read(self.session_metadata_path)
+
         metadata = {
             'name': self.name,
             'path': self.path,
@@ -91,6 +94,12 @@ class Session(object):
             'sampling_rate': self.sampling_rate,
             'num_channels': self.num_channels,
         }
+
+        for k, v in metadata.items():
+            assert existing_metadata[k] == v, \
+                ValueError('Value between existing metadata file and new metdata differ ({} v. {}'.format(
+                    existing_metadata[k], v
+                ))
 
         json_dump(self.session_metadata_path, metadata)
 
