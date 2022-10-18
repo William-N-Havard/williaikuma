@@ -32,8 +32,8 @@ class ThreadedPlayer(threading.Thread):
         self.chunk = chunk
 
     def run(self):
+        audio_output_stream = pyaudio.PyAudio()
         with wave.open(self.audio_path, 'rb') as wave_file:
-            audio_output_stream = pyaudio.PyAudio()
             stream = audio_output_stream.open(format=audio_output_stream.get_format_from_width(wave_file.getsampwidth()),
                                               channels=wave_file.getnchannels(), rate=wave_file.getframerate(), output=True)
 
@@ -45,6 +45,7 @@ class ThreadedPlayer(threading.Thread):
             stream.stop_stream()
             stream.close()
             audio_output_stream.terminate()
+        del audio_output_stream
 
     def stop(self):
         pass
@@ -78,6 +79,7 @@ class ThreadedRecorder(threading.Thread):
             wave_stream.stop_stream()
             wave_stream.close()
             audio_input_stream.terminate()
+        del audio_input_stream
 
     def stop(self):
         self.continue_recording = False
