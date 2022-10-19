@@ -269,14 +269,7 @@ class Controller(object):
         self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
         self.gui.enable_play_respeak()
 
-        if not assert_recording_exists(self.session.item_save_path()):
-            self.gui.enable_recording()
-            self.gui.disable_play()
-            self.gui.disable_delete()
-        else:
-            self.gui.disable_recording()
-            self.gui.enable_play()
-            self.gui.enable_delete()
+        self.gui_audio_session_player_switch()
 
 
     def gui_text_elicitation_update(self):
@@ -292,7 +285,10 @@ class Controller(object):
 
         if self.session.recordings_done > 0:
             self.gui.enable_menu_data_generate_textgrid()
+        self.gui_audio_session_player_switch()
 
+
+    def gui_audio_session_player_switch(self):
         if not assert_recording_exists(self.session.item_save_path()):
             self.gui.enable_recording()
             self.gui.disable_play()
