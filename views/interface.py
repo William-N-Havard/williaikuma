@@ -427,6 +427,9 @@ class MainView(object):
         # Otherwise the widget was already hidden
 
     def show_widget(self, widget):
+        if not hasattr(widget, 'original_place'):
+            setattr(widget, 'original_place', widget.place_info())
+
         if not hasattr(widget, 'visibility_status'):
             setattr(widget, 'visibility_status', 'hidden')
 
