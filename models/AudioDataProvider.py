@@ -32,9 +32,10 @@ class AudioDataProvider(object):
         self.set_wav_path()
 
         self.data = []
-        wavs = [os.path.join(self.wav_path, item) for item in os.listdir(self.wav_path)
-                if item.endswith('.wav')]
+        wavs = sorted([os.path.join(self.wav_path, item) for item in os.listdir(self.wav_path)
+                if item.endswith('.wav')])
         self.data = wavs
+
 
     def set_wav_path(self):
         json_data = json_read(self.path)
@@ -58,7 +59,8 @@ class AudioDataProvider(object):
 
     def __getitem__(self, index):
         sentence_recording = self.data[index]
-        return sentence_recording
+        sentence_recording_name = os.path.basename(os.path.splitext(sentence_recording)[0])
+        return sentence_recording, sentence_recording_name
 
 
     def __len__(self):

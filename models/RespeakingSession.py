@@ -32,12 +32,14 @@ class RespeakingSession(AudioSession):
         self.data = AudioDataProvider(self.data_path)
 
         self.current_sentence_recording = None
+        self.current_sentence_recording_name = None
 
         self.save()
 
     def update_current_data_item(self):
-        sentence_recording = self.data.item
+        sentence_recording, sentence_recording_name = self.data.item
         self.current_sentence_recording = sentence_recording
+        self.current_sentence_recording_name = sentence_recording_name
 
 
     def item_save_path(self):

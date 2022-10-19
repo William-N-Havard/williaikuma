@@ -72,7 +72,8 @@ class MainView(object):
         self.image_left = self.load_resized_image(TkButtons.BUTTON_LEFT.value)
         self.image_right = self.load_resized_image(TkButtons.BUTTON_RIGHT.value)
         self.image_delete = self.load_resized_image(TkButtons.BUTTON_DELETE.value)
-        self.image_respeak = self.load_resized_image(TkButtons.BUTTON_RESPEAK.value)
+        self.image_respeak_on = self.load_resized_image(TkButtons.BUTTON_RESPEAK.value)
+        self.image_respeak_off = self.load_resized_image(TkButtons.BUTTON_PLAY_OFF.value)
 
         # Menus
         menu = tk.Menu(root)
@@ -162,7 +163,7 @@ class MainView(object):
         Button_Listen["command"] = self.Button_Listen_Command
         self.Button_Listen = Button_Listen
 
-        Button_Listen_Respeak = tk.Button(root, state=tk.DISABLED, image=self.image_respeak)
+        Button_Listen_Respeak = tk.Button(root, state=tk.DISABLED, image=self.image_respeak_on)
         Button_Listen_Respeak["bg"] = "#efefef"
         ft = tkFont.Font(family='Times', size=10)
         Button_Listen_Respeak["font"] = ft
@@ -175,13 +176,13 @@ class MainView(object):
         self.hide_widget(Button_Listen_Respeak)
 
 
-        Label_ID=tk.Label(root)
+        Label_ID=tk.Label(root, wraplength=280)
         ft = tkFont.Font(family='Times',size=15)
         Label_ID["font"] = ft
         Label_ID["fg"] = "#333333"
         Label_ID["justify"] = "center"
         Label_ID["text"] = ""
-        Label_ID.place(x=0,y=180,width=280,height=25)
+        Label_ID.place(x=0,y=180,width=280,height=30)
         self.Label_ID = Label_ID
 
         Label_Progress = tk.Label(root)
@@ -190,7 +191,7 @@ class MainView(object):
         Label_Progress["fg"] = "#333333"
         Label_Progress["justify"] = "center"
         Label_Progress["text"] = ""
-        Label_Progress.place(x=280, y=180, width=280, height=25)
+        Label_Progress.place(x=280, y=180, width=280, height=30)
         self.Label_Progress = Label_Progress
 
         Label_Sentence=tk.Label(root, wraplength=560)
@@ -324,6 +325,16 @@ class MainView(object):
     def disable_delete(self):
         self.disable_widget(self.Button_Delete)
 
+
+    def disable_plays(self):
+        self.disable_widget(self.Button_Listen)
+        self.disable_widget(self.Button_Listen_Respeak)
+
+
+    def enable_plays(self):
+        self.enable_widget(self.Button_Listen)
+        self.enable_widget(self.Button_Listen_Respeak)
+
     #
     #   Button image update
     #
@@ -341,6 +352,14 @@ class MainView(object):
 
     def update_play_off(self):
         self.update_widget_image(self.Button_Listen, self.image_play_off)
+
+
+    def update_play_respeak_on(self):
+        self.update_widget_image(self.Button_Listen_Respeak, self.image_respeak_on)
+
+
+    def update_play_respeak_off(self):
+        self.update_widget_image(self.Button_Listen_Respeak, self.image_respeak_off)
 
 
     def populate_recent(self, recents):
@@ -397,11 +416,22 @@ class MainView(object):
     def hide_widget(self, widget):
         if not hasattr(widget, 'original_place'):
             setattr(widget, 'original_place', widget.place_info())
+
+        if not hasattr(widget, 'visibility_status'):
+            setattr(widget, 'visibility_status', 'visible')
+
+        if getattr(widget, 'visibility_status') == 'visible':
             widget.place_forget()
+            setattr(widget, 'visibility_status', 'hidden')
         # Otherwise the widget was already hidden
 
     def show_widget(self, widget):
-        widget.place(**widget.original_place)
+        if not hasattr(widget, 'visibility_status'):
+            setattr(widget, 'visibility_status', 'hidden')
+
+        if getattr(widget, 'visibility_status') == 'hidden':
+            widget.place(**widget.original_place)
+            setattr(widget, 'visibility_status', 'visible')
 
 
     def load_resized_image(self, path):

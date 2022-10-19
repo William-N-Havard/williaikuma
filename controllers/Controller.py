@@ -43,6 +43,7 @@ class Controller(object):
 
         self._recording_status = False
         self._playing_status = False
+        self._respeak_playing_status = False
 
         # Other
         self.app_config_file = '.williaikuma.json'
@@ -93,11 +94,25 @@ class Controller(object):
     def playing_status(self, value):
         self._playing_status = value
         if self.playing_status == False:
-            self.gui.enable_play()
+            self.gui.enable_plays()
             self.gui.update_play_on()
         else:
-            self.gui.disable_play()
+            self.gui.disable_plays()
             self.gui.update_play_off()
+
+    @property
+    def respeak_playing_status(self):
+        return self._respeak_playing_status
+
+    @playing_status.setter
+    def respeak_playing_status(self, value):
+        self._respeak_playing_status = value
+        if self._respeak_playing_status == False:
+            self.gui.enable_plays()
+            self.gui.update_play_respeak_on()
+        else:
+            self.gui.disable_plays()
+            self.gui.update_play_respeak_off()
 
     #
     #   Menu Commands
@@ -192,7 +207,7 @@ class Controller(object):
 
 
     def command_listen_respeak(self):
-        self._listen(self.session.current_sentence_recording)
+        self._listen(self.session.current_sentence_recording, which='respeak')
 
 
     def command_delete(self):
@@ -215,9 +230,9 @@ class Controller(object):
     #
     #   Private methods
     #
-    def _listen(self, item):
+    def _listen(self, item, which=''):
         try:
-            self.playing_status = True
+            setattr(self, '{}playing_status'.format('{}_'.format(which)), True)
             self.gui.disable_play()
             self.player = ThreadedPlayer(item)
             self.player.start()
@@ -226,7 +241,7 @@ class Controller(object):
         except Exception as e:
             self.gui.action_error('Error!', 'There is a problem with this recording!')
 
-        self.playing_status = False
+        setattr(self, '{}playing_status'.format('{}_'.format(which)), False)
         self.gui_update()
 
     #
@@ -242,9 +257,12 @@ class Controller(object):
 
 
     def gui_respeaking_update(self):
+        # Hide/Show widgets
         self.gui.hide_widget(self.gui.Label_Sentence)
         self.gui.show_widget(self.gui.Button_Listen_Respeak)
 
+        # Update labels
+        self.gui.set_label_sentence_id(self.session.current_sentence_recording_name)
         self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
         self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
         self.gui.enable_play_respeak()
@@ -260,6 +278,11 @@ class Controller(object):
 
 
     def gui_text_elicitation_update(self):
+        # Hide/Show widgets
+        self.gui.hide_widget(self.gui.Button_Listen_Respeak)
+        self.gui.show_widget(self.gui.Label_Sentence)
+
+        # Update labels
         self.gui.set_label_sentence_text(self.session.current_sentence_text)
         self.gui.set_label_sentence_id(self.session.current_sentence_id)
         self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
