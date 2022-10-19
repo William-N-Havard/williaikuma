@@ -46,6 +46,7 @@ from tkinter import PhotoImage, messagebox
 from PIL import Image
 from PIL.ImageTk import PhotoImage
 
+from models.consts import TASKS
 from views.utils import TkinterButtons as TkButtons
 
 class MainView(object):
@@ -220,11 +221,11 @@ class MainView(object):
     #   Event method
     #
     def Menu_File_New_Text_commmand(self):
-        self.ctrl.command_new(task='text_elicitation')
+        self.ctrl.command_new(task=TASKS.TEXT_ELICITATION)
 
 
     def Menu_File_New_Respeak_command(self):
-        self.ctrl.command_new(task='respeaking')
+        self.ctrl.command_new(task=TASKS.RESPEAKING)
 
 
     def Menu_File_Open_commmand(self):

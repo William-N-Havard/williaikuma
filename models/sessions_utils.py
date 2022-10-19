@@ -18,28 +18,28 @@
 #       • 
 # -----------------------------------------------------------------------------
 
+from models.consts import TASKS
 from models.RecordingSession import RecordingSession
 from models.RespeakingSession import RespeakingSession
-
 from models.utils import json_read
 
 
 def session_loader(session_json):
     metadata = json_read(session_json)
 
-    task = metadata['task']
-    if task == "text_elicitation":
+    task = TASKS.from_string(metadata['task'])
+    if task == TASKS.TEXT_ELICITATION:
         return RecordingSession.load(session_json)
-    elif task == "respeaking":
+    elif task == TASKS.RESPEAKING:
         return RespeakingSession.load(session_json)
     else:
         raise ValueError('Unknown type of task `{}`.'.format(task))
 
 
 def session_initiator(task, **kwargs):
-    if task == "text_elicitation":
+    if task == TASKS.TEXT_ELICITATION:
         return RecordingSession(task=task, **kwargs)
-    elif task == "respeaking":
+    elif task == TASKS.RESPEAKING:
         return RespeakingSession(task=task, **kwargs)
     else:
         raise ValueError('Unknown type of task `{}`.'.format(task))

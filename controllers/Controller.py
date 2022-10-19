@@ -19,13 +19,13 @@
 # -----------------------------------------------------------------------------
 import logging
 import os
-import sys
 from datetime import datetime
 
+from models.consts import TASKS
 from models.sessions_utils import session_loader, session_initiator
+from models.utils import assert_recording_exists, json_read, json_dump
 from views.interface import MainView
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
-from models.utils import assert_recording_exists, json_read, json_dump
 
 
 class Controller(object):
@@ -118,7 +118,8 @@ class Controller(object):
     #   Menu Commands
     #
     def command_new(self, task):
-        data_path = self.gui.action_open_file(file_type='*')
+        ext = 'txt' if task == TASKS.TEXT_ELICITATION else 'json'
+        data_path = self.gui.action_open_file(file_type=ext)
         if not data_path: return
 
         speaker = self.gui.action_prompt("Speaker?", "Enter speaker's name")
@@ -128,7 +129,8 @@ class Controller(object):
         datetime_now = datetime.now().strftime("%d%m%Y_%H%M%S")
         data_source_filename = os.path.basename(os.path.splitext(data_path)[0])
 
-        session_name = 'session_{}_{}_{}'.format(speaker, data_source_filename, datetime_now)
+        session_name = '{}_session_{}_{}_{}'.format(
+                        task.value, speaker, data_source_filename, datetime_now)
         session_path = os.path.join(self.session_path, session_name)
         os.makedirs(session_path)
 
@@ -248,9 +250,9 @@ class Controller(object):
     #   GUI refreshers
     #
     def gui_update(self):
-        if self.session.task == 'text_elicitation':
+        if self.session.task == TASKS.TEXT_ELICITATION:
             self.gui_text_elicitation_update()
-        elif self.session.task == 'respeaking':
+        elif self.session.task == TASKS.RESPEAKING:
             self.gui_respeaking_update()
         else:
             ValueError('Unknown task type ``!'.format(self.session.task))

@@ -21,7 +21,8 @@
 import os
 import abc
 
-from .utils import json_read, json_dump
+from models.consts import TASKS
+from models.utils import json_read, json_dump
 
 
 class AbstractSession(abc.ABC):
@@ -33,7 +34,7 @@ class AbstractSession(abc.ABC):
         self.path = path
         self.data_path = data_path
         self.speaker = speaker
-        self.task = task
+        self.task = TASKS.from_string(task) if not isinstance(task, TASKS) else task
 
         # Metadata
         self.session_metadata_path = os.path.join(self.path, 'metadata_{}.json'.format(self.name))
@@ -72,7 +73,7 @@ class AbstractSession(abc.ABC):
             'path': self.path,
             'data_path': self.data_path,
             'speaker': self.speaker,
-            'task': self.task,
+            'task': self.task.value,
         }
 
         metadata.update(other_metadata)
