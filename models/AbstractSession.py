@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: Session.py (as part of project noname.py)
+#   File: AbstractSession.py (as part of project noname.py)
 #   Created: 16/10/2022 16:34
 #   Last Modified: 16/10/2022 16:34
 # -----------------------------------------------------------------------------
@@ -24,11 +24,11 @@ import abc
 from .utils import json_read, json_dump
 
 
-class Session(abc.ABC):
+class AbstractSession(abc.ABC):
     def __init__(self, name, path, data_path, speaker, task):
-        super(Session, self).__init__()
+        super(AbstractSession, self).__init__()
 
-        # Default Session Metadata
+        # Default AbstractSession Metadata
         self.name = name
         self.path = path
         self.data_path = data_path
