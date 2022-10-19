@@ -30,3 +30,4 @@ class TkinterButtons(Enum):
     BUTTON_DELETE = os.path.join('assets', 'images', 'cross-mark.png')
     BUTTON_LEFT = os.path.join('assets', 'images', 'left-arrow.png')
     BUTTON_RIGHT = os.path.join('assets', 'images', 'right-arrow.png')
+    BUTTON_RESPEAK = os.path.join('assets', 'images', 'music-note.png')

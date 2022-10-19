@@ -20,6 +20,7 @@
 
 import json
 import os
+import wave
 
 
 def assert_recording_exists(path):
@@ -44,3 +45,12 @@ def json_read(json_path):
 def json_dump(json_path, data):
     with open(json_path, 'w') as out_json:
         json.dump(data, out_json)
+
+
+def get_recording_length(path):
+    with wave.open(path, 'r') as f:
+        frames = f.getnframes()
+        rate = f.getframerate()
+        duration = frames / float(rate)
+
+    return duration

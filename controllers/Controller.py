@@ -17,11 +17,12 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
-
+import logging
 import os
+import sys
 from datetime import datetime
 
-from models.Session import Session
+from models.sessions_utils import session_loader, session_initiator
 from views.interface import MainView
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
 from models.utils import assert_recording_exists, json_read, json_dump
@@ -44,11 +45,11 @@ class Controller(object):
         self._playing_status = False
 
         # Other
-        self._config_file = '.williaikuma.json'
-        self.config = self._read_config()
-        self.session_path = self.config.get('sentence_path', os.path.realpath('sessions'))
+        self.app_config_file = '.williaikuma.json'
+        self.app_config = self._read_config()
+        self.session_path = self.app_config.get('sentence_path', os.path.realpath('sessions'))
 
-        self.gui.populate_recent(self.config['recent'])
+        self.gui.populate_recent(self.app_config['recent'])
 
 
     def start(self):
@@ -99,10 +100,10 @@ class Controller(object):
             self.gui.update_play_off()
 
     #
-    #   Handle Sessions
+    #   Menu Commands
     #
-    def command_new(self):
-        data_path = self.gui.action_open_file(file_type='txt')
+    def command_new(self, task):
+        data_path = self.gui.action_open_file(file_type='*')
         if not data_path: return
 
         speaker = self.gui.action_prompt("Speaker?", "Enter speaker's name")
@@ -116,79 +117,92 @@ class Controller(object):
         session_path = os.path.join(self.session_path, session_name)
         os.makedirs(session_path)
 
-        self.session = Session(name=session_name, path=session_path, data_path=data_path, speaker=speaker)
+        self.session = session_initiator(name=session_name, path=session_path, data_path=data_path,
+                                         speaker=speaker, task=task)
         self.start()
 
 
     def command_open(self):
         session = self.gui.action_open_file(initial_dir=self.session_path,
-                                                 file_type='json')
+                                            file_type='json')
         if not session: return
 
         try:
-            self.session = Session.load(session)
+            self.session = session_loader(session)
             self.start()
         except Exception as e:
-            print(str(e))
+            logging.exception(e)
             self.gui.action_error('Error!', "Couldn't open this session!")
 
 
     def command_recent_open(self, session):
         try:
-            self.session = Session.load(session)
+            self.session = session_loader(session)
             self.start()
         except Exception as e:
-            print(str(e))
+            logging.exception(e)
             self.gui.action_error('Error!', "Couldn't open this session!")
 
 
+    def command_generate_textgrid(self):
+        try:
+            generated, failures = self.session.generate_textgrids()
+            self.gui.action_notify('Information', 'Done! ({} generated, {} failures)\n'.format(
+                generated, len(failures), '\n'.join(failures)
+            ))
+        except:
+            self.gui.action_error('Error', 'There was a problem when generating the TextGrid files.')
+
+    #
+    #   Recording Panel Commands
+    #
     def command_next(self):
         self.session.next()
-        self.gui_text_elicitation_update()
+        self.gui_update()
 
 
     def command_previous(self):
         self.session.previous()
-        self.gui_text_elicitation_update()
+        self.gui_update()
 
 
     def command_record(self):
-        if self.recording_status:
-            self.recorder.stop()
-            self.recorder.join()
-            del self.recorder
+        try:
+            if self.recording_status:
+                self.recorder.stop()
+                self.recorder.join()
+                del self.recorder
 
-            self.recording_status = False
-            self.session.recordings_done += 1
-        else:
-            self.recording_status = True
-            self.recorder = ThreadedRecorder(self.session.get_current_sentence_recording_path(),
-                                             sampling_rate=self.session.sampling_rate,
-                                             num_channels=self.session.num_channels)
-            self.recorder.start()
-        self.gui_text_elicitation_update()
+                self.recording_status = False
+                self.session.recordings_done += 1
+            else:
+                self.recording_status = True
+                self.recorder = ThreadedRecorder(self.session.item_save_path(),
+                                                 sampling_rate=self.session.sampling_rate,
+                                                 num_channels=self.session.num_channels)
+                self.recorder.start()
+        except Exception as e:
+            self.gui.action_error("Error", "Unknown error!")
+
+        self.gui_update()
 
 
     def command_listen(self):
-        try:
-            self.playing_status = True
-            self.gui.disable_play()
-            self.player = ThreadedPlayer(self.session.get_current_sentence_recording_path())
-            self.player.start()
-            self.player.join()
-            del self.player
-        except Exception as e:
-            self.gui.action_error('Error!', 'There is a problem with this recording!')
+        self._listen(self.session.item_save_path())
 
-        self.playing_status = False
-        self.gui_text_elicitation_update()
+
+    def command_listen_respeak(self):
+        self._listen(self.session.current_sentence_recording)
 
 
     def command_delete(self):
-        if assert_recording_exists(self.session.get_current_sentence_recording_path()):
-            os.remove(self.session.get_current_sentence_recording_path())
+        yes_no = self.gui.action_yes_no("Delete", "Delete this recording?")
+        if not yes_no: return
+
+        if assert_recording_exists(self.session.item_save_path()):
+            os.remove(self.session.item_save_path())
             self.session.recordings_done -= 1
-        self.gui_text_elicitation_update()
+        self.gui_update()
 
 
     def command_select_session_directory(self):
@@ -198,15 +212,44 @@ class Controller(object):
         self.session_path = new_dir
         self._update_app_config(sentence_path=new_dir)
 
+    #
+    #   Private methods
+    #
+    def _listen(self, item):
+        try:
+            self.playing_status = True
+            self.gui.disable_play()
+            self.player = ThreadedPlayer(item)
+            self.player.start()
+            self.player.join()
+            del self.player
+        except Exception as e:
+            self.gui.action_error('Error!', 'There is a problem with this recording!')
 
-    # Refresh GUI
-    def gui_text_elicitation_update(self):
-        self.gui.set_label_sentence_text(self.session.current_sentence_text)
-        self.gui.set_label_sentence_id(self.session.current_sentence_id)
+        self.playing_status = False
+        self.gui_update()
+
+    #
+    #   GUI refreshers
+    #
+    def gui_update(self):
+        if self.session.task == 'text_elicitation':
+            self.gui_text_elicitation_update()
+        elif self.session.task == 'respeaking':
+            self.gui_respeaking_update()
+        else:
+            ValueError('Unknown task type ``!'.format(self.session.task))
+
+
+    def gui_respeaking_update(self):
+        self.gui.hide_widget(self.gui.Label_Sentence)
+        self.gui.show_widget(self.gui.Button_Listen_Respeak)
+
         self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
         self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
+        self.gui.enable_play_respeak()
 
-        if not assert_recording_exists(self.session.get_current_sentence_recording_path()):
+        if not assert_recording_exists(self.session.item_save_path()):
             self.gui.enable_recording()
             self.gui.disable_play()
             self.gui.disable_delete()
@@ -216,21 +259,42 @@ class Controller(object):
             self.gui.enable_delete()
 
 
+    def gui_text_elicitation_update(self):
+        self.gui.set_label_sentence_text(self.session.current_sentence_text)
+        self.gui.set_label_sentence_id(self.session.current_sentence_id)
+        self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
+        self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
+
+        if self.session.recordings_done > 0:
+            self.gui.enable_menu_data_generate_textgrid()
+
+        if not assert_recording_exists(self.session.item_save_path()):
+            self.gui.enable_recording()
+            self.gui.disable_play()
+            self.gui.disable_delete()
+        else:
+            self.gui.disable_recording()
+            self.gui.enable_play()
+            self.gui.enable_delete()
+
+    #
+    #   Application configuration
+    #
     def _read_config(self):
-        if not os.path.exists(self._config_file):
-            json_dump(self._config_file, {
+        if not os.path.exists(self.app_config_file):
+            json_dump(self.app_config_file, {
                     "recent": []
                 })
 
-        config = json_read(self._config_file)
+        config = json_read(self.app_config_file)
         config['recent'] = [(a,b) for a,b in set([(a_, b_) for a_,b_ in config['recent']])if os.path.exists(b)]
-        json_dump(self._config_file, config)
+        json_dump(self.app_config_file, config)
         
         return config
 
 
     def _update_app_config(self, **kwargs):
-        config = self.config
+        config = self.app_config
         for k, v in kwargs.items():
             if k == "recent":
                 config.setdefault(k, [])
@@ -240,4 +304,4 @@ class Controller(object):
                 config[k] = config[k][:5]
             else:
                 config[k] = v
-        json_dump(self._config_file, config)
+        json_dump(self.app_config_file, config)

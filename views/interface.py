@@ -72,6 +72,7 @@ class MainView(object):
         self.image_left = self.load_resized_image(TkButtons.BUTTON_LEFT.value)
         self.image_right = self.load_resized_image(TkButtons.BUTTON_RIGHT.value)
         self.image_delete = self.load_resized_image(TkButtons.BUTTON_DELETE.value)
+        self.image_respeak = self.load_resized_image(TkButtons.BUTTON_RESPEAK.value)
 
         # Menus
         menu = tk.Menu(root)
@@ -79,7 +80,10 @@ class MainView(object):
 
         # File Menu
         fileMenu = tk.Menu(menu, tearoff=False)
-        fileMenu.add_command(label="New", command=self.Menu_File_New_commmand)
+        self.newMenu = tk.Menu(fileMenu, tearoff=0)
+        self.newMenu.add_command(label='New Text Elicitation', command=self.Menu_File_New_Text_commmand)
+        self.newMenu.add_command(label='New Respeaking', command=self.Menu_File_New_Respeak_command)
+        fileMenu.add_cascade(label="New", menu=self.newMenu)
         fileMenu.add_command(label="Open", command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
         self.recent_menu = tk.Menu(fileMenu, tearoff=0)
@@ -88,6 +92,14 @@ class MainView(object):
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=exit)
         menu.add_cascade(label="File", menu=fileMenu)
+
+        # Preference Menu
+        dataMenu = tk.Menu(menu, tearoff=False)
+        dataMenu.add_command(label='Generate TextGrid', state=tk.DISABLED,
+                             command=self.Menu_Data_Generate_TextGrid_Command)
+        self.dataMenu = dataMenu
+        menu.add_cascade(label="Data", menu=dataMenu)
+
 
         # Preference Menu
         preferenceMenu = tk.Menu(menu, tearoff=False)
@@ -101,7 +113,7 @@ class MainView(object):
         Button_Record["font"] = ft
         Button_Record["fg"] = "#000000"
         Button_Record["justify"] = "center"
-        Button_Record["text"] = "Grabar"
+        Button_Record["text"] = "Record"
         Button_Record.place(x=120,y=60,width=320,height=60)
         Button_Record["command"] = self.Button_Record_command
         self.Button_Record = Button_Record
@@ -134,7 +146,7 @@ class MainView(object):
         Button_Delete["font"] = ft
         Button_Delete["fg"] = "#000000"
         Button_Delete["justify"] = "center"
-        Button_Delete["text"] = "Rechazar"
+        Button_Delete["text"] = "Delete"
         Button_Delete.place(x=120,y=120,width=320,height=60)
         Button_Delete["command"] = self.Button_Delete_Command
         self.Button_Delete = Button_Delete
@@ -145,10 +157,23 @@ class MainView(object):
         Button_Listen["font"] = ft
         Button_Listen["fg"] = "#000000"
         Button_Listen["justify"] = "center"
-        Button_Listen["text"] = "Escuchar"
+        Button_Listen["text"] = "Play"
         Button_Listen.place(x=0,y=0,width=560,height=60)
         Button_Listen["command"] = self.Button_Listen_Command
         self.Button_Listen = Button_Listen
+
+        Button_Listen_Respeak = tk.Button(root, state=tk.DISABLED, image=self.image_respeak)
+        Button_Listen_Respeak["bg"] = "#efefef"
+        ft = tkFont.Font(family='Times', size=10)
+        Button_Listen_Respeak["font"] = ft
+        Button_Listen_Respeak["fg"] = "#000000"
+        Button_Listen_Respeak["justify"] = "center"
+        Button_Listen_Respeak["text"] = "Respeak"
+        Button_Listen_Respeak.place(x=0,y=220,width=560,height=230)
+        Button_Listen_Respeak["command"] = self.Button_Listen_Respeak_Command
+        self.Button_Listen_Respeak = Button_Listen_Respeak
+        self.hide_widget(Button_Listen_Respeak)
+
 
         Label_ID=tk.Label(root)
         ft = tkFont.Font(family='Times',size=15)
@@ -174,7 +199,7 @@ class MainView(object):
         Label_Sentence["fg"] = "#333333"
         Label_Sentence["justify"] = "center"
         Label_Sentence["text"] = "Create a new project or open an existing one."
-        Label_Sentence.place(x=0,y=205,width=560,height=245)
+        Label_Sentence.place(x=0,y=205,width=560,height=230)
         self.Label_Sentence = Label_Sentence
 
         statusbar = tk.Label(root, text="Waiting...", bd=1, relief=tk.SUNKEN, anchor=tk.W)
@@ -193,12 +218,20 @@ class MainView(object):
     #
     #   Event method
     #
-    def Menu_File_New_commmand(self):
-        self.ctrl.command_new()
+    def Menu_File_New_Text_commmand(self):
+        self.ctrl.command_new(task='text_elicitation')
+
+
+    def Menu_File_New_Respeak_command(self):
+        self.ctrl.command_new(task='respeaking')
 
 
     def Menu_File_Open_commmand(self):
         self.ctrl.command_open()
+
+
+    def Menu_Data_Generate_TextGrid_Command(self):
+        self.ctrl.command_generate_textgrid()
 
 
     def Menu_Preference_Session_command(self):
@@ -224,54 +257,91 @@ class MainView(object):
     def Button_Listen_Command(self):
         self.ctrl.command_listen()
 
+
+    def Button_Listen_Respeak_Command(self):
+        self.ctrl.command_listen_respeak()
+
     #
     # Update widgets (ugly but it works)
     #
     def set_label_sentence_text(self, sentence):
         self.Label_Sentence['text'] = sentence
 
+
     def set_label_sentence_id(self, sentence):
         self.Label_ID['text'] = sentence
+
 
     def set_label_progress(self, done, total):
         self.Label_Progress['text'] = '{}/{}'.format(done, total)
 
+
     def set_status_bar(self, index, speaker, session):
         self.statusbar['text'] = 'Line: {} | Speaker: {} | Session: {}'.format(index, speaker, session)
+
 
     def enable_directional_buttons(self):
         self.enable_widget(self.Button_Previous)
         self.enable_widget(self.Button_Next)
 
+
     def enable_recording(self):
         self.enable_widget(self.Button_Record)
+
 
     def enable_play(self):
         self.enable_widget(self.Button_Listen)
 
+
     def enable_delete(self):
         self.enable_widget(self.Button_Delete)
+
+
+    def enable_play_respeak(self):
+        self.enable_widget(self.Button_Listen_Respeak)
+
+
+    def enable_menu_data_generate_textgrid(self):
+        self.dataMenu.entryconfig(1, state=tk.NORMAL)
+
+
+    def disable_menu_data_generate_textgrid(self):
+        self.dataMenu.entryconfig(1, state=tk.DISABLED)
+
 
     def disable_recording(self):
         self.disable_widget(self.Button_Record)
 
+
     def disable_play(self):
         self.disable_widget(self.Button_Listen)
+
+
+    def disable_play_respeak(self):
+        self.disable_widget(self.Button_Listen_Respeak)
+
 
     def disable_delete(self):
         self.disable_widget(self.Button_Delete)
 
+    #
+    #   Button image update
+    #
     def update_recording_on(self):
         self.update_widget_image(self.Button_Record, self.image_record_on)
+
 
     def update_recording_off(self):
         self.update_widget_image(self.Button_Record, self.image_record_off)
 
+
     def update_play_on(self):
         self.update_widget_image(self.Button_Listen, self.image_play_on)
 
+
     def update_play_off(self):
         self.update_widget_image(self.Button_Listen, self.image_play_off)
+
 
     def populate_recent(self, recents):
         for recent_name, recent_path in recents:
@@ -279,6 +349,7 @@ class MainView(object):
                                          command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
         self.recent_menu.delete(0)
+
     #
     # Message boxes
     #
@@ -286,6 +357,7 @@ class MainView(object):
         return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
                                    title="Elegir un archivo",
                                    filetypes=(("Files", "*.{}*".format(file_type)),))
+
 
     def action_prompt(self, title, message):
         return tk.simpledialog.askstring(title, message)
@@ -295,8 +367,16 @@ class MainView(object):
         return tk.messagebox.showerror(title, message)
 
 
+    def action_notify(self, title, message):
+        return tk.messagebox.showinfo(title, message)
+
+
     def action_choose_dir(self, initial_dir ='/home/'):
         return tkinter.filedialog.askdirectory(initialdir=initial_dir)
+
+
+    def action_yes_no(self, title, message):
+        return tkinter.messagebox.askyesno(title, message, default="no")
 
     #
     #   Utility methods
@@ -312,6 +392,16 @@ class MainView(object):
 
     def disable_widget(self, widget):
         widget['state'] = tk.DISABLED
+
+
+    def hide_widget(self, widget):
+        if not hasattr(widget, 'original_place'):
+            setattr(widget, 'original_place', widget.place_info())
+            widget.place_forget()
+        # Otherwise the widget was already hidden
+
+    def show_widget(self, widget):
+        widget.place(**widget.original_place)
 
 
     def load_resized_image(self, path):
