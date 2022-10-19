@@ -19,7 +19,8 @@
 # -----------------------------------------------------------------------------
 import os
 
-from .utils import text_read, json_read
+from natsort import natsorted
+from models.utils import json_read
 
 
 class AudioDataProvider(object):
@@ -32,7 +33,7 @@ class AudioDataProvider(object):
         self.set_wav_path()
 
         self.data = []
-        wavs = sorted([os.path.join(self.wav_path, item) for item in os.listdir(self.wav_path)
+        wavs = natsorted([os.path.join(self.wav_path, item) for item in os.listdir(self.wav_path)
                 if item.endswith('.wav')])
         self.data = wavs
 
