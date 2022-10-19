@@ -19,12 +19,12 @@
 # -----------------------------------------------------------------------------
 import os
 
-from models.AudioSession import AudioSession
+from models.AudioAbstractSession import AudioAbstractSession
 from models.TextDataProvider import TextDataProvider
 from models.utils import json_read
 
 
-class RecordingSession(AudioSession):
+class RecordingSession(AudioAbstractSession):
 
     def __init__(self, **kwargs):
         super(RecordingSession, self).__init__(**kwargs)
