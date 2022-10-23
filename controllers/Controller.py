@@ -64,7 +64,7 @@ class Controller(object):
 
         self.command_next()
         self.gui.enable_directional_buttons()
-        self.gui.set_status_bar(self.session.index, self.session.speaker, self.session.name)
+        self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
 
     #
     #   Properties
@@ -236,7 +236,7 @@ class Controller(object):
     #
     def _listen(self, item, which=''):
         try:
-            setattr(self, '{}playing_status'.format('{}_'.format(which)), True)
+            setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), True)
             self.gui.disable_play()
             self.player = ThreadedPlayer(item)
             self.player.start()
@@ -245,7 +245,7 @@ class Controller(object):
         except Exception as e:
             self.gui.action_error('Error!', 'There is a problem with this recording!')
 
-        setattr(self, '{}playing_status'.format('{}_'.format(which)), False)
+        setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), False)
         self.gui_update()
 
     #
