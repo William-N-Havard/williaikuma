@@ -21,6 +21,7 @@
 import json
 import os
 import wave
+from datetime import datetime
 
 
 def assert_recording_exists(path):
@@ -54,3 +55,5 @@ def get_recording_length(path):
         duration = frames / float(rate)
 
     return duration
+
+now = lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S")

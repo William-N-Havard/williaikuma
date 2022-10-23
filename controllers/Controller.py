@@ -23,7 +23,7 @@ from datetime import datetime
 
 from models.consts import TASKS
 from models.sessions_utils import session_loader, session_initiator
-from models.utils import assert_recording_exists, json_read, json_dump
+from models.utils import assert_recording_exists, json_read, json_dump, now
 from views.interface import MainView
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
 
@@ -50,7 +50,7 @@ class Controller(object):
         self.app_config = self._read_config()
         self.session_path = self.app_config.get('sentence_path', os.path.realpath('sessions'))
 
-        self.gui.populate_recent(self.app_config['recent'])
+        self.gui.populate_recent([(name, path) for name, path, *_ in self.app_config['recent']])
 
 
     def start(self):
@@ -100,9 +100,11 @@ class Controller(object):
             self.gui.disable_plays()
             self.gui.update_play_off()
 
+
     @property
     def respeak_playing_status(self):
         return self._respeak_playing_status
+
 
     @playing_status.setter
     def respeak_playing_status(self, value):
@@ -126,7 +128,7 @@ class Controller(object):
         if not speaker: return
 
         # Generate session directory
-        datetime_now = datetime.now().strftime("%d%m%Y_%H%M%S")
+        datetime_now = now().replace(' ', '_').replace('/', '').replace(':', '')
         data_source_filename = os.path.basename(os.path.splitext(data_path)[0])
 
         session_name = '{}_session_{}_{}_{}'.format(
@@ -308,7 +310,9 @@ class Controller(object):
                 })
 
         config = json_read(self.app_config_file)
-        config['recent'] = [(a,b) for a,b in set([(a_, b_) for a_,b_ in config['recent']])if os.path.exists(b)]
+        config['recent'] = [[name, path, date] for name, path, date in config['recent'] if os.path.exists(path)]
+        config['recent'] = list(sorted(config['recent'],
+                                  key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True))
         json_dump(self.app_config_file, config)
         
         return config
@@ -318,11 +322,19 @@ class Controller(object):
         config = self.app_config
         for k, v in kwargs.items():
             if k == "recent":
+                cur_sess = v
                 config.setdefault(k, [])
-                recent = [v.name, v.session_metadata_path]
-                if recent not in config[k]:
+                recent = [cur_sess.name, cur_sess.session_metadata_path, cur_sess.last_access]
+
+                recent_names = [name for name, _, _ in config[k]]
+                if cur_sess.name not in recent_names:
                     config[k].insert(0, recent)
-                config[k] = config[k][:5]
+                else:
+                    idx = recent_names.index(cur_sess.name)
+                    config[k][idx][-1] = cur_sess.last_access
+
+                config[k] = sorted(config[k][:5],
+                                   key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True)
             else:
                 config[k] = v
         json_dump(self.app_config_file, config)
