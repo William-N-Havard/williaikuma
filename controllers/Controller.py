@@ -48,7 +48,7 @@ class Controller(object):
         # Other
         self.app_config_file = '.williaikuma.json'
         self.app_config = self._read_config()
-        self.session_path = self.app_config.get('sentence_path', os.path.realpath('sessions'))
+        self.session_path = self.app_config.get('session_path', os.path.realpath('sessions'))
 
         self.gui.populate_recent([(name, path) for name, path, *_ in self.app_config['recent']])
 
@@ -229,7 +229,7 @@ class Controller(object):
         if not new_dir: return
 
         self.session_path = new_dir
-        self._update_app_config(sentence_path=new_dir)
+        self._update_app_config(session_path=new_dir)
 
     #
     #   Private methods
