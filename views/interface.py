@@ -177,13 +177,13 @@ class MainView(object):
         self.hide_widget(Button_Listen_Respeak)
 
 
-        Label_ID=tk.Label(root, wraplength=280)
+        Label_ID=tk.Label(root, wraplength=380)
         ft = tkFont.Font(family='Times',size=15)
         Label_ID["font"] = ft
         Label_ID["fg"] = "#333333"
         Label_ID["justify"] = "center"
         Label_ID["text"] = ""
-        Label_ID.place(x=0,y=180,width=280,height=30)
+        Label_ID.place(x=0,y=180,width=380,height=30)
         self.Label_ID = Label_ID
 
         Label_Progress = tk.Label(root)
@@ -192,7 +192,7 @@ class MainView(object):
         Label_Progress["fg"] = "#333333"
         Label_Progress["justify"] = "center"
         Label_Progress["text"] = ""
-        Label_Progress.place(x=280, y=180, width=280, height=30)
+        Label_Progress.place(x=380, y=180, width=180, height=30)
         self.Label_Progress = Label_Progress
 
         Label_Sentence=tk.Label(root, wraplength=560)
