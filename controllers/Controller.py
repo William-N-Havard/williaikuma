@@ -19,23 +19,21 @@
 # -----------------------------------------------------------------------------
 import logging
 import os
-from datetime import datetime
 
 from models.consts import TASKS
-from models.sessions_utils import session_loader, session_initiator
-from models.utils import assert_recording_exists, json_read, json_dump, now
-from views.interface import MainView
+from models.utils import assert_recording_exists, now
+from models.Application import Application
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
-
+from views.interface import MainView
 
 class Controller(object):
 
-    def __init__(self, gui):
+    def __init__(self, app: Application, gui: MainView):
+        # Model
+        self.app: Application = app
+
         # View
         self.gui: MainView = gui
-
-        # Model
-        self.session = None
 
         # Audio
         self.recorder = None
@@ -45,26 +43,19 @@ class Controller(object):
         self._playing_status = False
         self._respeak_playing_status = False
 
-        # Other
-        self.app_config_file = '.williaikuma.json'
-        self.app_config = self._read_config()
-        self.session_path = self.app_config.get('session_path', os.path.realpath('sessions'))
-
-        self.gui.populate_recent([(name, path) for name, path, *_ in self.app_config['recent']])
+        self.gui.populate_recent(self.app.recent_sessions)
 
 
     def start(self):
-        self._update_app_config(recent=self.session)
-
         try:
-            self.session.start()
+            self.app.session_start()
         except Exception as e:
-            self.gui.action_error('Error!', str(e))
+            logging.exception(e)
+            self.gui.action_error('Error!', 'Unable to start the session!')
             return
 
         self.command_next()
         self.gui.enable_directional_buttons()
-        self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
 
     #
     #   Properties
@@ -133,21 +124,21 @@ class Controller(object):
 
         session_name = '{}_session_{}_{}_{}'.format(
                         task.value, speaker, data_source_filename, datetime_now)
-        session_path = os.path.join(self.session_path, session_name)
+        session_path = os.path.join(self.app.session_path, session_name)
         os.makedirs(session_path)
 
-        self.session = session_initiator(name=session_name, path=session_path, data_path=data_path,
-                                         speaker=speaker, task=task)
+        self.app.session_init(name=session_name, path=session_path, data_path=data_path,
+                              speaker=speaker, task=task)
         self.start()
 
 
     def command_open(self):
-        session = self.gui.action_open_file(initial_dir=self.session_path,
+        session = self.gui.action_open_file(initial_dir=self.app.session_path,
                                             file_type='json')
         if not session: return
 
         try:
-            self.session = session_loader(session)
+            self.app.session_load(session)
             self.start()
         except Exception as e:
             logging.exception(e)
@@ -156,7 +147,7 @@ class Controller(object):
 
     def command_recent_open(self, session):
         try:
-            self.session = session_loader(session)
+            self.app.session_load(session)
             self.start()
         except Exception as e:
             logging.exception(e)
@@ -165,23 +156,24 @@ class Controller(object):
 
     def command_generate_textgrid(self):
         try:
-            generated, failures = self.session.generate_textgrids()
+            generated, failures = self.app.session.generate_textgrids()
             self.gui.action_notify('Information', 'Done! ({} generated, {} failures)\n'.format(
                 generated, len(failures), '\n'.join(failures)
             ))
-        except:
+        except Exception as e:
+            logging.exception(e)
             self.gui.action_error('Error', 'There was a problem when generating the TextGrid files.')
 
     #
     #   Recording Panel Commands
     #
     def command_next(self):
-        self.session.next()
+        self.app.session.next()
         self.gui_update()
 
 
     def command_previous(self):
-        self.session.previous()
+        self.app.session.previous()
         self.gui_update()
 
 
@@ -193,43 +185,43 @@ class Controller(object):
                 del self.recorder
 
                 self.recording_status = False
-                self.session.recordings_done += 1
+                self.app.session.recordings_done += 1
             else:
                 self.recording_status = True
-                self.recorder = ThreadedRecorder(self.session.item_save_path(),
-                                                 sampling_rate=self.session.sampling_rate,
-                                                 num_channels=self.session.num_channels)
+                self.recorder = ThreadedRecorder(self.app.session.item_save_path(),
+                                                 sampling_rate=self.app.session.sampling_rate,
+                                                 num_channels=self.app.session.num_channels)
                 self.recorder.start()
         except Exception as e:
+            logging.exception(e)
             self.gui.action_error("Error", "Unknown error!")
 
         self.gui_update()
 
 
     def command_listen(self):
-        self._listen(self.session.item_save_path())
+        self._listen(self.app.session.item_save_path())
 
 
     def command_listen_respeak(self):
-        self._listen(self.session.current_sentence_recording, which='respeak')
+        self._listen(self.app.session.current_sentence_recording, which='respeak')
 
 
     def command_delete(self):
         yes_no = self.gui.action_yes_no("Delete", "Delete this recording?")
         if not yes_no: return
 
-        if assert_recording_exists(self.session.item_save_path()):
-            os.remove(self.session.item_save_path())
-            self.session.recordings_done -= 1
+        if assert_recording_exists(self.app.session.item_save_path()):
+            os.remove(self.app.session.item_save_path())
+            self.app.session.recordings_done -= 1
         self.gui_update()
 
 
     def command_select_session_directory(self):
-        new_dir = self.gui.action_choose_dir(os.path.realpath(self.session_path))
+        new_dir = self.gui.action_choose_dir(self.app.session_path)
         if not new_dir: return
 
-        self.session_path = new_dir
-        self._update_app_config(session_path=new_dir)
+        self.app.session_path = new_dir
 
     #
     #   Private methods
@@ -243,6 +235,7 @@ class Controller(object):
             self.player.join()
             del self.player
         except Exception as e:
+            logging.exception(e)
             self.gui.action_error('Error!', 'There is a problem with this recording!')
 
         setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), False)
@@ -252,12 +245,12 @@ class Controller(object):
     #   GUI refreshers
     #
     def gui_update(self):
-        if self.session.task == TASKS.TEXT_ELICITATION:
+        if self.app.session.task == TASKS.TEXT_ELICITATION:
             self.gui_text_elicitation_update()
-        elif self.session.task == TASKS.RESPEAKING:
+        elif self.app.session.task == TASKS.RESPEAKING:
             self.gui_respeaking_update()
         else:
-            ValueError('Unknown task type ``!'.format(self.session.task))
+            ValueError('Unknown task type ``!'.format(self.app.session.task))
 
 
     def gui_respeaking_update(self):
@@ -266,9 +259,9 @@ class Controller(object):
         self.gui.show_widget(self.gui.Button_Listen_Respeak)
 
         # Update labels
-        self.gui.set_label_sentence_id(self.session.current_sentence_recording_name)
-        self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
-        self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
+        self.gui.set_label_sentence_id(self.app.session.current_sentence_recording_name)
+        self.gui.set_label_progress(self.app.session.recordings_done, len(self.app.session.data))
+        self.gui.set_status_bar(self.app.session.index+1, self.app.session.speaker, self.app.session.name)
         self.gui.enable_play_respeak()
 
         self.gui_audio_session_player_switch()
@@ -280,18 +273,18 @@ class Controller(object):
         self.gui.show_widget(self.gui.Label_Sentence)
 
         # Update labels
-        self.gui.set_label_sentence_text(self.session.current_sentence_text)
-        self.gui.set_label_sentence_id(self.session.current_sentence_id)
-        self.gui.set_label_progress(self.session.recordings_done, len(self.session.data))
-        self.gui.set_status_bar(self.session.index+1, self.session.speaker, self.session.name)
+        self.gui.set_label_sentence_text(self.app.session.current_sentence_text)
+        self.gui.set_label_sentence_id(self.app.session.current_sentence_id)
+        self.gui.set_label_progress(self.app.session.recordings_done, len(self.app.session.data))
+        self.gui.set_status_bar(self.app.session.index+1, self.app.session.speaker, self.app.session.name)
 
-        if self.session.recordings_done > 0:
+        if self.app.session.recordings_done > 0:
             self.gui.enable_menu_data_generate_textgrid()
         self.gui_audio_session_player_switch()
 
 
     def gui_audio_session_player_switch(self):
-        if not assert_recording_exists(self.session.item_save_path()):
+        if not assert_recording_exists(self.app.session.item_save_path()):
             self.gui.enable_recording()
             self.gui.disable_play()
             self.gui.disable_delete()
@@ -299,42 +292,3 @@ class Controller(object):
             self.gui.disable_recording()
             self.gui.enable_play()
             self.gui.enable_delete()
-
-    #
-    #   Application configuration
-    #
-    def _read_config(self):
-        if not os.path.exists(self.app_config_file):
-            json_dump(self.app_config_file, {
-                    "recent": []
-                })
-
-        config = json_read(self.app_config_file)
-        config['recent'] = [[name, path, date] for name, path, date in config['recent'] if os.path.exists(path)]
-        config['recent'] = list(sorted(config['recent'],
-                                  key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True))
-        json_dump(self.app_config_file, config)
-        
-        return config
-
-
-    def _update_app_config(self, **kwargs):
-        config = self.app_config
-        for k, v in kwargs.items():
-            if k == "recent":
-                cur_sess = v
-                config.setdefault(k, [])
-                recent = [cur_sess.name, cur_sess.session_metadata_path, cur_sess.last_access]
-
-                recent_names = [name for name, _, _ in config[k]]
-                if cur_sess.name not in recent_names:
-                    config[k].insert(0, recent)
-                else:
-                    idx = recent_names.index(cur_sess.name)
-                    config[k][idx][-1] = cur_sess.last_access
-
-                config[k] = sorted(config[k][:5],
-                                   key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True)
-            else:
-                config[k] = v
-        json_dump(self.app_config_file, config)

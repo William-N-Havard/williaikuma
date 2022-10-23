@@ -27,7 +27,7 @@ from models.utils import assert_recording_exists, assert_recording_readable
 
 class ThreadedPlayer(threading.Thread):
     def __init__(self, audio_path, chunk=1024):
-        super(ThreadedPlayer).__init__(self)
+        super(ThreadedPlayer, self).__init__()
         self.audio_path = audio_path
         self.chunk = chunk
 
@@ -54,7 +54,7 @@ class ThreadedPlayer(threading.Thread):
 class ThreadedRecorder(threading.Thread):
     def __init__(self, audio_path, sampling_rate, num_channels,
                  chunk_size = 1024, format=pyaudio.paInt16):
-        super(ThreadedRecorder).__init__(self)
+        super(ThreadedRecorder, self).__init__()
         self.continue_recording = True
 
         self.audio_path = audio_path

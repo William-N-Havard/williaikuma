@@ -22,14 +22,15 @@ import tkinter as tk
 
 from controllers.Controller import Controller
 from views.interface import MainView
+from models.Application import Application
 
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title('Williaikuma')
-
+        application = Application()
         view = MainView(self)
-        controller = Controller(view)
+        controller = Controller(application, view)
         view.set_controller(controller)
+        self.title(application.name)
