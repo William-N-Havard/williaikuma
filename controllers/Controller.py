@@ -227,9 +227,10 @@ class Controller(object):
     #   Private methods
     #
     def _listen(self, item, which=''):
+        self.gui.disable_play()
+        self.gui.disable_delete()
         try:
             setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), True)
-            self.gui.disable_play()
             self.player = ThreadedPlayer(item)
             self.player.start()
             self.player.join()
