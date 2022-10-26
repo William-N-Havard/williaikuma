@@ -32,20 +32,23 @@ class ThreadedPlayer(threading.Thread):
         self.chunk = chunk
 
     def run(self):
-        audio_output_stream = pyaudio.PyAudio()
-        with wave.open(self.audio_path, 'rb') as wave_file:
-            stream = audio_output_stream.open(format=audio_output_stream.get_format_from_width(wave_file.getsampwidth()),
-                                              channels=wave_file.getnchannels(), rate=wave_file.getframerate(), output=True)
+        try:
+            with wave.open(self.audio_path, 'rb') as wave_file:
+                audio_format = wave_file.getsampwidth()
+                num_channels = wave_file.getnchannels()
+                sampling_rate = wave_file.getframerate()
+                wave_frames = wave_file.readframes(wave_file.getnframes())
 
-            data = wave_file.readframes(self.chunk)
-            while data:
-                stream.write(data)
-                data = wave_file.readframes(self.chunk)
-
-            stream.stop_stream()
-            stream.close()
-            audio_output_stream.terminate()
-        del audio_output_stream
+                audio_output_stream = pyaudio.PyAudio()
+                stream = audio_output_stream.open(format=audio_output_stream.get_format_from_width(audio_format),
+                                                  channels=num_channels, rate=sampling_rate, output=True)
+                stream.write(wave_frames)
+                stream.stop_stream()
+                stream.close()
+                audio_output_stream.terminate()
+                del audio_output_stream
+        except Exception as e:
+            raise IOError('Error while reading the WAVE file. {}'.format(str(e)))
 
     def stop(self):
         pass
