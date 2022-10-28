@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: interface.py (as part of project noname.py)
+#   File: MainView.py (as part of project noname.py)
 #   Created: 16/10/2022 18:11
 #   Last Modified: 16/10/2022 18:11
 # -----------------------------------------------------------------------------
@@ -47,10 +47,13 @@ from PIL import Image
 from PIL.ImageTk import PhotoImage
 
 from models.consts import TASKS
+from views.MissingView import MissingView
 from views.utils import TkinterButtons as TkButtons
 
-class MainView(object):
+class MainView(tk.Frame):
     def __init__(self, root):
+        super().__init__(root)
+
         self.root = root
         self.ctrl = None
 
@@ -96,6 +99,9 @@ class MainView(object):
 
         # Preference Menu
         dataMenu = tk.Menu(menu, tearoff=False)
+        dataMenu.add_command(label='View Missing Items', state=tk.DISABLED,
+                             command=self.Menu_Data_ViewMissing_Command)
+        dataMenu.add_separator()
         dataMenu.add_command(label='Generate TextGrid', state=tk.DISABLED,
                              command=self.Menu_Data_Generate_TextGrid_Command)
         self.dataMenu = dataMenu
@@ -245,6 +251,9 @@ class MainView(object):
         self.ctrl.command_reset_recent()
 
 
+    def Menu_Data_ViewMissing_Command(self):
+        self.ctrl.command_view_missing()
+
     def Button_Previous_command(self):
         self.ctrl.command_previous()
 
@@ -309,11 +318,19 @@ class MainView(object):
 
 
     def enable_menu_data_generate_textgrid(self):
-        self.dataMenu.entryconfig(1, state=tk.NORMAL)
+        self.dataMenu.entryconfig(2, state=tk.NORMAL)
 
 
     def disable_menu_data_generate_textgrid(self):
-        self.dataMenu.entryconfig(1, state=tk.DISABLED)
+        self.dataMenu.entryconfig(2, state=tk.DISABLED)
+
+
+    def enable_menu_data_missing(self):
+        self.dataMenu.entryconfig(0, state=tk.NORMAL)
+
+
+    def disable_menu_data_missing(self):
+        self.dataMenu.entryconfig(0, state=tk.DISABLED)
 
 
     def disable_recording(self):
@@ -420,6 +437,11 @@ class MainView(object):
 
     def action_yes_no(self, title, message):
         return tkinter.messagebox.askyesno(title, message, default="no")
+
+
+    def show_missing(self, missing_items):
+        selected_item = MissingView(self, missing_items=missing_items).show()
+        return selected_item
 
     #
     #   Utility methods

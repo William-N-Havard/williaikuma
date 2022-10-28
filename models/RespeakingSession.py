@@ -52,6 +52,14 @@ class RespeakingSession(AudioAbstractSession):
         return int(recording_name.split('_')[0].split('-')[-1])
 
 
+    def get_missing_items(self):
+        existing_recordings = [self.item_index(item) for item in self.list_recordings()]
+        target_recortings = [self.item_index(item) for item in os.listdir(self.data.wav_path)
+                             if item .endswith('.wav')]
+        missing_indices = sorted(list(set(target_recortings)-set(existing_recordings)))
+        return missing_indices
+
+
     @classmethod
     def load(cls, session_json):
         session_path, _ = os.path.split(session_json)

@@ -25,7 +25,7 @@ from .utils import text_read
 class TextDataProvider(object):
     def __init__(self, path):
         self.path = path
-        self.index = -1
+        self._index = -1
 
 
     def load(self):
@@ -38,6 +38,18 @@ class TextDataProvider(object):
     @property
     def item(self):
         return self[self.index]
+
+
+    @property
+    def index(self):
+        return self._index
+
+
+    @index.setter
+    def index(self, value):
+        assert type(value) == int, ValueError("Index can only be an integer!")
+        assert value >= 0, ValueError("Index can't be negative!")
+        self._index = value
 
 
     def previous(self):

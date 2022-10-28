@@ -58,6 +58,10 @@ class AbstractSession(abc.ABC):
         self.update_current_data_item()
 
 
+    def override_index(self, value):
+        self.data.index = value - 1
+        self.update_current_data_item()
+
     @abc.abstractmethod
     def update_current_data_item(self):
         pass

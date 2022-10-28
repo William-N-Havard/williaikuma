@@ -21,7 +21,7 @@
 import tkinter as tk
 
 from controllers.Controller import Controller
-from views.interface import MainView
+from views.MainView import MainView
 from models.Application import Application
 
 

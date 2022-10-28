@@ -24,7 +24,7 @@ from models.consts import TASKS
 from models.utils import assert_recording_exists, now
 from models.Application import Application
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
-from views.interface import MainView
+from views.MainView import MainView
 
 class Controller(object):
 
@@ -229,6 +229,13 @@ class Controller(object):
 
         self.gui_refresh_recent()
 
+    def command_view_missing(self):
+        missing_items = self.app.session.get_missing_items()
+        selected_missing_item = self.gui.show_missing(missing_items=missing_items)
+        if selected_missing_item:
+            self.app.session.override_index(selected_missing_item)
+        self.gui_update()
+
     #
     #   Private methods
     #
@@ -252,6 +259,7 @@ class Controller(object):
     #   GUI refreshers
     #
     def gui_update(self):
+        self.gui.enable_menu_data_missing()
         if self.app.session.task == TASKS.TEXT_ELICITATION:
             self.gui_text_elicitation_update()
         elif self.app.session.task == TASKS.RESPEAKING:

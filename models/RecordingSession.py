@@ -54,6 +54,12 @@ class RecordingSession(AudioAbstractSession):
         return int(recording_name.split('_')[0].split('-')[-1])
 
 
+    def get_missing_items(self):
+        existing_recordings = [self.item_index(item) for item in self.list_recordings()]
+        missing_indices = sorted([i for i in range(1,len(self.data)+1) if i not in existing_recordings])
+        return missing_indices
+
+
     @classmethod
     def load(cls, session_json):
         session_path, _ = os.path.split(session_json)

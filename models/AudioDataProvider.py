@@ -26,7 +26,7 @@ from models.utils import json_read
 class AudioDataProvider(object):
     def __init__(self, path):
         self.path = path
-        self.index = -1
+        self._index = -1
 
 
     def load(self):
@@ -49,6 +49,18 @@ class AudioDataProvider(object):
     def item(self):
         return self[self.index]
 
+
+    @property
+    def index(self):
+        return self._index
+
+
+    @index.setter
+    def index(self, value):
+        assert type(value) == int, ValueError("Index can only be an integer!")
+        assert value >= 0, ValueError("Index can't be negative!")
+        self._index = value
+        
 
     def previous(self):
         self.index = self.index - 1 if self.index > 0 else len(self.data) - 1
