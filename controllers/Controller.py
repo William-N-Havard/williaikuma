@@ -223,6 +223,12 @@ class Controller(object):
 
         self.app.session_path = new_dir
 
+    def command_reset_recent(self):
+        yes_no = self.gui.action_yes_no("Delete", "Delete this recording?")
+        if not yes_no: return
+
+        self.gui_refresh_recent()
+
     #
     #   Private methods
     #
@@ -293,3 +299,7 @@ class Controller(object):
             self.gui.disable_recording()
             self.gui.enable_play()
             self.gui.enable_delete()
+
+    def gui_refresh_recent(self):
+        self.gui.reset_recent_menu()
+        self.gui.populate_recent(self.app.recent_sessions)

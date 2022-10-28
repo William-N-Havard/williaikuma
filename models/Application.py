@@ -57,6 +57,11 @@ class Application(object):
     def recent_sessions(self):
         return [(name, path) for name, path, *_ in self.config['recent']]
 
+
+    def reset_recent_sessions(self):
+        self.config['recent'] = []
+        self.update_config()
+
     #
     #   Session handler
     #

@@ -89,7 +89,6 @@ class MainView(object):
         fileMenu.add_command(label="Open", command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
         self.recent_menu = tk.Menu(fileMenu, tearoff=0)
-        self.recent_menu.add_command(label='None', state=tk.DISABLED)
         fileMenu.add_cascade(label="Recent", menu=self.recent_menu)
         fileMenu.add_separator()
         fileMenu.add_command(label="Exit", command=exit)
@@ -208,6 +207,8 @@ class MainView(object):
         statusbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.statusbar = statusbar
 
+        self.reset_recent_menu()
+
     @property
     def controller(self):
         return self.ctrl
@@ -238,6 +239,10 @@ class MainView(object):
 
     def Menu_Preference_Session_command(self):
         self.ctrl.command_select_session_directory()
+
+
+    def Menu_Recent_Reset_command(self):
+        self.ctrl.command_reset_recent()
 
 
     def Button_Previous_command(self):
@@ -364,11 +369,29 @@ class MainView(object):
 
 
     def populate_recent(self, recents):
-        for recent_name, recent_path in recents:
-            self.recent_menu.add_command(label=recent_name,
-                                         command=lambda path=recent_path: self.ctrl.command_recent_open(path))
+        if recents:
+            for idx, (recent_name, recent_path) in enumerate(recents, 1):
+                self.recent_menu.insert_command(
+                        index=idx,
+                        label=recent_name,
+                        command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
-        self.recent_menu.delete(0)
+            if (idx_to_del:=self.recent_menu.index('None')) != None:\
+                self.recent_menu.delete(idx_to_del)
+
+            self.recent_menu.entryconfigure(self.recent_menu.index('Reset'),
+                                            state=tk.NORMAL)
+        else:
+            self.reset_recent_menu()
+
+    def reset_recent_menu(self):
+        while (last_index := self.recent_menu.index(tk.END)) != None:
+            self.recent_menu.delete(last_index)
+
+        self.recent_menu.add_command(label='None', state=tk.DISABLED)
+        self.recent_menu.add_separator()
+        self.recent_menu.add_command(label='Reset', state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
+
 
     #
     # Message boxes
