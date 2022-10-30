@@ -21,32 +21,21 @@
 import wave
 import pyaudio
 import threading
+import simpleaudio
 
 from models.utils import assert_recording_exists, assert_recording_readable
 
 
 class ThreadedPlayer(threading.Thread):
-    def __init__(self, audio_path, chunk=1024):
+    def __init__(self, audio_path):
         super(ThreadedPlayer, self).__init__()
         self.audio_path = audio_path
-        self.chunk = chunk
 
     def run(self):
         try:
-            with wave.open(self.audio_path, 'rb') as wave_file:
-                audio_format = wave_file.getsampwidth()
-                num_channels = wave_file.getnchannels()
-                sampling_rate = wave_file.getframerate()
-                wave_frames = wave_file.readframes(wave_file.getnframes())
-
-                audio_output_stream = pyaudio.PyAudio()
-                stream = audio_output_stream.open(format=audio_output_stream.get_format_from_width(audio_format),
-                                                  channels=num_channels, rate=sampling_rate, output=True)
-                stream.write(wave_frames)
-                stream.stop_stream()
-                stream.close()
-                audio_output_stream.terminate()
-                del audio_output_stream
+            wave_object = simpleaudio.WaveObject.from_wave_file(self.audio_path)
+            wave_play = wave_object.play()
+            wave_play.wait_done()
         except Exception as e:
             raise IOError('Error while reading the WAVE file. {}'.format(str(e)))
 
