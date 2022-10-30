@@ -21,52 +21,23 @@
 
 from .utils import text_read
 
+from models.AbstractDataProvider import AbstractDataProvider
 
-class TextDataProvider(object):
+class TextDataProvider(AbstractDataProvider):
     def __init__(self, path):
-        self.path = path
-        self._index = -1
-
+        super().__init__(path=path)
 
     def load(self):
-        self.data = []
+        data = []
         for i_line, line in enumerate(text_read(self.path), 1):
             assert ' ## ' in line, ValueError("' ## ' not found on line {}.".format(i_line))
-            self.data.append(line)
-
-
-    @property
-    def item(self):
-        return self[self.index]
-
-
-    @property
-    def index(self):
-        return self._index
-
-
-    @index.setter
-    def index(self, value):
-        assert type(value) == int, ValueError("Index can only be an integer!")
-        assert value >= -1, ValueError("Index can't be negative ({})!".format(value))
-        self._index = value
-
-
-    def previous(self):
-        self.index = self.index - 1 if self.index > 0 else len(self.data) - 1
-
-
-    def next(self):
-        self.index = self.index + 1 if self.index < len(self.data) - 1 else 0
+            data.append(line.split(' ## '))
+        self.data = data
 
 
     def __getitem__(self, index):
-        sentence, sentence_id = self.data[index].split(' ## ')
+        sentence, sentence_id = self.data[index]
         sentence = sentence.strip()
         sentence_id = sentence_id.strip()
 
         return sentence, sentence_id
-
-
-    def __len__(self):
-        return len(self.data)
