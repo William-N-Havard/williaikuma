@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: MainView.py (as part of project noname.py)
+#   File: MainView.py (as part of project Williaikuma)
 #   Created: 16/10/2022 18:11
 #   Last Modified: 16/10/2022 18:11
 # -----------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: old_interface.py (as part of project noname.py)
+#   File: old_interface.py (as part of project Williaikuma)
 #   Created: 16/10/2022 16:25
 #   Last Modified: 16/10/2022 16:25
 # -----------------------------------------------------------------------------

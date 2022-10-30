@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: utils.py (as part of project noname.py)
+#   File: utils.py (as part of project Williaikuma)
 #   Created: 15/10/2022 00:51
 #   Last Modified: 15/10/2022 00:51
 # -----------------------------------------------------------------------------

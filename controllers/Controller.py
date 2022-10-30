@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: Controller.py (as part of project noname.py)
+#   File: Controller.py (as part of project Williaikuma)
 #   Created: 16/10/2022 17:06
 #   Last Modified: 16/10/2022 17:06
 # -----------------------------------------------------------------------------
@@ -127,9 +127,13 @@ class Controller(object):
         session_path = os.path.join(self.app.session_path, session_name)
         os.makedirs(session_path)
 
-        self.app.session_init(name=session_name, path=session_path, data_path=data_path,
-                              speaker=speaker, task=task)
-        self.start()
+        try:
+            self.app.session_init(name=session_name, path=session_path, data_path=data_path,
+                                  speaker=speaker, task=task)
+            self.start()
+        except Exception as e:
+            logging.exception(e)
+            self.gui.action_error('Error!', "Couldn't create this session!")
 
 
     def command_open(self):

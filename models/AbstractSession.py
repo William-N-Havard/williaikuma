@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: AbstractSession.py (as part of project noname.py)
+#   File: AbstractSession.py (as part of project Williaikuma)
 #   Created: 16/10/2022 16:34
 #   Last Modified: 16/10/2022 16:34
 # -----------------------------------------------------------------------------

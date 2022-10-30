@@ -20,6 +20,7 @@
 import os
 from datetime import datetime
 
+from models.Session import Session
 from models.SessionRecording import SessionRecording
 from models.SessionRespeaking import SessionRespeaking
 from models.Tasks import TASKS
@@ -66,23 +67,16 @@ class Application(object):
     #   Session handler
     #
     def session_load(self, session_json):
-        metadata = json_read(session_json)
+        try:
+            self.session = Session.load(session_json)
+        except Exception as e:
+            raise Exception(e)
 
-        task = TASKS.from_string(metadata['task'])
-        if task == TASKS.TEXT_ELICITATION:
-            self.session = SessionRecording.load(session_json)
-        elif task == TASKS.RESPEAKING:
-            self.session = SessionRespeaking.load(session_json)
-        else:
-            raise ValueError('Unknown type of task `{}`.'.format(task))
-
-    def session_init(self, task, **kwargs):
-        if task == TASKS.TEXT_ELICITATION:
-            self.session = SessionRecording(task=task, **kwargs)
-        elif task == TASKS.RESPEAKING:
-            self.session = SessionRespeaking(task=task, **kwargs)
-        else:
-            raise ValueError('Unknown type of task `{}`.'.format(task))
+    def session_init(self, **kwargs):
+        try:
+            self.session = Session.init(**kwargs)
+        except Exception as e:
+            raise Exception(e)
 
     def session_start(self):
         self.update_config(recent=self.session)

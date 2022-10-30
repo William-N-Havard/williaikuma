@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: Tasks.py (as part of project noname.py)
+#   File: Tasks.py (as part of project Williaikuma)
 #   Created: 15/10/2022 04:52
 #   Last Modified: 15/10/2022 04:52
 # -----------------------------------------------------------------------------

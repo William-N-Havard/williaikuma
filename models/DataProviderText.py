@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: DataProviderText.py (as part of project noname.py)
+#   File: DataProviderText.py (as part of project Williaikuma)
 #   Created: 16/10/2022 16:37
 #   Last Modified: 16/10/2022 16:37
 # -----------------------------------------------------------------------------
