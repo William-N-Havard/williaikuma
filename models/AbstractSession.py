@@ -104,6 +104,8 @@ class AbstractSession(abc.ABC):
 
 
     @classmethod
-    @abc.abstractmethod
     def load(cls, session_json):
-        pass
+        session_path, _ = os.path.split(session_json)
+        session_metadata = json_read(session_json)
+
+        return cls(**session_metadata)

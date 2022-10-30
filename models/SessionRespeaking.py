@@ -58,11 +58,3 @@ class SessionRespeaking(AbstractSessionAudio):
                              if item .endswith('.wav')]
         missing_indices = sorted(list(set(target_recortings)-set(existing_recordings)))
         return missing_indices
-
-
-    @classmethod
-    def load(cls, session_json):
-        session_path, _ = os.path.split(session_json)
-        session_metadata = json_read(session_json)
-
-        return cls(**session_metadata)

@@ -96,9 +96,3 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
     @property
     def index(self):
         return self.data.index
-
-
-    @classmethod
-    @abc.abstractmethod
-    def load(cls, session_json):
-        pass
