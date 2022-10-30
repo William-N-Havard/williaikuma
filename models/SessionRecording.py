@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: RecordingSession.py (as part of project Williaikuma)
+#   File: SessionRecording.py (as part of project Williaikuma)
 #   Created: 19/10/2022 04:23
 #   Last Modified: 19/10/2022 04:23
 # -----------------------------------------------------------------------------
@@ -19,17 +19,17 @@
 # -----------------------------------------------------------------------------
 import os
 
-from models.AudioAbstractSession import AudioAbstractSession
-from models.TextDataProvider import TextDataProvider
+from models.AbstractSessionAudio import AbstractSessionAudio
+from models.DataProviderText import DataProviderText
 from models.utils import json_read
 
 
-class RecordingSession(AudioAbstractSession):
+class SessionRecording(AbstractSessionAudio):
 
     def __init__(self, **kwargs):
-        super(RecordingSession, self).__init__(**kwargs)
+        super(SessionRecording, self).__init__(**kwargs)
 
-        self.data = TextDataProvider(self.data_path)
+        self.data = DataProviderText(self.data_path)
 
         self.current_sentence_text = None
         self.current_sentence_id = None

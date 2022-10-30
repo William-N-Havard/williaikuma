@@ -46,7 +46,7 @@ from tkinter import PhotoImage, messagebox
 from PIL import Image
 from PIL.ImageTk import PhotoImage
 
-from models.consts import TASKS
+from models.Tasks import TASKS
 from views.MissingView import MissingView
 from views.utils import TkinterButtons as TkButtons
 

@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: TextDataProvider.py (as part of project noname.py)
+#   File: DataProviderText.py (as part of project noname.py)
 #   Created: 16/10/2022 16:37
 #   Last Modified: 16/10/2022 16:37
 # -----------------------------------------------------------------------------
@@ -23,9 +23,9 @@ from .utils import text_read
 
 from models.AbstractDataProvider import AbstractDataProvider
 
-class TextDataProvider(AbstractDataProvider):
+class DataProviderText(AbstractDataProvider):
     def __init__(self, path):
-        super().__init__(path=path)
+        super(DataProviderText, self).__init__(path=path)
 
     def load(self):
         data = []

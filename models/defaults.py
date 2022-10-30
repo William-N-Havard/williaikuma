@@ -2,9 +2,9 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: consts.py (as part of project noname.py)
-#   Created: 15/10/2022 04:52
-#   Last Modified: 15/10/2022 04:52
+#   File: defaults.py (as part of project Williaikuma)
+#   Created: 30/10/2022 16:22
+#   Last Modified: 30/10/2022 16:22
 # -----------------------------------------------------------------------------
 #   Author: William N. Havard
 #           Postdoctoral Researcher
@@ -18,19 +18,5 @@
 #       • 
 # -----------------------------------------------------------------------------
 
-from enum import Enum, unique
-
 SAMPLING_RATE = 44_100
 NUM_CHANNELS = 1
-
-@unique
-class TASKS(Enum):
-    TEXT_ELICITATION = 'text-elicitation'
-    RESPEAKING = 'respeaking'
-
-    @staticmethod
-    def from_string(label):
-        for tasks_const in list(TASKS):
-            if tasks_const.value == label:
-                return tasks_const
-        raise ValueError('Unknown task {}!'.format(label))

@@ -20,9 +20,9 @@
 import os
 from datetime import datetime
 
-from models.RecordingSession import RecordingSession
-from models.RespeakingSession import RespeakingSession
-from models.consts import TASKS
+from models.SessionRecording import SessionRecording
+from models.SessionRespeaking import SessionRespeaking
+from models.Tasks import TASKS
 from models.utils import json_dump, json_read
 
 class Application(object):
@@ -70,17 +70,17 @@ class Application(object):
 
         task = TASKS.from_string(metadata['task'])
         if task == TASKS.TEXT_ELICITATION:
-            self.session = RecordingSession.load(session_json)
+            self.session = SessionRecording.load(session_json)
         elif task == TASKS.RESPEAKING:
-            self.session = RespeakingSession.load(session_json)
+            self.session = SessionRespeaking.load(session_json)
         else:
             raise ValueError('Unknown type of task `{}`.'.format(task))
 
     def session_init(self, task, **kwargs):
         if task == TASKS.TEXT_ELICITATION:
-            self.session = RecordingSession(task=task, **kwargs)
+            self.session = SessionRecording(task=task, **kwargs)
         elif task == TASKS.RESPEAKING:
-            self.session = RespeakingSession(task=task, **kwargs)
+            self.session = SessionRespeaking(task=task, **kwargs)
         else:
             raise ValueError('Unknown type of task `{}`.'.format(task))
 

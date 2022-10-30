@@ -21,7 +21,7 @@
 import os
 import abc
 
-from models.consts import TASKS
+from models.Tasks import TASKS
 from models.utils import json_read, json_dump, now
 
 

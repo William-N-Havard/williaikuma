@@ -20,7 +20,7 @@
 import logging
 import os
 
-from models.consts import TASKS
+from models.Tasks import TASKS
 from models.utils import assert_recording_exists, now
 from models.Application import Application
 from audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer

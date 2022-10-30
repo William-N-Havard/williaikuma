@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: AudioAbstractSession.py (as part of project Williaikuma)
+#   File: AbstractSessionAudio.py (as part of project Williaikuma)
 #   Created: 19/10/2022 04:53
 #   Last Modified: 19/10/2022 04:53
 # -----------------------------------------------------------------------------
@@ -21,14 +21,14 @@ import os
 import abc
 from pympi import Praat
 
-from models.consts import SAMPLING_RATE, NUM_CHANNELS
+from models.defaults import SAMPLING_RATE, NUM_CHANNELS
 from models.AbstractSession import AbstractSession
 from models.utils import get_recording_length
 
 
-class AudioAbstractSession(AbstractSession, abc.ABC):
+class AbstractSessionAudio(AbstractSession, abc.ABC):
     def __init__(self, sampling_rate=SAMPLING_RATE, num_channels=NUM_CHANNELS, **kwargs):
-        super(AudioAbstractSession, self).__init__(**kwargs)
+        super(AbstractSessionAudio, self).__init__(**kwargs)
 
         # Recording metadata
         self.sampling_rate = sampling_rate
