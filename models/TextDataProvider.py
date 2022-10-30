@@ -48,7 +48,7 @@ class TextDataProvider(object):
     @index.setter
     def index(self, value):
         assert type(value) == int, ValueError("Index can only be an integer!")
-        assert value >= 0, ValueError("Index can't be negative!")
+        assert value >= -1, ValueError("Index can't be negative ({})!".format(value))
         self._index = value
 
 
