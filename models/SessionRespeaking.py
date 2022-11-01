@@ -56,5 +56,5 @@ class SessionRespeaking(AbstractSessionAudio):
         existing_recordings = [self.item_index(item) for item in self.list_recordings()]
         target_recortings = [self.item_index(item) for item in os.listdir(self.data.wav_path)
                              if item .endswith('.wav')]
-        missing_indices = sorted(list(set(target_recortings)-set(existing_recordings)))
+        missing_indices = sorted(list(set(target_recortings)-set(existing_recordings)), reverse=True)
         return missing_indices
