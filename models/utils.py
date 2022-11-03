@@ -23,6 +23,9 @@ import os
 import wave
 from datetime import datetime
 
+from pympi import Praat
+
+now = lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def assert_recording_exists(path):
     return os.path.exists(path)
@@ -56,4 +59,9 @@ def get_recording_length(path):
 
     return duration
 
-now = lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+def create_praat_tg(rec_length, sentence, textgrid_path, raw_filename):
+    tg = Praat.TextGrid(xmin=0, xmax=rec_length)
+    tier = tg.add_tier('transcription')
+    tier.add_interval(begin=0, end=rec_length, value=sentence)
+    tg.to_file(filepath=os.path.join(textgrid_path, '{}.TextGrid'.format(raw_filename)),
+               codec='utf-8')

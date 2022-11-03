@@ -61,30 +61,6 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         return [item for item in os.listdir(self.recordings_path) if item.endswith('.wav')]
 
 
-    def generate_textgrids(self):
-        if not os.path.exists(self.textgrid_path): os.makedirs(self.textgrid_path)
-
-        # Go through each recording
-        done = 0
-        errors = []
-        try:
-            for wav_file in self.list_recordings():
-                raw_filename = os.path.basename(os.path.splitext(wav_file)[0])
-                rec_length = get_recording_length(os.path.join(self.recordings_path, wav_file))
-                line_number = self.item_index(wav_file)
-                sentence, _ = self.data[line_number-1]
-
-                tg = Praat.TextGrid(xmin=0, xmax=rec_length)
-                tier = tg.add_tier('transcription')
-                tier.add_interval(begin=0, end=rec_length, value=sentence)
-                tg.to_file(filepath=os.path.join(self.textgrid_path, '{}.TextGrid'.format(raw_filename)),
-                           codec='utf-8')
-                done += 1
-        except:
-            errors.append(wav_file)
-        return done, errors
-
-
     def save(self):
         audio_metadata = {
             'sampling_rate': self.sampling_rate,

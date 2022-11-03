@@ -19,9 +19,11 @@
 # -----------------------------------------------------------------------------
 import os
 
+from pympi import Praat
+
 from models.AbstractSessionAudio import AbstractSessionAudio
 from models.DataProviderText import DataProviderText
-from models.utils import json_read
+from models.utils import create_praat_tg, get_recording_length, json_read
 
 
 class SessionRecording(AbstractSessionAudio):
@@ -58,3 +60,23 @@ class SessionRecording(AbstractSessionAudio):
         existing_recordings = [self.item_index(item) for item in self.list_recordings()]
         missing_indices = sorted([i for i in range(1,len(self.data)+1) if i not in existing_recordings], reverse=True)
         return missing_indices
+
+
+    def generate_textgrids(self):
+        if not os.path.exists(self.textgrid_path): os.makedirs(self.textgrid_path)
+
+        # Go through each recording
+        done = 0
+        errors = []
+        try:
+            for wav_file in self.list_recordings():
+                raw_filename = os.path.basename(os.path.splitext(wav_file)[0])
+                rec_length = get_recording_length(os.path.join(self.recordings_path, wav_file))
+                line_number = self.item_index(wav_file)
+                sentence, _ = self.data[line_number-1]
+
+                create_praat_tg(rec_length, sentence, self.textgrid_path, raw_filename)
+                done += 1
+        except:
+            errors.append(wav_file)
+        return done, errors

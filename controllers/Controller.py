@@ -283,6 +283,8 @@ class Controller(object):
         self.gui.set_status_bar(self.app.session.index+1, self.app.session.speaker, self.app.session.name)
         self.gui.enable_play_respeak()
 
+        if self.app.session.recordings_done > 0:
+            self.gui.enable_menu_data_generate_textgrid()
         self.gui_audio_session_player_switch()
 
 

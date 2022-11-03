@@ -21,6 +21,8 @@ import os
 from natsort import natsorted
 
 from models.AbstractDataProvider import AbstractDataProvider
+from models.DataProviderText import DataProviderText
+from models.Tasks import TASKS
 from models.utils import json_read
 
 
@@ -41,6 +43,15 @@ class DataProviderAudio(AbstractDataProvider):
         source_root_path = json_data['path']
 
         self.wav_path = os.path.join(source_root_path, 'wavs')
+        try:
+            if TASKS.from_string(json_data['task']) == TASKS.TEXT_ELICITATION:
+                self.source_sentences = DataProviderText(json_data['data_path'])
+                self.source_sentences.load()
+            else:
+                self.source_sentences = None
+        except Exception as e:
+            self.source_sentences = None
+            raise Exception(e)
 
 
     def __getitem__(self, index):
