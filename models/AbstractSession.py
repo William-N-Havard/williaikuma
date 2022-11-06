@@ -26,7 +26,7 @@ from models.utils import json_read, json_dump, now
 
 
 class AbstractSession(abc.ABC):
-    def __init__(self, name, path, data_path, speaker, task, last_access=now()):
+    def __init__(self, name, path, data_path, speaker, task, version, last_access=now()):
         super(AbstractSession, self).__init__()
 
         # Default AbstractSession Metadata
@@ -36,6 +36,7 @@ class AbstractSession(abc.ABC):
         self.speaker = speaker
         self.task = TASKS.from_string(task) if not isinstance(task, TASKS) else task
         self.last_access = now()
+        self.version = version
 
         # Metadata
         self.session_metadata_path = os.path.join(self.path, 'metadata_{}.json'.format(self.name))
@@ -79,15 +80,16 @@ class AbstractSession(abc.ABC):
             'data_path': self.data_path,
             'speaker': self.speaker,
             'task': self.task.value,
-            'last_access': now()
+            'last_access': now(),
+            'version': self.version,
         }
 
         metadata.update(other_metadata)
 
         if existing_metadata:
             for k, v in metadata.items():
-                if k == 'last_access': continue
-                assert existing_metadata[k] == v, \
+                if k in ['last_access', 'version']: continue
+                assert existing_metadata.get(k, None) == v, \
                     ValueError('Value between existing metadata file and '
                                'new metdata differ ({} v. {}'.format(
                         existing_metadata[k], v
@@ -104,8 +106,15 @@ class AbstractSession(abc.ABC):
 
 
     @classmethod
-    def load(cls, session_json):
+    def load(cls, version, session_json):
         session_path, _ = os.path.split(session_json)
         session_metadata = json_read(session_json)
+
+        if session_metadata.get('version', None) != version:
+            # Upgrade session from one version to another
+            # by adding/removing/updating some attributes
+            pass
+
+        session_metadata['version'] = version
 
         return cls(**session_metadata)

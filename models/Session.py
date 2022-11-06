@@ -32,26 +32,26 @@ class Session(abc.ABC):
                               'using .load() and .init() methods.'.format(type(self).__name__))
 
     @staticmethod
-    def load(session_json):
+    def load(version, session_json):
         metadata = json_read(session_json)
 
         task = TASKS.from_string(metadata['task'])
         if task == TASKS.TEXT_ELICITATION:
-            session = SessionRecording.load(session_json)
+            session = SessionRecording
         elif task == TASKS.RESPEAKING:
-            session = SessionRespeaking.load(session_json)
+            session = SessionRespeaking
         else:
             raise ValueError('Unknown type of task `{}`.'.format(task))
 
-        return session
+        return session.load(session_json=session_json,  version=version)
 
     @staticmethod
-    def init(task, **kwargs):
+    def init(task, version, **kwargs):
         if task == TASKS.TEXT_ELICITATION:
-            session = SessionRecording(task=task, **kwargs)
+            session = SessionRecording
         elif task == TASKS.RESPEAKING:
-            session = SessionRespeaking(task=task, **kwargs)
+            session = SessionRespeaking
         else:
             raise ValueError('Unknown type of task `{}`.'.format(task))
 
-        return session
+        return session(task=task, version=version, **kwargs)

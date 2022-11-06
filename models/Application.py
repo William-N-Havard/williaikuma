@@ -17,20 +17,19 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
+
 import os
 from datetime import datetime
 
 from models.Session import Session
-from models.SessionRecording import SessionRecording
-from models.SessionRespeaking import SessionRespeaking
-from models.Tasks import TASKS
 from models.utils import json_dump, json_read
 
 class Application(object):
-    def __init__(self):
+    def __init__(self, version):
         super(Application, self).__init__()
 
         self.name = "Williaikuma"
+        self.version = version
 
         # Session
         self.session = None
@@ -68,13 +67,14 @@ class Application(object):
     #
     def session_load(self, session_json):
         try:
-            self.session = Session.load(session_json)
+            self.session = Session.load(session_json=session_json,
+                                        version=self.version)
         except Exception as e:
             raise Exception(e)
 
     def session_init(self, **kwargs):
         try:
-            self.session = Session.init(**kwargs)
+            self.session = Session.init(**kwargs, version=self.version)
         except Exception as e:
             raise Exception(e)
 

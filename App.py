@@ -20,6 +20,7 @@
 
 import tkinter as tk
 
+from __init__ import __version__
 from controllers.Controller import Controller
 from views.MainView import MainView
 from models.Application import Application
@@ -29,7 +30,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        application = Application()
+        application = Application(version=__version__)
         view = MainView(self)
         controller = Controller(application, view)
         view.set_controller(controller)
