@@ -2,7 +2,7 @@
 .idea
 sessions/
 .williaikuma.json
-.wip
+wip/
 
 # Byte-compiled / optimized / DLL files #
 __pycache__/

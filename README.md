@@ -52,13 +52,19 @@ Random segmentation faults may occur if PyAudio fails to properly initialise ALS
 If you use this work for your own research, please use the following reference:
 
 ```bibtex
-@inproceedings{havard_lift22,
-  TITLE = {{Production et Perception de 〈’〉 en Tsimane’}},
-  AUTHOR = {Havard, William and Peurey, Loann and Scaff, Camila and Cristia, Alejandrina},
-  BOOKTITLE = {{LIFT 2022 - 4{\`e}mes journ{\'e}es scientifiques du Groupement de Recherche ''Linguistique informatique, formelle et de terrain''}},
+@inproceedings{havard:hal-03852211,
+  TITLE = {{A study of the production and perception of ' in Tsimane'}},
+  AUTHOR = {Havard, William and Scaff, Camila and Peurey, Loann and Cristia, Alejandrina},
+  URL = {https://hal.archives-ouvertes.fr/hal-03852211},
+  BOOKTITLE = {{Journ{\'e}es Jointes des Groupements de Recherche Linguistique Informatique, Formelle et de Terrain (LIFT) et Traitement Automatique des Langues (TAL)}},
   ADDRESS = {Marseille, France},
+  EDITOR = {Becerra, Leonor and Favre, Beno{\^i}t and Gardent, Claire and Parmentier, Yannick},
+  PUBLISHER = {{CNRS}},
+  PAGES = {1-8},
   YEAR = {2022},
-  MONTH = Nov,
+  KEYWORDS = {phonology ; perception ; production ; adapted lab experiments.},
+  HAL_ID = {hal-03852211},
+  HAL_VERSION = {v1},
 }
 ```
 
