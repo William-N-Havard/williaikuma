@@ -21,6 +21,7 @@
 import os
 import abc
 
+from pkg_resources import parse_version
 from models.Tasks import TASKS
 from models.utils import json_read, json_dump, now, resolve_relative_path
 
@@ -124,14 +125,14 @@ class AbstractSession(abc.ABC):
         session_path, _ = os.path.split(session_json)
         session_metadata = json_read(session_json)
 
-        if session_metadata.get('version', None) != version:
-            # Upgrade session from one version to another
-            # by adding/removing/updating some attributes
-            pass
+        parsed_session_version = parse_version(session_metadata.get('version', '0.0.0'))
+        parsed_current_version = parse_version(version)
+
+        # Update metadata
+        if  parsed_session_version != parsed_current_version:
+            if parsed_session_version <= parse_version('0.1.2'):
+                session_metadata.pop('path')
 
         session_metadata['version'] = version
-
-        if 'path' in session_metadata:
-            session_metadata.pop('path')
 
         return cls(path = session_path, **session_metadata)
