@@ -23,7 +23,7 @@ from natsort import natsorted
 from models.AbstractDataProvider import AbstractDataProvider
 from models.DataProviderText import DataProviderText
 from models.Tasks import TASKS
-from models.utils import json_read
+from models.utils import json_read, resolve_relative_path
 
 
 class DataProviderAudio(AbstractDataProvider):
@@ -39,13 +39,15 @@ class DataProviderAudio(AbstractDataProvider):
 
 
     def _set_wav_path(self):
+        source_session_path, _ = os.path.split(self.path)
         json_data = json_read(self.path)
-        source_root_path = json_data['path']
 
-        self.wav_path = os.path.join(source_root_path, 'wavs')
+        self.wav_path = os.path.join(source_session_path, 'wavs')
         try:
             if TASKS.from_string(json_data['task']) == TASKS.TEXT_ELICITATION:
-                self.source_sentences = DataProviderText(json_data['data_path'])
+                # Resolve relative path
+                text_data_path = resolve_relative_path(source_session_path, json_data['data_path'])
+                self.source_sentences = DataProviderText(text_data_path)
                 self.source_sentences.load()
             else:
                 self.source_sentences = None

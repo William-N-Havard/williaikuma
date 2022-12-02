@@ -415,7 +415,7 @@ class MainView(tk.Frame):
     #
     def action_open_file(self, initial_dir ="/home/", file_type='txt'):
         return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
-                                   title="Elegir un archivo",
+                                   title="Choose a file",
                                    filetypes=(("Files", "*.{}*".format(file_type)),))
 
 

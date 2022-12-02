@@ -27,6 +27,13 @@ from pympi import Praat
 
 now = lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
+def resolve_relative_path(prefix_path, target_path):
+    if os.path.isabs(target_path):
+        return target_path
+    else:
+        return os.path.abspath(os.path.join(prefix_path, target_path))
+
+
 def assert_recording_exists(path):
     return os.path.exists(path)
 

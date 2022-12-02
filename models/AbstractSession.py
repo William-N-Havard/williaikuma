@@ -22,7 +22,7 @@ import os
 import abc
 
 from models.Tasks import TASKS
-from models.utils import json_read, json_dump, now
+from models.utils import json_read, json_dump, now, resolve_relative_path
 
 
 class AbstractSession(abc.ABC):
@@ -31,8 +31,12 @@ class AbstractSession(abc.ABC):
 
         # Default AbstractSession Metadata
         self.name = name
+
         self.path = path
-        self.data_path = data_path
+
+        # Handle relative paths
+        self._data_path = data_path
+
         self.speaker = speaker
         self.task = TASKS.from_string(task) if not isinstance(task, TASKS) else task
         self.last_access = now()
@@ -40,6 +44,16 @@ class AbstractSession(abc.ABC):
 
         # Metadata
         self.session_metadata_path = os.path.join(self.path, 'metadata_{}.json'.format(self.name))
+
+    @property
+    def data_path(self):
+        # Handle relative path for data paths
+        #
+        # Normally, this should never happen (the app always uses absolute paths when creating a session) but we
+        # could encounter relative paths if the user changes the paths for some reason or another in the JSON
+        # metadata file. This ensures the app will still be able to load the session's data.
+
+        return resolve_relative_path(self.path, self._data_path)
 
 
     def start(self):
@@ -76,8 +90,8 @@ class AbstractSession(abc.ABC):
 
         metadata = {
             'name': self.name,
-            'path': self.path,
-            'data_path': self.data_path,
+            #'path': self._path,
+            'data_path': self._data_path, # Put back the path we found in the metadata
             'speaker': self.speaker,
             'task': self.task.value,
             'last_access': now(),
@@ -117,4 +131,7 @@ class AbstractSession(abc.ABC):
 
         session_metadata['version'] = version
 
-        return cls(**session_metadata)
+        if 'path' in session_metadata:
+            session_metadata.pop('path')
+
+        return cls(path = session_path, **session_metadata)
