@@ -131,7 +131,7 @@ class AbstractSession(abc.ABC):
         # Update metadata
         if  parsed_session_version != parsed_current_version:
             if parsed_session_version <= parse_version('0.1.2'):
-                session_metadata.pop('path')
+                if 'path' in session_metadata: session_metadata.pop('path')
 
         session_metadata['version'] = version
 
