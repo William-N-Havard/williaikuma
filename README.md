@@ -41,6 +41,17 @@ Williaikuma use [PyAudio](https://pypi.org/project/PyAudio/) to record speech an
 
 See [lin-environment.yml](lin-environment.yml) (Linux) or [win-environment.yml](win-environment.yml) (Windows) for an extensive list of libraries to install (via conda).
 
+# Standalone Application (Windows)
+
+To transform this application to a standard Windows standalone application, install PyInstaller 
+(you can also use [auto-py-to-exe](https://pypi.org/project/auto-py-to-exe/) to do so) and run the following command
+
+```
+pyinstaller --noconfirm --onedir --windowed --collect-submodules "williaikuma" --collect-data "williaikuma"  "YOUR-PATH\Williaikuma.py"
+```
+
+Make sure the to copy `williaikuma/assets/*` to `dist/Williaikuma` and preserve directory/file organisation!
+
 # Screenshots
 
 ![Text elicitation mode](assets/readme/text-elicitation.png)
