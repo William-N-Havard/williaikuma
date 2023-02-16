@@ -20,10 +20,10 @@
 
 import tkinter as tk
 
-from __init__ import __version__
-from controllers.Controller import Controller
-from views.MainView import MainView
-from models.Application import Application
+from williaikuma import __version__
+from williaikuma.controllers.Controller import Controller
+from williaikuma.views.MainView import MainView
+from williaikuma.models.Application import Application
 
 
 class App(tk.Tk):
@@ -35,3 +35,8 @@ class App(tk.Tk):
         controller = Controller(application, view)
         view.set_controller(controller)
         self.title(application.name)
+
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

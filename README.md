@@ -29,6 +29,8 @@ line-3_sentid-pair23.word2.natsent_speaker-NAME.wav
 
 with `NAME` being the name of the speaker of the current session. The line number of the sentence is also added to avoid any ambiguity.
 
+See [`assets/examples/example_sentences.txt`](assets/examples/example_sentences.txt) for an example.
+
 ## Recordings
 
 The default implementation allows to record **WAVE files** with 1 channel and a 44.1kHz sampling rate. These value can be changed by updating the values stored in [defaults.py](models/defaults.py)
@@ -36,7 +38,8 @@ The default implementation allows to record **WAVE files** with 1 channel and a 
 # Requirements
 
 Williaikuma use [PyAudio](https://pypi.org/project/PyAudio/) to record speech and [simpleaudio](https://pypi.org/project/simpleaudio/) to play the recordings back. PyAudio requires the installation of [ALSA](https://www.alsa-project.org/wiki/Main_Page) drivers. The application may also be run on Windows (untested, though).
-See [environment.yml](environment.yml) for an extensive list of libraries to install (via conda).
+
+See [lin-environment.yml](lin-environment.yml) (Linux) or [win-environment.yml](win-environment.yml) (Windows) for an extensive list of libraries to install (via conda).
 
 # Screenshots
 
@@ -45,7 +48,7 @@ See [environment.yml](environment.yml) for an extensive list of libraries to ins
 
 # Known issues
 
-Random segmentation faults may occur if PyAudio fails to properly initialise ALSA drivers (via PortAudio).
+Random segmentation faults (on Linux) may occur if PyAudio fails to properly initialise ALSA drivers (via PortAudio).
 
 # Citation
 
