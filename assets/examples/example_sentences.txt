@@ -1,0 +1,3 @@
+My name is William. ## ex-sent1
+I am using Williaikuma to collect audio recordings. ## ex-sent2
+This application works great! ## ex-sent3
