@@ -21,13 +21,15 @@
 import os
 from enum import Enum, unique
 
+BASE_PATH = os.path.join('williaikuma', 'assets', 'images')
+
 @unique
 class TkinterButtons(Enum):
-    BUTTON_RECORD_ON = os.path.join('williaikuma', 'assets', 'images', 'record.png')
-    BUTTON_RECORD_OFF = os.path.join('williaikuma', 'assets', 'images', 'stop.png')
-    BUTTON_PLAY_ON = os.path.join('williaikuma', 'assets', 'images', 'play.png')
-    BUTTON_PLAY_OFF = os.path.join('williaikuma', 'assets', 'images', 'pause.png')
-    BUTTON_DELETE = os.path.join('williaikuma', 'assets', 'images', 'cross-mark.png')
-    BUTTON_LEFT = os.path.join('williaikuma', 'assets', 'images', 'left-arrow.png')
-    BUTTON_RIGHT = os.path.join('williaikuma', 'assets', 'images', 'right-arrow.png')
-    BUTTON_RESPEAK = os.path.join('williaikuma', 'assets', 'images', 'music-note.png')
+    BUTTON_RECORD_ON = os.path.join(BASE_PATH, 'record.png')
+    BUTTON_RECORD_OFF = os.path.join(BASE_PATH, 'stop.png')
+    BUTTON_PLAY_ON = os.path.join(BASE_PATH, 'play.png')
+    BUTTON_PLAY_OFF = os.path.join(BASE_PATH, 'pause.png')
+    BUTTON_DELETE = os.path.join(BASE_PATH, 'cross-mark.png')
+    BUTTON_LEFT = os.path.join(BASE_PATH, 'left-arrow.png')
+    BUTTON_RIGHT = os.path.join(BASE_PATH, 'right-arrow.png')
+    BUTTON_RESPEAK = os.path.join(BASE_PATH, 'music-note.png')
