@@ -66,8 +66,8 @@ class MainView(tk.Frame):
         # File Menu
         fileMenu = tk.Menu(menu, tearoff=False)
         self.newMenu = tk.Menu(fileMenu, tearoff=0)
-        self.newMenu.add_command(label=gettext('New Text Elicitation'), command=self.Menu_File_New_Text_commmand)
-        self.newMenu.add_command(label=gettext('New Respeaking'), command=self.Menu_File_New_Respeak_command)
+        self.newMenu.add_command(label=gettext("New Text Elicitation"), command=self.Menu_File_New_Text_commmand)
+        self.newMenu.add_command(label=gettext("New Respeaking"), command=self.Menu_File_New_Respeak_command)
         fileMenu.add_cascade(label=gettext("New"), menu=self.newMenu)
         fileMenu.add_command(label=gettext("Open"), command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
@@ -79,10 +79,10 @@ class MainView(tk.Frame):
 
         # Preference Menu
         dataMenu = tk.Menu(menu, tearoff=False)
-        dataMenu.add_command(label=gettext('View Missing Items'), state=tk.DISABLED,
+        dataMenu.add_command(label=gettext("View Missing Items"), state=tk.DISABLED,
                              command=self.Menu_Data_ViewMissing_Command)
         dataMenu.add_separator()
-        dataMenu.add_command(label=gettext('Generate TextGrid'), state=tk.DISABLED,
+        dataMenu.add_command(label=gettext("Generate TextGrid"), state=tk.DISABLED,
                              command=self.Menu_Data_Generate_TextGrid_Command)
         self.dataMenu = dataMenu
         menu.add_cascade(label=gettext("Data"), menu=dataMenu)
@@ -90,8 +90,8 @@ class MainView(tk.Frame):
 
         # Preference Menu
         preferenceMenu = tk.Menu(menu, tearoff=False)
-        preferenceMenu.add_command(label=gettext('Default Session Directory'), command=self.Menu_Preference_Session_command)
-        menu.add_cascade(label=gettext("Preference"), menu=preferenceMenu)
+        preferenceMenu.add_command(label=gettext("Default Session Directory"), command=self.Menu_Preference_Session_command)
+        menu.add_cascade(label=gettext("Preferences"), menu=preferenceMenu)
 
 
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
@@ -273,7 +273,7 @@ class MainView(tk.Frame):
 
 
     def set_status_bar(self, index, speaker, session):
-        self.statusbar['text'] = gettext('Line: {} | Speaker: {} | Session: {}').format(index, speaker, session)
+        self.statusbar['text'] = gettext("Line: {} | Speaker: {} | Session: {}").format(index, speaker, session)
 
 
     def enable_directional_buttons(self):
@@ -373,10 +373,10 @@ class MainView(tk.Frame):
                         label=recent_name,
                         command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
-            if (idx_to_del:=self.recent_menu.index(gettext('None'))) != None:\
+            if (idx_to_del:=self.recent_menu.index(gettext("None"))) != None:\
                 self.recent_menu.delete(idx_to_del)
 
-            self.recent_menu.entryconfigure(self.recent_menu.index(gettext('Reset')),
+            self.recent_menu.entryconfigure(self.recent_menu.index(gettext("Reset")),
                                             state=tk.NORMAL)
         else:
             self.reset_recent_menu()
@@ -385,9 +385,9 @@ class MainView(tk.Frame):
         while (last_index := self.recent_menu.index(tk.END)) != None:
             self.recent_menu.delete(last_index)
 
-        self.recent_menu.add_command(label=gettext('None'), state=tk.DISABLED)
+        self.recent_menu.add_command(label=gettext("None"), state=tk.DISABLED)
         self.recent_menu.add_separator()
-        self.recent_menu.add_command(label=gettext('Reset'), state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
+        self.recent_menu.add_command(label=gettext("Reset"), state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
 
 
     #

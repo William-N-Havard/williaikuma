@@ -38,16 +38,14 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
+    # Set locale translations
     from babel import default_locale, Locale
 
-    local_lang = Locale.parse(default_locale('LC_MESSAGES')).language
     local_dir = os.path.join('williaikuma','assets','locales')
-    try:
-        local_gettext = gettext.translation('base', localedir=local_dir, languages=[local_lang])
-    except:
-        local_gettext = gettext.translation('base', localedir=local_dir, languages=['en'])
-
+    local_lang = Locale.parse(default_locale('LC_MESSAGES')).language
+    local_gettext = gettext.translation('base', localedir=local_dir, languages=[local_lang], fallback=True)
     local_gettext.install(names=['gettext'])
 
+    # Start app
     app = App()
     app.mainloop()

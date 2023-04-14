@@ -36,7 +36,7 @@ class ThreadedPlayer(threading.Thread):
             wave_play = wave_object.play()
             wave_play.wait_done()
         except Exception as e:
-            raise IOError(gettext('Error while reading the WAVE file. {}').format(str(e)))
+            raise IOError(gettext("Error while reading the WAVE file. {}").format(str(e)))
 
     def stop(self):
         pass

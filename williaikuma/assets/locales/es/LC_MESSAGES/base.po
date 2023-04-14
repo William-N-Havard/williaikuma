@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-04-13 18:51+0200\n"
-"PO-Revision-Date: 2023-04-13 19:05+0200\n"
+"PO-Revision-Date: 2023-04-14 10:35+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr "Introduzca el nombre del hablante"
 
 #: controllers/Controller.py:119
 msgid "Speaker?"
-msgstr "Hablante?"
+msgstr "¿Hablante?"
 
 #: controllers/Controller.py:137
 msgid "Couldn't create this session!"
@@ -160,11 +160,11 @@ msgstr "Volver a hablar"
 
 #: views/MainView.py:190
 msgid "Create a new project or open an existing one."
-msgstr "Crear un nuevo proyecto o abrir un existente."
+msgstr "Crear un nuevo proyecto o abrir uno."
 
 #: views/MainView.py:194
 msgid "Waiting..."
-msgstr "Cargando..."
+msgstr "Esperando..."
 
 #: views/MainView.py:278
 msgid "Line: {} | Speaker: {} | Session: {}"
