@@ -204,7 +204,7 @@ class Controller(object):
         self.view_update()
 
 
-    def command_lisgui_refresh_recentten(self):
+    def command_listen(self):
         self._listen(self.model.session.item_save_path())
 
 
@@ -236,6 +236,7 @@ class Controller(object):
 
     def set_locale(self, lang_code):
         self.model.set_locale(lang_code)
+        self.view.root.restart()
 
     def command_view_missing(self):
         missing_items = self.model.session.get_missing_items()

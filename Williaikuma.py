@@ -26,8 +26,10 @@ from williaikuma.views.MainView import MainView
 from williaikuma.models.Application import Application
 
 class App(tk.Tk):
-    def __init__(self):
+    def __init__(self, wrapper):
         super().__init__()
+
+        self.wrapper = wrapper
 
         # Get main model and set locale
         model = Application(version=__version__)
@@ -41,8 +43,24 @@ class App(tk.Tk):
         # Set title
         self.title(model.name)
 
+    def restart(self):
+        self.wrapper.restart = True
+        self.destroy()
+
+
+class AppWrapper:
+    def __init__(self):
+        self.app = App
+        self.restart = True
+
+    def run(self):
+        while self.restart:
+            if self.restart: self.restart = False
+            app = self.app(self)
+            app.mainloop()
+
 
 if __name__ == "__main__":
     # Start app
-    app = App()
-    app.mainloop()
+    app = AppWrapper()
+    app.run()
