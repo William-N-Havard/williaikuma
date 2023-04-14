@@ -19,10 +19,16 @@
 # -----------------------------------------------------------------------------
 
 import os
+import gettext
+
 from datetime import datetime
+from locale import getlocale
+from babel import Locale
 
 from williaikuma.models.Session import Session
 from williaikuma.models.utils import json_dump, json_read
+from williaikuma.utils import LOCAL_PATH
+
 
 class Application(object):
     def __init__(self, version):
@@ -61,6 +67,16 @@ class Application(object):
     def reset_recent_sessions(self):
         self.config['recent'] = []
         self.update_config()
+
+    #
+    #   Internationalisation
+    #
+    def set_locale(self):
+        local_lang = Locale.parse(getlocale()[0]).language
+
+        local_gettext = gettext.translation('base', localedir=LOCAL_PATH, languages=[local_lang], fallback=True)
+        local_gettext.install(names=['gettext'])
+
 
     #
     #   Session handler

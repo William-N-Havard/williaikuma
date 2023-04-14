@@ -19,23 +19,18 @@
 # -----------------------------------------------------------------------------
 
 import os
-import sys
 from enum import Enum, unique
 
-try:
-   wd = sys._MEIPASS
-except AttributeError:
-   wd = os.getcwd()
+from williaikuma.utils import IMAGE_PATH
 
-BASE_PATH = os.path.join(wd, 'williaikuma', 'assets', 'images')
 
 @unique
 class TkinterButtons(Enum):
-    BUTTON_RECORD_ON = os.path.join(BASE_PATH, 'record.png')
-    BUTTON_RECORD_OFF = os.path.join(BASE_PATH, 'stop.png')
-    BUTTON_PLAY_ON = os.path.join(BASE_PATH, 'play.png')
-    BUTTON_PLAY_OFF = os.path.join(BASE_PATH, 'pause.png')
-    BUTTON_DELETE = os.path.join(BASE_PATH, 'cross-mark.png')
-    BUTTON_LEFT = os.path.join(BASE_PATH, 'left-arrow.png')
-    BUTTON_RIGHT = os.path.join(BASE_PATH, 'right-arrow.png')
-    BUTTON_RESPEAK = os.path.join(BASE_PATH, 'music-note.png')
+    BUTTON_RECORD_ON = os.path.join(IMAGE_PATH, 'record.png')
+    BUTTON_RECORD_OFF = os.path.join(IMAGE_PATH, 'stop.png')
+    BUTTON_PLAY_ON = os.path.join(IMAGE_PATH, 'play.png')
+    BUTTON_PLAY_OFF = os.path.join(IMAGE_PATH, 'pause.png')
+    BUTTON_DELETE = os.path.join(IMAGE_PATH, 'cross-mark.png')
+    BUTTON_LEFT = os.path.join(IMAGE_PATH, 'left-arrow.png')
+    BUTTON_RIGHT = os.path.join(IMAGE_PATH, 'right-arrow.png')
+    BUTTON_RESPEAK = os.path.join(IMAGE_PATH, 'music-note.png')

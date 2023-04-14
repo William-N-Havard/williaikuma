@@ -28,12 +28,12 @@ from williaikuma.views.MainView import MainView
 
 class Controller(object):
 
-    def __init__(self, app: Application, gui: MainView):
+    def __init__(self, model: Application, view: MainView):
         # Model
-        self.app: Application = app
+        self.model: Application = model
 
         # View
-        self.gui: MainView = gui
+        self.view: MainView = view
 
         # Audio
         self.recorder = None
@@ -43,19 +43,19 @@ class Controller(object):
         self._playing_status = False
         self._respeak_playing_status = False
 
-        self.gui.populate_recent(self.app.recent_sessions)
+        self.view.populate_recent(self.model.recent_sessions)
 
 
     def start(self):
         try:
-            self.app.session_start()
+            self.model.session_start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("Unable to start the session!"))
+            self.view.action_error(gettext("Error!"), gettext("Unable to start the session!"))
             return
 
         self.command_next()
-        self.gui.enable_directional_buttons()
+        self.view.enable_directional_buttons()
 
     #
     #   Properties
@@ -69,11 +69,11 @@ class Controller(object):
     def recording_status(self, value):
         self._recording_status = value
         if self.recording_status == False:
-            self.gui.disable_recording()
-            self.gui.update_recording_on()
+            self.view.disable_recording()
+            self.view.update_recording_on()
         else:
-            self.gui.enable_recording()
-            self.gui.update_recording_off()
+            self.view.enable_recording()
+            self.view.update_recording_off()
 
 
     @property
@@ -85,11 +85,11 @@ class Controller(object):
     def playing_status(self, value):
         self._playing_status = value
         if self.playing_status == False:
-            self.gui.enable_plays()
-            self.gui.update_play_on()
+            self.view.enable_plays()
+            self.view.update_play_on()
         else:
-            self.gui.disable_plays()
-            self.gui.update_play_off()
+            self.view.disable_plays()
+            self.view.update_play_off()
 
 
     @property
@@ -101,21 +101,21 @@ class Controller(object):
     def respeak_playing_status(self, value):
         self._respeak_playing_status = value
         if self._respeak_playing_status == False:
-            self.gui.enable_plays()
-            self.gui.update_play_respeak_on()
+            self.view.enable_plays()
+            self.view.update_play_respeak_on()
         else:
-            self.gui.disable_plays()
-            self.gui.update_play_respeak_off()
+            self.view.disable_plays()
+            self.view.update_play_respeak_off()
 
     #
     #   Menu Commands
     #
     def command_new(self, task):
         ext = 'txt' if task == TASKS.TEXT_ELICITATION else 'json'
-        data_path = self.gui.action_open_file(file_type=ext)
+        data_path = self.view.action_open_file(file_type=ext)
         if not data_path: return
 
-        speaker = self.gui.action_prompt(gettext("Speaker?"), gettext("Enter speaker's name"))
+        speaker = self.view.action_prompt(gettext("Speaker?"), gettext("Enter speaker's name"))
         if not speaker: return
 
         # Generate session directory
@@ -124,61 +124,61 @@ class Controller(object):
 
         session_name = '{}_session_{}_{}_{}'.format(
                         task.value, speaker, data_source_filename, datetime_now)
-        session_path = os.path.join(self.app.session_path, session_name)
+        session_path = os.path.join(self.model.session_path, session_name)
         os.makedirs(session_path)
 
         try:
-            self.app.session_init(name=session_name, path=session_path, data_path=data_path,
-                                  speaker=speaker, task=task)
+            self.model.session_init(name=session_name, path=session_path, data_path=data_path,
+                                    speaker=speaker, task=task)
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("Couldn't create this session!"))
+            self.view.action_error(gettext("Error!"), gettext("Couldn't create this session!"))
 
 
     def command_open(self):
-        session = self.gui.action_open_file(initial_dir=self.app.session_path,
-                                            file_type='json')
+        session = self.view.action_open_file(initial_dir=self.model.session_path,
+                                             file_type='json')
         if not session: return
 
         try:
-            self.app.session_load(session)
+            self.model.session_load(session)
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
+            self.view.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
 
 
     def command_recent_open(self, session):
         try:
-            self.app.session_load(session)
+            self.model.session_load(session)
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
+            self.view.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
 
 
     def command_generate_textgrid(self):
         try:
-            generated, failures = self.app.session.generate_textgrids()
-            self.gui.action_notify(gettext("Information"), gettext("Done! ({} generated, {} failures)\n").format(
+            generated, failures = self.model.session.generate_textgrids()
+            self.view.action_notify(gettext("Information"), gettext("Done! ({} generated, {} failures)\n").format(
                 generated, len(failures), '\n'.join(failures)
             ))
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("There was a problem when generating the TextGrid files."))
+            self.view.action_error(gettext("Error!"), gettext("There was a problem when generating the TextGrid files."))
 
     #
     #   Recording Panel Commands
     #
     def command_next(self):
-        self.app.session.next()
-        self.gui_update()
+        self.model.session.next()
+        self.view_update()
 
 
     def command_previous(self):
-        self.app.session.previous()
-        self.gui_update()
+        self.model.session.previous()
+        self.view_update()
 
 
     def command_record(self):
@@ -189,63 +189,63 @@ class Controller(object):
                 del self.recorder
 
                 self.recording_status = False
-                self.app.session.recordings_done += 1
+                self.model.session.recordings_done += 1
             else:
                 self.recording_status = True
-                self.recorder = ThreadedRecorder(self.app.session.item_save_path(),
-                                                 sampling_rate=self.app.session.sampling_rate,
-                                                 num_channels=self.app.session.num_channels)
+                self.recorder = ThreadedRecorder(self.model.session.item_save_path(),
+                                                 sampling_rate=self.model.session.sampling_rate,
+                                                 num_channels=self.model.session.num_channels)
                 self.recorder.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("Unknown error!"))
+            self.view.action_error(gettext("Error!"), gettext("Unknown error!"))
 
-        self.gui_update()
+        self.view_update()
 
 
-    def command_listen(self):
-        self._listen(self.app.session.item_save_path())
+    def command_lisgui_refresh_recentten(self):
+        self._listen(self.model.session.item_save_path())
 
 
     def command_listen_respeak(self):
-        self._listen(self.app.session.current_sentence_recording, which='respeak')
+        self._listen(self.model.session.current_sentence_recording, which='respeak')
 
 
     def command_delete(self):
-        yes_no = self.gui.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
+        yes_no = self.view.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
         if not yes_no: return
 
-        if assert_recording_exists(self.app.session.item_save_path()):
-            os.remove(self.app.session.item_save_path())
-            self.app.session.recordings_done -= 1
-        self.gui_update()
+        if assert_recording_exists(self.model.session.item_save_path()):
+            os.remove(self.model.session.item_save_path())
+            self.model.session.recordings_done -= 1
+        self.view_update()
 
 
     def command_select_session_directory(self):
-        new_dir = self.gui.action_choose_dir(self.app.session_path)
+        new_dir = self.view.action_choose_dir(self.model.session_path)
         if not new_dir: return
 
-        self.app.session_path = new_dir
+        self.model.session_path = new_dir
 
     def command_reset_recent(self):
-        yes_no = self.gui.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
+        yes_no = self.view.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
         if not yes_no: return
 
-        self.gui_refresh_recent()
+        self.view_refresh_recent()
 
     def command_view_missing(self):
-        missing_items = self.app.session.get_missing_items()
-        selected_missing_item = self.gui.show_missing(missing_items=missing_items)
+        missing_items = self.model.session.get_missing_items()
+        selected_missing_item = self.view.show_missing(missing_items=missing_items)
         if selected_missing_item:
-            self.app.session.override_index(selected_missing_item)
-        self.gui_update()
+            self.model.session.override_index(selected_missing_item)
+        self.view_update()
 
     #
     #   Private methods
     #
     def _listen(self, item, which=''):
-        self.gui.disable_play()
-        self.gui.disable_delete()
+        self.view.disable_play()
+        self.view.disable_delete()
         try:
             setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), True)
             self.player = ThreadedPlayer(item)
@@ -254,66 +254,66 @@ class Controller(object):
             del self.player
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error(gettext("Error!"), gettext("There is a problem with this recording!"))
+            self.view.action_error(gettext("Error!"), gettext("There is a problem with this recording!"))
 
         setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), False)
-        self.gui_update()
+        self.view_update()
 
     #
     #   GUI refreshers
     #
-    def gui_update(self):
-        self.gui.enable_menu_data_missing()
-        if self.app.session.task == TASKS.TEXT_ELICITATION:
-            self.gui_text_elicitation_update()
-        elif self.app.session.task == TASKS.RESPEAKING:
-            self.gui_respeaking_update()
+    def view_update(self):
+        self.view.enable_menu_data_missing()
+        if self.model.session.task == TASKS.TEXT_ELICITATION:
+            self.view_text_elicitation_update()
+        elif self.model.session.task == TASKS.RESPEAKING:
+            self.view_respeaking_update()
         else:
-            ValueError(gettext("Unknown type of task `{}`.").format(self.app.session.task))
+            ValueError(gettext("Unknown type of task `{}`.").format(self.model.session.task))
 
 
-    def gui_respeaking_update(self):
+    def view_respeaking_update(self):
         # Hide/Show widgets
-        self.gui.hide_widget(self.gui.Label_Sentence)
-        self.gui.show_widget(self.gui.Button_Listen_Respeak)
+        self.view.hide_widget(self.view.Label_Sentence)
+        self.view.show_widget(self.view.Button_Listen_Respeak)
 
         # Update labels
-        self.gui.set_label_sentence_id(self.app.session.current_sentence_recording_name)
-        self.gui.set_label_progress(self.app.session.recordings_done, len(self.app.session.data))
-        self.gui.set_status_bar(self.app.session.index+1, self.app.session.speaker, self.app.session.name)
-        self.gui.enable_play_respeak()
+        self.view.set_label_sentence_id(self.model.session.current_sentence_recording_name)
+        self.view.set_label_progress(self.model.session.recordings_done, len(self.model.session.data))
+        self.view.set_status_bar(self.model.session.index + 1, self.model.session.speaker, self.model.session.name)
+        self.view.enable_play_respeak()
 
-        if self.app.session.recordings_done > 0:
-            self.gui.enable_menu_data_generate_textgrid()
-        self.gui_audio_session_player_switch()
+        if self.model.session.recordings_done > 0:
+            self.view.enable_menu_data_generate_textgrid()
+        self.view_audio_session_player_switch()
 
 
-    def gui_text_elicitation_update(self):
+    def view_text_elicitation_update(self):
         # Hide/Show widgets
-        self.gui.hide_widget(self.gui.Button_Listen_Respeak)
-        self.gui.show_widget(self.gui.Label_Sentence)
+        self.view.hide_widget(self.view.Button_Listen_Respeak)
+        self.view.show_widget(self.view.Label_Sentence)
 
         # Update labels
-        self.gui.set_label_sentence_text(self.app.session.current_sentence_text)
-        self.gui.set_label_sentence_id(self.app.session.current_sentence_id)
-        self.gui.set_label_progress(self.app.session.recordings_done, len(self.app.session.data))
-        self.gui.set_status_bar(self.app.session.index+1, self.app.session.speaker, self.app.session.name)
+        self.view.set_label_sentence_text(self.model.session.current_sentence_text)
+        self.view.set_label_sentence_id(self.model.session.current_sentence_id)
+        self.view.set_label_progress(self.model.session.recordings_done, len(self.model.session.data))
+        self.view.set_status_bar(self.model.session.index + 1, self.model.session.speaker, self.model.session.name)
 
-        if self.app.session.recordings_done > 0:
-            self.gui.enable_menu_data_generate_textgrid()
-        self.gui_audio_session_player_switch()
+        if self.model.session.recordings_done > 0:
+            self.view.enable_menu_data_generate_textgrid()
+        self.view_audio_session_player_switch()
 
 
-    def gui_audio_session_player_switch(self):
-        if not assert_recording_exists(self.app.session.item_save_path()):
-            self.gui.enable_recording()
-            self.gui.disable_play()
-            self.gui.disable_delete()
+    def view_audio_session_player_switch(self):
+        if not assert_recording_exists(self.model.session.item_save_path()):
+            self.view.enable_recording()
+            self.view.disable_play()
+            self.view.disable_delete()
         else:
-            self.gui.disable_recording()
-            self.gui.enable_play()
-            self.gui.enable_delete()
+            self.view.disable_recording()
+            self.view.enable_play()
+            self.view.enable_delete()
 
-    def gui_refresh_recent(self):
-        self.gui.reset_recent_menu()
-        self.gui.populate_recent(self.app.recent_sessions)
+    def view_refresh_recent(self):
+        self.view.reset_recent_menu()
+        self.view.populate_recent(self.model.recent_sessions)

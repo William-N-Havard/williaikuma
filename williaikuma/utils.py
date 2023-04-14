@@ -2,9 +2,9 @@
 # -*- coding: utf8 -*-
 #
 # -----------------------------------------------------------------------------
-#   File: defaults.py (as part of project Williaikuma)
-#   Created: 30/10/2022 16:22
-#   Last Modified: 30/10/2022 16:22
+#   File: utils.py (as part of project Williaikuma)
+#   Created: 14/04/2023 14:58
+#   Last Modified: 14/04/2023 14:58
 # -----------------------------------------------------------------------------
 #   Author: William N. Havard
 #           Postdoctoral Researcher
@@ -18,5 +18,13 @@
 #       • 
 # -----------------------------------------------------------------------------
 
-SAMPLING_RATE = 44_100
-NUM_CHANNELS = 1
+import os
+import sys
+
+try:
+    wd = sys._MEIPASS
+except AttributeError:
+    wd = os.getcwd()
+
+IMAGE_PATH = os.path.join(wd, 'williaikuma', 'assets', 'images')
+LOCAL_PATH = os.path.join(wd, 'williaikuma', 'assets', 'locales')

@@ -18,9 +18,7 @@
 #       • 
 # -----------------------------------------------------------------------------
 import os
-import sys
 import tkinter as tk
-import gettext
 
 from williaikuma import __version__
 from williaikuma.controllers.Controller import Controller
@@ -31,29 +29,20 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        application = Application(version=__version__)
+        # Get main model and set locale
+        model = Application(version=__version__)
+        model.set_locale()
+        # Get View
         view = MainView(self)
-        controller = Controller(application, view)
+        # Get controller
+        controller = Controller(model, view)
+        # Attach controler to view
         view.set_controller(controller)
-        self.title(application.name)
+        # Set title
+        self.title(model.name)
 
 
 if __name__ == "__main__":
-    # Set locale translations
-    from locale import getlocale
-    from babel import Locale
-
-    try:
-        wd = sys._MEIPASS
-    except AttributeError:
-        wd = os.getcwd()
-
-    local_dir = os.path.join(wd, 'williaikuma','assets','locales')
-    local_lang = Locale.parse(getlocale()[0]).language
-
-    local_gettext = gettext.translation('base', localedir=local_dir, languages=[local_lang], fallback=True)
-    local_gettext.install(names=['gettext'])
-
     # Start app
     app = App()
     app.mainloop()
