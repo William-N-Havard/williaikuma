@@ -51,7 +51,7 @@ class Controller(object):
             self.app.session_start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error!', 'Unable to start the session!')
+            self.gui.action_error(gettext('Error!'), gettext('Unable to start the session!'))
             return
 
         self.command_next()
@@ -115,7 +115,7 @@ class Controller(object):
         data_path = self.gui.action_open_file(file_type=ext)
         if not data_path: return
 
-        speaker = self.gui.action_prompt("Speaker?", "Enter speaker's name")
+        speaker = self.gui.action_prompt(gettext("Speaker?"), gettext("Enter speaker's name"))
         if not speaker: return
 
         # Generate session directory
@@ -133,7 +133,7 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error!', "Couldn't create this session!")
+            self.gui.action_error(gettext('Error!'), gettext("Couldn't create this session!"))
 
 
     def command_open(self):
@@ -146,7 +146,7 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error!', "Couldn't open this session!")
+            self.gui.action_error(gettext('Error!'), gettext("Couldn't open this session!"))
 
 
     def command_recent_open(self, session):
@@ -155,18 +155,18 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error!', "Couldn't open this session!")
+            self.gui.action_error(gettext('Error!'), gettext("Couldn't open this session!"))
 
 
     def command_generate_textgrid(self):
         try:
             generated, failures = self.app.session.generate_textgrids()
-            self.gui.action_notify('Information', 'Done! ({} generated, {} failures)\n'.format(
+            self.gui.action_notify(gettext('Information'), gettext('Done! ({} generated, {} failures)\n').format(
                 generated, len(failures), '\n'.join(failures)
             ))
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error', 'There was a problem when generating the TextGrid files.')
+            self.gui.action_error(gettext('Error!'), gettext('There was a problem when generating the TextGrid files.'))
 
     #
     #   Recording Panel Commands
@@ -198,7 +198,7 @@ class Controller(object):
                 self.recorder.start()
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error("Error", "Unknown error!")
+            self.gui.action_error(gettext("Error!"), gettext("Unknown error!"))
 
         self.gui_update()
 
@@ -212,7 +212,7 @@ class Controller(object):
 
 
     def command_delete(self):
-        yes_no = self.gui.action_yes_no("Delete", "Delete this recording?")
+        yes_no = self.gui.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
         if not yes_no: return
 
         if assert_recording_exists(self.app.session.item_save_path()):
@@ -228,7 +228,7 @@ class Controller(object):
         self.app.session_path = new_dir
 
     def command_reset_recent(self):
-        yes_no = self.gui.action_yes_no("Delete", "Delete this recording?")
+        yes_no = self.gui.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
         if not yes_no: return
 
         self.gui_refresh_recent()
@@ -254,7 +254,7 @@ class Controller(object):
             del self.player
         except Exception as e:
             logging.exception(e)
-            self.gui.action_error('Error!', 'There is a problem with this recording!')
+            self.gui.action_error(gettext('Error!'), gettext('There is a problem with this recording!'))
 
         setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), False)
         self.gui_update()
@@ -269,7 +269,7 @@ class Controller(object):
         elif self.app.session.task == TASKS.RESPEAKING:
             self.gui_respeaking_update()
         else:
-            ValueError('Unknown task type ``!'.format(self.app.session.task))
+            ValueError(gettext('Unknown type of task `{}`.').format(self.app.session.task))
 
 
     def gui_respeaking_update(self):

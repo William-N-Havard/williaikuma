@@ -21,6 +21,7 @@
 from williaikuma.models.AbstractDataProvider import AbstractDataProvider
 from williaikuma.models.utils import text_read
 
+
 class DataProviderText(AbstractDataProvider):
     def __init__(self, path):
         super(DataProviderText, self).__init__(path=path)
@@ -28,7 +29,7 @@ class DataProviderText(AbstractDataProvider):
     def load(self):
         data = []
         for i_line, line in enumerate(text_read(self.path), 1):
-            assert ' ## ' in line, ValueError("' ## ' not found on line {}.".format(i_line))
+            assert ' ## ' in line, ValueError(gettext("' ## ' not found on line {}.").format(i_line))
             data.append(line.split(' ## '))
         self.data = data
 

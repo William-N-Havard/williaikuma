@@ -66,32 +66,32 @@ class MainView(tk.Frame):
         # File Menu
         fileMenu = tk.Menu(menu, tearoff=False)
         self.newMenu = tk.Menu(fileMenu, tearoff=0)
-        self.newMenu.add_command(label='New Text Elicitation', command=self.Menu_File_New_Text_commmand)
-        self.newMenu.add_command(label='New Respeaking', command=self.Menu_File_New_Respeak_command)
-        fileMenu.add_cascade(label="New", menu=self.newMenu)
-        fileMenu.add_command(label="Open", command=self.Menu_File_Open_commmand)
+        self.newMenu.add_command(label=gettext('New Text Elicitation'), command=self.Menu_File_New_Text_commmand)
+        self.newMenu.add_command(label=gettext('New Respeaking'), command=self.Menu_File_New_Respeak_command)
+        fileMenu.add_cascade(label=gettext("New"), menu=self.newMenu)
+        fileMenu.add_command(label=gettext("Open"), command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
         self.recent_menu = tk.Menu(fileMenu, tearoff=0)
-        fileMenu.add_cascade(label="Recent", menu=self.recent_menu)
+        fileMenu.add_cascade(label=gettext("Recent"), menu=self.recent_menu)
         fileMenu.add_separator()
-        fileMenu.add_command(label="Exit", command=self.root.destroy)
-        menu.add_cascade(label="File", menu=fileMenu)
+        fileMenu.add_command(label=gettext("Exit"), command=self.root.destroy)
+        menu.add_cascade(label=gettext("File"), menu=fileMenu)
 
         # Preference Menu
         dataMenu = tk.Menu(menu, tearoff=False)
-        dataMenu.add_command(label='View Missing Items', state=tk.DISABLED,
+        dataMenu.add_command(label=gettext('View Missing Items'), state=tk.DISABLED,
                              command=self.Menu_Data_ViewMissing_Command)
         dataMenu.add_separator()
-        dataMenu.add_command(label='Generate TextGrid', state=tk.DISABLED,
+        dataMenu.add_command(label=gettext('Generate TextGrid'), state=tk.DISABLED,
                              command=self.Menu_Data_Generate_TextGrid_Command)
         self.dataMenu = dataMenu
-        menu.add_cascade(label="Data", menu=dataMenu)
+        menu.add_cascade(label=gettext("Data"), menu=dataMenu)
 
 
         # Preference Menu
         preferenceMenu = tk.Menu(menu, tearoff=False)
-        preferenceMenu.add_command(label='Default Session Directory', command=self.Menu_Preference_Session_command)
-        menu.add_cascade(label="Preference", menu=preferenceMenu)
+        preferenceMenu.add_command(label=gettext('Default Session Directory'), command=self.Menu_Preference_Session_command)
+        menu.add_cascade(label=gettext("Preference"), menu=preferenceMenu)
 
 
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
@@ -100,7 +100,7 @@ class MainView(tk.Frame):
         Button_Record["font"] = ft
         Button_Record["fg"] = "#000000"
         Button_Record["justify"] = "center"
-        Button_Record["text"] = "Record"
+        Button_Record["text"] = gettext("Record")
         Button_Record.place(x=120,y=60,width=320,height=60)
         Button_Record["command"] = self.Button_Record_command
         self.Button_Record = Button_Record
@@ -133,7 +133,7 @@ class MainView(tk.Frame):
         Button_Delete["font"] = ft
         Button_Delete["fg"] = "#000000"
         Button_Delete["justify"] = "center"
-        Button_Delete["text"] = "Delete"
+        Button_Delete["text"] = gettext("Delete")
         Button_Delete.place(x=120,y=120,width=320,height=60)
         Button_Delete["command"] = self.Button_Delete_Command
         self.Button_Delete = Button_Delete
@@ -144,7 +144,7 @@ class MainView(tk.Frame):
         Button_Listen["font"] = ft
         Button_Listen["fg"] = "#000000"
         Button_Listen["justify"] = "center"
-        Button_Listen["text"] = "Play"
+        Button_Listen["text"] = gettext("Play")
         Button_Listen.place(x=0,y=0,width=560,height=60)
         Button_Listen["command"] = self.Button_Listen_Command
         self.Button_Listen = Button_Listen
@@ -155,7 +155,7 @@ class MainView(tk.Frame):
         Button_Listen_Respeak["font"] = ft
         Button_Listen_Respeak["fg"] = "#000000"
         Button_Listen_Respeak["justify"] = "center"
-        Button_Listen_Respeak["text"] = "Respeak"
+        Button_Listen_Respeak["text"] = gettext("Respeak")
         Button_Listen_Respeak.place(x=0,y=220,width=560,height=230)
         Button_Listen_Respeak["command"] = self.Button_Listen_Respeak_Command
         self.Button_Listen_Respeak = Button_Listen_Respeak
@@ -185,11 +185,11 @@ class MainView(tk.Frame):
         Label_Sentence["font"] = ft
         Label_Sentence["fg"] = "#333333"
         Label_Sentence["justify"] = "center"
-        Label_Sentence["text"] = "Create a new project or open an existing one."
+        Label_Sentence["text"] = gettext("Create a new project or open an existing one.")
         Label_Sentence.place(x=0,y=205,width=560,height=230)
         self.Label_Sentence = Label_Sentence
 
-        statusbar = tk.Label(root, text="Waiting...", bd=1, relief=tk.SUNKEN, anchor=tk.W)
+        statusbar = tk.Label(root, text=gettext("Waiting..."), bd=1, relief=tk.SUNKEN, anchor=tk.W)
         statusbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.statusbar = statusbar
 
@@ -273,7 +273,7 @@ class MainView(tk.Frame):
 
 
     def set_status_bar(self, index, speaker, session):
-        self.statusbar['text'] = 'Line: {} | Speaker: {} | Session: {}'.format(index, speaker, session)
+        self.statusbar['text'] = gettext('Line: {} | Speaker: {} | Session: {}').format(index, speaker, session)
 
 
     def enable_directional_buttons(self):
@@ -373,10 +373,10 @@ class MainView(tk.Frame):
                         label=recent_name,
                         command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
-            if (idx_to_del:=self.recent_menu.index('None')) != None:\
+            if (idx_to_del:=self.recent_menu.index(gettext('None'))) != None:\
                 self.recent_menu.delete(idx_to_del)
 
-            self.recent_menu.entryconfigure(self.recent_menu.index('Reset'),
+            self.recent_menu.entryconfigure(self.recent_menu.index(gettext('Reset')),
                                             state=tk.NORMAL)
         else:
             self.reset_recent_menu()
@@ -385,9 +385,9 @@ class MainView(tk.Frame):
         while (last_index := self.recent_menu.index(tk.END)) != None:
             self.recent_menu.delete(last_index)
 
-        self.recent_menu.add_command(label='None', state=tk.DISABLED)
+        self.recent_menu.add_command(label=gettext('None'), state=tk.DISABLED)
         self.recent_menu.add_separator()
-        self.recent_menu.add_command(label='Reset', state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
+        self.recent_menu.add_command(label=gettext('Reset'), state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
 
 
     #
@@ -395,8 +395,8 @@ class MainView(tk.Frame):
     #
     def action_open_file(self, initial_dir ="/home/", file_type='txt'):
         return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
-                                   title="Choose a file",
-                                   filetypes=(("Files", "*.{}*".format(file_type)),))
+                                                  title=gettext("Choose a file"),
+                                                  filetypes=((gettext("Files"), "*.{}*".format(file_type)),))
 
 
     def action_prompt(self, title, message):

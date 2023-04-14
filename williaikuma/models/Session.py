@@ -41,7 +41,7 @@ class Session(abc.ABC):
         elif task == TASKS.RESPEAKING:
             session = SessionRespeaking
         else:
-            raise ValueError('Unknown type of task `{}`.'.format(task))
+            raise ValueError(gettext('Unknown type of task `{}`.').format(task))
 
         return session.load(session_json=session_json,  version=version)
 
@@ -52,6 +52,6 @@ class Session(abc.ABC):
         elif task == TASKS.RESPEAKING:
             session = SessionRespeaking
         else:
-            raise ValueError('Unknown type of task `{}`.'.format(task))
+            raise ValueError(gettext('Unknown type of task `{}`.').format(task))
 
         return session(task=task, version=version, **kwargs)

@@ -17,14 +17,14 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
-
+import os
 import tkinter as tk
+import gettext
 
 from williaikuma import __version__
 from williaikuma.controllers.Controller import Controller
 from williaikuma.views.MainView import MainView
 from williaikuma.models.Application import Application
-
 
 class App(tk.Tk):
     def __init__(self):
@@ -38,5 +38,16 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
+    from babel import default_locale, Locale
+
+    local_lang = Locale.parse(default_locale('LC_MESSAGES')).language
+    local_dir = os.path.join('williaikuma','assets','locales')
+    try:
+        local_gettext = gettext.translation('base', localedir=local_dir, languages=[local_lang])
+    except:
+        local_gettext = gettext.translation('base', localedir=local_dir, languages=['en'])
+
+    local_gettext.install(names=['gettext'])
+
     app = App()
     app.mainloop()

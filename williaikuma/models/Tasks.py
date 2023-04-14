@@ -20,6 +20,7 @@
 
 from enum import Enum, unique
 
+
 @unique
 class TASKS(Enum):
     TEXT_ELICITATION = 'text-elicitation'
@@ -30,4 +31,4 @@ class TASKS(Enum):
         for tasks_const in list(TASKS):
             if tasks_const.value == label:
                 return tasks_const
-        raise ValueError('Unknown task {}!'.format(label))
+        raise ValueError(gettext('Unknown type of task `{}`.').format(label))

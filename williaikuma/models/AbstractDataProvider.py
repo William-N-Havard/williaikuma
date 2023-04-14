@@ -20,6 +20,7 @@
 
 import abc
 
+
 class AbstractDataProvider(abc.ABC):
     def __init__(self, path):
         self.path = path
@@ -44,8 +45,8 @@ class AbstractDataProvider(abc.ABC):
 
     @index.setter
     def index(self, value):
-        assert type(value) == int, ValueError("Index can only be an integer!")
-        assert value >= -1, ValueError("Index can't be negative ({})!".format(value))
+        assert type(value) == int, ValueError(gettext("Index can only be an integer!"))
+        assert value >= -1, ValueError(gettext("Index can't be negative ({})!").format(value))
         self._index = value
 
     @abc.abstractmethod
