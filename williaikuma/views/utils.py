@@ -19,9 +19,15 @@
 # -----------------------------------------------------------------------------
 
 import os
+import sys
 from enum import Enum, unique
 
-BASE_PATH = os.path.join('williaikuma', 'assets', 'images')
+try:
+   wd = sys._MEIPASS
+except AttributeError:
+   wd = os.getcwd()
+
+BASE_PATH = os.path.join(wd, 'williaikuma', 'assets', 'images')
 
 @unique
 class TkinterButtons(Enum):

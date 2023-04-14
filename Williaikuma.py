@@ -18,6 +18,7 @@
 #       • 
 # -----------------------------------------------------------------------------
 import os
+import sys
 import tkinter as tk
 import gettext
 
@@ -42,10 +43,14 @@ if __name__ == "__main__":
     from locale import getlocale
     from babel import Locale
 
-    local_dir = os.path.join('williaikuma','assets','locales')
+    try:
+        wd = sys._MEIPASS
+    except AttributeError:
+        wd = os.getcwd()
+
+    local_dir = os.path.join(wd, 'williaikuma','assets','locales')
     local_lang = Locale.parse(getlocale()[0]).language
 
-    print(local_lang, os.path.exists(local_dir))
     local_gettext = gettext.translation('base', localedir=local_dir, languages=[local_lang], fallback=True)
     local_gettext.install(names=['gettext'])
 

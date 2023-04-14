@@ -3,7 +3,6 @@
 sessions/
 .williaikuma.json
 wip/
-output/
 
 # Byte-compiled / optimized / DLL files #
 __pycache__/
