@@ -21,6 +21,8 @@
 import os
 import sys
 
+# Do not change: design required by PyInstaller on Windows
+# Does not prevent the app from running on Linux fortunately!
 try:
     wd = sys._MEIPASS
 except AttributeError:
