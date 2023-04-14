@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-04-14 10:47+0200\n"
+"POT-Creation-Date: 2023-04-14 16:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,64 +19,64 @@ msgstr ""
 msgid "Error while reading the WAVE file. {}"
 msgstr ""
 
-#: ./controllers/Controller.py:54
+#: ./controllers/Controller.py:55
 msgid "Unable to start the session!"
 msgstr ""
 
-#: ./controllers/Controller.py:54 ./controllers/Controller.py:136
-#: ./controllers/Controller.py:149 ./controllers/Controller.py:158
-#: ./controllers/Controller.py:169 ./controllers/Controller.py:201
-#: ./controllers/Controller.py:257
+#: ./controllers/Controller.py:55 ./controllers/Controller.py:137
+#: ./controllers/Controller.py:150 ./controllers/Controller.py:159
+#: ./controllers/Controller.py:170 ./controllers/Controller.py:202
+#: ./controllers/Controller.py:261
 msgid "Error!"
 msgstr ""
 
-#: ./controllers/Controller.py:118
+#: ./controllers/Controller.py:119
 msgid "Enter speaker's name"
 msgstr ""
 
-#: ./controllers/Controller.py:118
+#: ./controllers/Controller.py:119
 msgid "Speaker?"
 msgstr ""
 
-#: ./controllers/Controller.py:136
+#: ./controllers/Controller.py:137
 msgid "Couldn't create this session!"
 msgstr ""
 
-#: ./controllers/Controller.py:149 ./controllers/Controller.py:158
+#: ./controllers/Controller.py:150 ./controllers/Controller.py:159
 msgid "Couldn't open this session!"
 msgstr ""
 
-#: ./controllers/Controller.py:164
+#: ./controllers/Controller.py:165
 msgid ""
 "Done! ({} generated, {} failures)\n"
 msgstr ""
 
-#: ./controllers/Controller.py:164
+#: ./controllers/Controller.py:165
 msgid "Information"
 msgstr ""
 
-#: ./controllers/Controller.py:169
+#: ./controllers/Controller.py:170
 msgid "There was a problem when generating the TextGrid files."
 msgstr ""
 
-#: ./controllers/Controller.py:201
+#: ./controllers/Controller.py:202
 msgid "Unknown error!"
 msgstr ""
 
-#: ./controllers/Controller.py:215 ./controllers/Controller.py:231
+#: ./controllers/Controller.py:216 ./controllers/Controller.py:232
 msgid "Delete this recording?"
 msgstr ""
 
-#: ./controllers/Controller.py:215 ./controllers/Controller.py:231
-#: ./views/MainView.py:136
+#: ./controllers/Controller.py:216 ./controllers/Controller.py:232
+#: ./views/MainView.py:139
 msgid "Delete"
 msgstr ""
 
-#: ./controllers/Controller.py:257
+#: ./controllers/Controller.py:261
 msgid "There is a problem with this recording!"
 msgstr ""
 
-#: ./controllers/Controller.py:272 ./models/Session.py:44
+#: ./controllers/Controller.py:276 ./models/Session.py:44
 #: ./models/Session.py:55 ./models/Tasks.py:34
 msgid "Unknown type of task `{}`."
 msgstr ""
@@ -91,6 +91,10 @@ msgstr ""
 
 #: ./models/AbstractSession.py:109
 msgid "Value between existing metadata file and new metadata differ ({} v. {})"
+msgstr ""
+
+#: ./models/Application.py:85
+msgid "Default (English)"
 msgstr ""
 
 #: ./models/DataProviderText.py:32
@@ -145,43 +149,47 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: ./views/MainView.py:103
+#: ./views/MainView.py:98
+msgid "Language"
+msgstr ""
+
+#: ./views/MainView.py:106
 msgid "Record"
 msgstr ""
 
-#: ./views/MainView.py:147
+#: ./views/MainView.py:150
 msgid "Play"
 msgstr ""
 
-#: ./views/MainView.py:158
+#: ./views/MainView.py:161
 msgid "Respeak"
 msgstr ""
 
-#: ./views/MainView.py:188
+#: ./views/MainView.py:191
 msgid "Create a new project or open an existing one."
 msgstr ""
 
-#: ./views/MainView.py:192
+#: ./views/MainView.py:195
 msgid "Waiting..."
 msgstr ""
 
-#: ./views/MainView.py:276
+#: ./views/MainView.py:279
 msgid "Line: {} | Speaker: {} | Session: {}"
 msgstr ""
 
-#: ./views/MainView.py:376 ./views/MainView.py:388
+#: ./views/MainView.py:379 ./views/MainView.py:391
 msgid "None"
 msgstr ""
 
-#: ./views/MainView.py:379 ./views/MainView.py:390
+#: ./views/MainView.py:382 ./views/MainView.py:393
 msgid "Reset"
 msgstr ""
 
-#: ./views/MainView.py:398
+#: ./views/MainView.py:411
 msgid "Choose a file"
 msgstr ""
 
-#: ./views/MainView.py:399
+#: ./views/MainView.py:412
 msgid "Files"
 msgstr ""
 

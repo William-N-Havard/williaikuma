@@ -93,6 +93,9 @@ class MainView(tk.Frame):
         preferenceMenu.add_command(label=gettext("Default Session Directory"), command=self.Menu_Preference_Session_command)
         menu.add_cascade(label=gettext("Preferences"), menu=preferenceMenu)
 
+        # Language selection
+        self.locale_menu = tk.Menu(preferenceMenu, tearoff=0)
+        preferenceMenu.add_cascade(label=gettext("Language"), menu=self.locale_menu)
 
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
         Button_Record["bg"] = "#efefef"
@@ -389,6 +392,16 @@ class MainView(tk.Frame):
         self.recent_menu.add_separator()
         self.recent_menu.add_command(label=gettext("Reset"), state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
 
+
+    def populate_locale(self, locales):
+        if locales:
+            for idx, lang_code in enumerate(locales, 1):
+                self.locale_menu.insert_command(
+                        index=idx,
+                        label=lang_code,
+                        command=lambda lc=lang_code: self.ctrl.set_locale(lc))
+                if idx == 1:
+                    self.locale_menu.add_separator()
 
     #
     # Message boxes

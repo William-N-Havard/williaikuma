@@ -44,6 +44,7 @@ class Controller(object):
         self._respeak_playing_status = False
 
         self.view.populate_recent(self.model.recent_sessions)
+        self.view.populate_locale(self.model.get_locales())
 
 
     def start(self):
@@ -232,6 +233,9 @@ class Controller(object):
         if not yes_no: return
 
         self.view_refresh_recent()
+
+    def set_locale(self, lang_code):
+        self.model.set_locale(lang_code)
 
     def command_view_missing(self):
         missing_items = self.model.session.get_missing_items()

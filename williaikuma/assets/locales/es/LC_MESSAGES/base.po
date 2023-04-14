@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-04-13 18:51+0200\n"
-"PO-Revision-Date: 2023-04-14 11:14+0200\n"
+"POT-Creation-Date: 2023-04-14 16:35+0200\n"
+"PO-Revision-Date: 2023-04-14 16:37+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -15,9 +15,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 2.3\n"
 
-#: audio/ThreadedAudio.py:40
+#: audio/ThreadedAudio.py:39
 msgid "Error while reading the WAVE file. {}"
 msgstr "Error al leer el archivo WAVE. {}"
 
@@ -28,7 +28,7 @@ msgstr "¡No se puede iniciar la sesión!"
 #: controllers/Controller.py:55 controllers/Controller.py:137
 #: controllers/Controller.py:150 controllers/Controller.py:159
 #: controllers/Controller.py:170 controllers/Controller.py:202
-#: controllers/Controller.py:258
+#: controllers/Controller.py:261
 msgid "Error!"
 msgstr "¡Error!"
 
@@ -69,131 +69,141 @@ msgid "Delete this recording?"
 msgstr "¿Borrar esta grabación?"
 
 #: controllers/Controller.py:216 controllers/Controller.py:232
-#: views/MainView.py:138
+#: views/MainView.py:139
 msgid "Delete"
 msgstr "Borrar"
 
-#: controllers/Controller.py:258
+#: controllers/Controller.py:261
 msgid "There is a problem with this recording!"
 msgstr "¡Hay un problema con esta grabación!"
 
-#: controllers/Controller.py:273 models/Session.py:45 models/Session.py:56
-#: models/Tasks.py:35
+#: controllers/Controller.py:276 models/Session.py:44 models/Session.py:55
+#: models/Tasks.py:34
 msgid "Unknown type of task `{}`."
 msgstr "Tipo desconocido de tarea `{}`."
 
-#: models/AbstractDataProvider.py:50
+#: models/AbstractDataProvider.py:48
 msgid "Index can only be an integer!"
 msgstr "¡El índice sólo puede ser un entero!"
 
-#: models/AbstractDataProvider.py:51
+#: models/AbstractDataProvider.py:49
 msgid "Index can't be negative ({})!"
 msgstr "¡El índice no puede ser negativo ({})!"
 
 #: models/AbstractSession.py:109
 msgid "Value between existing metadata file and new metadata differ ({} v. {})"
-msgstr "El valor entre el archivo de metadatos existente y los nuevos metadatos difiere ({} v. {})"
+msgstr ""
+"El valor entre el archivo de metadatos existente y los nuevos metadatos "
+"difiere ({} v. {})"
 
-#: models/DataProviderText.py:33
+#: models/Application.py:85
+msgid "Default (English)"
+msgstr "Por defecto (Inglés)"
+
+#: models/DataProviderText.py:32
 msgid "' ## ' not found on line {}."
 msgstr "' ## ' no se encuentra en la línea {}."
 
-#: views/MainView.py:71
+#: views/MainView.py:69
 msgid "New Text Elicitation"
 msgstr "Nuevo Texto Elicitado"
 
-#: views/MainView.py:72
+#: views/MainView.py:70
 msgid "New Respeaking"
 msgstr "Nueva Regrabación"
 
-#: views/MainView.py:73
+#: views/MainView.py:71
 msgid "New"
 msgstr "Nuevo"
 
-#: views/MainView.py:74
+#: views/MainView.py:72
 msgid "Open"
 msgstr "Abrir"
 
-#: views/MainView.py:77
+#: views/MainView.py:75
 msgid "Recent"
 msgstr "Reciente"
 
-#: views/MainView.py:79
+#: views/MainView.py:77
 msgid "Exit"
 msgstr "Salir"
 
-#: views/MainView.py:80
+#: views/MainView.py:78
 msgid "File"
 msgstr "Archivo"
 
-#: views/MainView.py:84
+#: views/MainView.py:82
 msgid "View Missing Items"
 msgstr "Ver items faltantes"
 
-#: views/MainView.py:87
+#: views/MainView.py:85
 msgid "Generate TextGrid"
 msgstr "Generar TextGrid"
 
-#: views/MainView.py:90
+#: views/MainView.py:88
 msgid "Data"
 msgstr "Datos"
 
-#: views/MainView.py:95
+#: views/MainView.py:93
 msgid "Default Session Directory"
 msgstr "Directorio de Sesion por Defecto"
 
-#: views/MainView.py:96
-msgid "Preference"
+#: views/MainView.py:94
+msgid "Preferences"
 msgstr "Preferencia"
 
-#: views/MainView.py:105
+#: views/MainView.py:98
+msgid "Language"
+msgstr "Idioma"
+
+#: views/MainView.py:106
 msgid "Record"
 msgstr "Registro"
 
-#: views/MainView.py:149
+#: views/MainView.py:150
 msgid "Play"
 msgstr "Reproducir"
 
-#: views/MainView.py:160
+#: views/MainView.py:161
 msgid "Respeak"
 msgstr "Volver a hablar"
 
-#: views/MainView.py:190
+#: views/MainView.py:191
 msgid "Create a new project or open an existing one."
 msgstr "Crear un nuevo proyecto o abrir uno."
 
-#: views/MainView.py:194
+#: views/MainView.py:195
 msgid "Waiting..."
 msgstr "Esperando..."
 
-#: views/MainView.py:278
+#: views/MainView.py:279
 msgid "Line: {} | Speaker: {} | Session: {}"
 msgstr "Línea: {} | Hablante: {} | Sesión: {}"
 
-#: views/MainView.py:378 views/MainView.py:390
+#: views/MainView.py:379 views/MainView.py:391
 msgid "None"
 msgstr "Ninguno"
 
-#: views/MainView.py:381 views/MainView.py:392
+#: views/MainView.py:382 views/MainView.py:393
 msgid "Reset"
 msgstr "Reiniciar"
 
-#: views/MainView.py:400
+#: views/MainView.py:411
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 
-#: views/MainView.py:401
+#: views/MainView.py:412
 msgid "Files"
 msgstr "Archivos"
 
-#: views/MissingView.py:34 views/MissingView.py:71
+#: views/MissingView.py:33 views/MissingView.py:70
 msgid "Missing items"
 msgstr "Grabaciones perdidas"
 
-#: views/MissingView.py:52
+#: views/MissingView.py:51
 msgid "Go"
 msgstr "Ir"
 
-#: views/MissingView.py:62
+#: views/MissingView.py:61
 msgid "Cancel"
 msgstr "Cancelar"

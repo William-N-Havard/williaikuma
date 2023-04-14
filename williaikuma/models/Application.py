@@ -19,7 +19,7 @@
 # -----------------------------------------------------------------------------
 
 import os
-import gettext
+import gettext as _gettext
 
 from datetime import datetime
 from locale import getlocale
@@ -71,13 +71,20 @@ class Application(object):
     #
     #   Internationalisation
     #
-    def set_locale(self):
-        local_lang = Locale.parse(getlocale()[0]).language
+    def set_locale(self, lang_code=''):
+        if not lang_code:
+            lang_code = self.config.get('language', Locale.parse(getlocale()[0]).language)
+        else:
+            # Safe to do: if we are here this function has at least been executed once
+            self.update_config(language=lang_code if lang_code in self.get_locales()[1:] else 'en')
 
-        local_gettext = gettext.translation('base', localedir=LOCAL_PATH, languages=[local_lang], fallback=True)
+        local_gettext = _gettext.translation('base', localedir=LOCAL_PATH, languages=[lang_code], fallback=True)
         local_gettext.install(names=['gettext'])
 
 
+    def get_locales(self):
+        return [gettext('Default (English)')] + \
+               [lang for lang in os.listdir(LOCAL_PATH) if os.path.isdir(os.path.join(LOCAL_PATH, lang))]
     #
     #   Session handler
     #
