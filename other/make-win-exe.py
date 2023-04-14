@@ -23,6 +23,11 @@ import shutil
 
 def make_win_exe():
     this_files_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+    specs_path = os.path.join(this_files_path, 'other', 'win-exe', 'spec')
+    build_path = os.path.join(this_files_path, 'other', 'win-exe', 'build')
+    dist_path = os.path.join(this_files_path, 'other', 'win-exe', 'dist')
+
     args = [
         'pyinstaller',
         '--noconfirm',
@@ -31,9 +36,9 @@ def make_win_exe():
         '--windowed',
         '--add-data', '"{};{}"'.format(os.path.join(this_files_path, 'williaikuma', 'assets'),
                                        os.path.join('.','williaikuma','assets')),
-        '--specpath', '{}'.format(os.path.join(this_files_path, 'other', 'win-exe', 'spec')),
-        '--distpath', '{}'.format(os.path.join(this_files_path, 'other', 'win-exe', 'dist')),
-        '--workpath', '{}'.format(os.path.join(this_files_path, 'other', 'win-exe', 'build')),
+        '--specpath', '{}'.format(specs_path),
+        '--distpath', '{}'.format(dist_path),
+        '--workpath', '{}'.format(build_path),
         '--collect-submodules', '"williaikuma"',
         '{}'.format(os.path.join(this_files_path, 'Williaikuma.py')),
     ]
@@ -42,16 +47,16 @@ def make_win_exe():
     os.system(' '.join(args))
 
     # Clean
-    if os.path.exists(os.path.join(this_files_path, 'other', 'win-exe', 'spec')):
-        shutil.rmtree(os.path.join(this_files_path, 'other', 'win-exe', 'spec'))
+    if os.path.exists(specs_path):
+        shutil.rmtree(specs_path)
 
-    if os.path.exists(os.path.join(this_files_path, 'other', 'win-exe', 'build')):
-        shutil.rmtree(os.path.join(this_files_path, 'other', 'win-exe', 'build'))
+    if os.path.exists(build_path):
+        shutil.rmtree(build_path)
 
-    if os.path.exists(os.path.join(this_files_path, 'other', 'win-exe', 'dist', 'Williaikuma.exe')):
-        shutil.move(os.path.join(this_files_path, 'other', 'win-exe', 'dist', 'Williaikuma.exe'),
+    if os.path.exists(os.path.join(dist_path, 'Williaikuma.exe')):
+        shutil.move(os.path.join(dist_path, 'Williaikuma.exe'),
                     os.path.join(this_files_path, 'other', 'win-exe', 'Williaikuma.exe'))
-        shutil.rmtree(os.path.join(this_files_path, 'other', 'win-exe', 'dist'))
+        shutil.rmtree(dist_path)
 
 
 def main():
