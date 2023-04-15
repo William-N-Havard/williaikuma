@@ -45,6 +45,7 @@ class Application(object):
         self._config = self._read_config()
         self._session_path = self.config.get('session_path', os.path.realpath('sessions'))
 
+        self.set_locale()
 
     @property
     def config(self):

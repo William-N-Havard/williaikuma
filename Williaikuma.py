@@ -33,7 +33,6 @@ class App(tk.Tk):
 
         # Get main model and set locale
         model = Application(version=__version__)
-        model.set_locale()
         # Get View
         view = MainView(self)
         # Get controller
