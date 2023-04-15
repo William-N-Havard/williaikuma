@@ -20,6 +20,7 @@
 
 import abc
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.SessionRecording import SessionRecording
 from williaikuma.models.SessionRespeaking import SessionRespeaking
 from williaikuma.models.Tasks import TASKS
@@ -41,7 +42,7 @@ class Session(abc.ABC):
         elif task == TASKS.RESPEAKING:
             session = SessionRespeaking
         else:
-            raise ValueError(gettext('Unknown type of task `{}`.').format(task))
+            raise ValueError(MSG.EXCEPT_UNKNOWN_TASK.format(task))
 
         return session.load(session_json=session_json,  version=version)
 
@@ -52,6 +53,6 @@ class Session(abc.ABC):
         elif task == TASKS.RESPEAKING:
             session = SessionRespeaking
         else:
-            raise ValueError(gettext('Unknown type of task `{}`.').format(task))
+            raise ValueError(MSG.EXCEPT_UNKNOWN_TASK.format(task))
 
         return session(task=task, version=version, **kwargs)

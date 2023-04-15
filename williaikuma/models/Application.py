@@ -25,6 +25,7 @@ from datetime import datetime
 from locale import getlocale
 from babel import Locale
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.Session import Session
 from williaikuma.models.utils import json_dump, json_read
 from williaikuma.utils import LOCAL_PATH
@@ -84,7 +85,7 @@ class Application(object):
 
 
     def get_locales(self):
-        return [gettext('Default (English)')] + \
+        return [MSG.MENU_LANGUAGE_DEFAULT] + \
                [lang for lang in os.listdir(LOCAL_PATH) if os.path.isdir(os.path.join(LOCAL_PATH, lang))]
     #
     #   Session handler

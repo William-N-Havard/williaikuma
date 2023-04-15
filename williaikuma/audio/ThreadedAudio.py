@@ -23,6 +23,7 @@ import pyaudio
 import threading
 import simpleaudio
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.utils import assert_recording_exists, assert_recording_readable
 
 class ThreadedPlayer(threading.Thread):
@@ -36,7 +37,7 @@ class ThreadedPlayer(threading.Thread):
             wave_play = wave_object.play()
             wave_play.wait_done()
         except Exception as e:
-            raise IOError(gettext("Error while reading the WAVE file. {}").format(str(e)))
+            raise IOError(MSG.EXCEPT_READING_WAVE_FILE.format(str(e)))
 
     def stop(self):
         pass

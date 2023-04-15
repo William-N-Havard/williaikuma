@@ -23,6 +23,7 @@ import abc
 
 from pkg_resources import parse_version
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
 from williaikuma.models.utils import json_read, json_dump, now, resolve_relative_path
 
@@ -106,10 +107,7 @@ class AbstractSession(abc.ABC):
             for k, v in metadata.items():
                 if k in ['last_access', 'version']: continue
                 assert existing_metadata.get(k, None) == v, \
-                    ValueError(gettext('Value between existing metadata file and '
-                               'new metadata differ ({} v. {})').format(
-                        existing_metadata[k], v
-                    ))
+                    ValueError(MSG.EXCEPT_METADATA_MISMATCH.format(existing_metadata[k], v))
                 if k not in metadata.keys():
                     metadata[k] = v
 

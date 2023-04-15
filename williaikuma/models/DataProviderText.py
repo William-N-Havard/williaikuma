@@ -19,6 +19,7 @@
 # -----------------------------------------------------------------------------
 
 from williaikuma.models.AbstractDataProvider import AbstractDataProvider
+from williaikuma.models.Messages import MSG
 from williaikuma.models.utils import text_read
 
 
@@ -29,7 +30,7 @@ class DataProviderText(AbstractDataProvider):
     def load(self):
         data = []
         for i_line, line in enumerate(text_read(self.path), 1):
-            assert ' ## ' in line, ValueError(gettext("' ## ' not found on line {}.").format(i_line))
+            assert ' ## ' in line, ValueError(MSG.EXCEPT_MISSING_LINE_SEP.format(i_line))
             data.append(line.split(' ## '))
         self.data = data
 
