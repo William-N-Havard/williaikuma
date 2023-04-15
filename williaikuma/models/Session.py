@@ -29,6 +29,7 @@ from williaikuma.models.utils import json_read
 
 class Session(abc.ABC):
     def __init__(self):
+        # Non localised message as this exception will never be displayed to the final user
         raise PermissionError('Class `{}` is not instanciable and may only be used as a factory '
                               'using .load() and .init() methods.'.format(type(self).__name__))
 

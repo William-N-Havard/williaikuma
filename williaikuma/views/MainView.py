@@ -20,9 +20,7 @@
 
 import tkinter as tk
 import tkinter.font as tkFont
-import tkinter.simpledialog
-import tkinter.filedialog
-from tkinter import PhotoImage, messagebox
+from tkinter import PhotoImage
 
 import babel
 from PIL import Image
@@ -398,7 +396,7 @@ class MainView(tk.Frame):
 
     def populate_locale(self, locales):
         if locales:
-            for idx, lang_code in enumerate(locales, 1):
+            for idx, (lang_code, disable) in enumerate(locales, 1):
                 try:
                     lang_name = babel.Locale.parse(lang_code).get_language_name()
                 except:
@@ -406,7 +404,8 @@ class MainView(tk.Frame):
 
                 self.locale_menu.insert_command(
                         index=idx,
-                        label=lang_name,
+                        label=lang_name if idx > 1 else str(MSG.MENU_LANGUAGE_DEFAULT).format(lang_name),
+                        state=tk.DISABLED if disable else tk.NORMAL,
                         command=lambda lc=lang_code: self.ctrl.set_locale(str(lc)))
                 if idx == 1:
                     self.locale_menu.add_separator()
@@ -414,31 +413,6 @@ class MainView(tk.Frame):
     #
     # Message boxes
     #
-    def action_open_file(self, initial_dir ="/home/", file_type='txt'):
-        return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
-                                                  title=MSG.TITLE_CHOOSE_FILE,
-                                                  filetypes=((MSG.TEXT_FILES, "*.{}*".format(file_type)),))
-
-
-    def action_prompt(self, title, message):
-        return tk.simpledialog.askstring(title, message)
-
-
-    def action_error(self, title, message):
-        return tk.messagebox.showerror(title, message)
-
-
-    def action_notify(self, title, message):
-        return tk.messagebox.showinfo(title, message)
-
-
-    def action_choose_dir(self, initial_dir ='/home/'):
-        return tkinter.filedialog.askdirectory(initialdir=initial_dir)
-
-
-    def action_yes_no(self, title, message):
-        return tkinter.messagebox.askyesno(title, message, default="no")
-
 
     def show_missing(self, missing_items):
         selected_item = MissingView(self, missing_items=missing_items).show()

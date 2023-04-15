@@ -3,7 +3,12 @@
 
 from enum import Enum
 
-# /!\ If any string is modified here, localisation will not work anymore.
+import babel
+
+from williaikuma.models.defaults import DEFAULT_LANGUAGE
+
+
+# /!\ If ANY string is modified here, whatever the modification, localisation will not work anymore.
 # Hence, each string modification here implies regeneration .pot, .po, and .mo files.
 
 class MSG(Enum):
@@ -35,7 +40,7 @@ class MSG(Enum):
     MENU_FILE                 = "File"
     MENU_GENERATE_TEXTGRID    = "Generate TextGrid"
     MENU_LANGUAGE             = "Language"
-    MENU_LANGUAGE_DEFAULT     = "Default (English)"
+    MENU_LANGUAGE_DEFAULT     = "Default ({})".format(babel.Locale.parse(DEFAULT_LANGUAGE).get_language_name())
     MENU_MISSING_ITEMS        = "View Missing Items"
     MENU_NEW                  = "New"
     MENU_NEW_RESPEAKING       = "New Respeaking"
@@ -55,12 +60,12 @@ class MSG(Enum):
     TEXT_MISSING_ITEMS                 = "Missing items"
     TEXT_PROMPT_DELETE_RECORDING       = "Delete this recording?"
     TEXT_PROMPT_SPEAKER                = "Enter speaker's name"
+    TEXT_PROMPT_CHANGE_LOCALE          = "The application will have to restart to apply the changes. Restart?"
 
     TITLE_CHOOSE_FILE                  = "Choose a file"
     TITLE_DELETE                       = "Delete"
     TITLE_ERROR                        = "Error!"
     TITLE_INFORMATION                  = "Information"
-    TITLE_PROMPT_SPEAKER               = "Speaker?"
 
     def __str__(self):
-        return gettext(str(self.value))
+        return gettext(str(self.value)) # noqa: Unresolved Reference
