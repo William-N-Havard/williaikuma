@@ -103,10 +103,9 @@ class Application(object):
             raise Exception(e)
 
     def session_start(self):
-        self.update_config(recent=self.session)
-
         try:
             self.session.start()
+            self.update_config(recent=self.session)
         except Exception as e:
             raise Exception(e)
 

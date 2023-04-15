@@ -43,9 +43,12 @@ class Controller(object):
         self._playing_status = False
         self._respeak_playing_status = False
 
+        self.__init_view__()
+
+    def __init_view__(self):
+        self.view.root.title(self.model.name)
         self.view.populate_recent(self.model.recent_sessions)
         self.view.populate_locale(self.model.get_locales())
-
 
     def start(self):
         try:

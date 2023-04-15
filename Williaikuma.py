@@ -39,8 +39,6 @@ class App(tk.Tk):
         controller = Controller(model, view)
         # Attach controler to view
         view.set_controller(controller)
-        # Set title
-        self.title(model.name)
 
     def restart(self):
         self.wrapper.restart = True
