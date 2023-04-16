@@ -90,6 +90,7 @@ class Application(object):
         langs = [lang for lang in os.listdir(LOCAL_PATH) if os.path.isdir(os.path.join(LOCAL_PATH, lang))]
         langs = [DEFAULT_LANGUAGE] + langs if DEFAULT_LANGUAGE not in langs else langs
         # Add whether the language is the currently activated one
+
         return [(lang, lang==self.get_lang()) for lang in langs]
 
     def get_lang(self):

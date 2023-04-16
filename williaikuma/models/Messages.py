@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from enum import Enum
+from enum import Enum, EnumMeta
 
 import babel
 
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
+from williaikuma.models.utils import FrozenEnum
 
 
 # /!\ If ANY string is modified here, whatever the modification, localisation will not work anymore.
-# Hence, each string modification here implies regeneration .pot, .po, and .mo files.
-
-class MSG(Enum):
+#     Hence, each string modification here implies regenerating the .pot, .po, and .mo files.
+class MSG(Enum, metaclass=FrozenEnum):
     BUTTON_CANCEL  = "Cancel"
     BUTTON_DETELE  = "Delete"
     BUTTON_GO      = "Go"
@@ -67,5 +67,12 @@ class MSG(Enum):
     TITLE_ERROR                        = "Error!"
     TITLE_INFORMATION                  = "Information"
 
-    def __str__(self):
-        return gettext(str(self.value)) # noqa: Unresolved Reference
+    def _accessed(self):
+        # This function has two roles:
+        #   * it is called when a member of the enumeration is accessed
+        #     which allows us to translate the text using gettext.gettext
+        #   * it only returns the value of the member of the class instead of an Enum object.
+        #     This allows to directly access the value without having to do item.value when called
+        #     and allows us to directly have access to the string value without having to use the
+        #     str() function on the class member (allowing to directly format the string using str.format())
+        return gettext(self.value) # noqa: Unresolved reference 'gettext'

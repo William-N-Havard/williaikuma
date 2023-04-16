@@ -404,7 +404,7 @@ class MainView(tk.Frame):
 
                 self.locale_menu.insert_command(
                         index=idx,
-                        label=lang_name if idx > 1 else str(MSG.MENU_LANGUAGE_DEFAULT).format(lang_name),
+                        label=lang_name if idx > 1 else MSG.MENU_LANGUAGE_DEFAULT.format(lang_name),
                         state=tk.DISABLED if disable else tk.NORMAL,
                         command=lambda lc=lang_code: self.ctrl.set_locale(str(lc)))
                 if idx == 1:
