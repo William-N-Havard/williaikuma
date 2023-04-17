@@ -22,6 +22,9 @@ import tkinter as tk
 import tkinter.font as tkFont
 from gettext import gettext
 
+from williaikuma.models.Messages import MSG
+
+
 class MissingView(tk.Toplevel):
     def __init__(self, parent, missing_items = []):
         super().__init__(parent)
@@ -30,7 +33,7 @@ class MissingView(tk.Toplevel):
         self.missing_items = missing_items
 
         #setting title
-        self.title(gettext("Missing items"))
+        self.title(MSG.TEXT_MISSING_ITEMS)
 
         #setting window size
         width=250
@@ -48,7 +51,7 @@ class MissingView(tk.Toplevel):
         Go_Button["font"] = ft
         Go_Button["fg"] = "#000000"
         Go_Button["justify"] = "center"
-        Go_Button["text"] = gettext("Go")
+        Go_Button["text"] = MSG.BUTTON_GO
         Go_Button.place(x=0,y=250,width=125,height=30)
         Go_Button["command"] = self.Go_Button_command
 
@@ -58,7 +61,7 @@ class MissingView(tk.Toplevel):
         Cancel_Button["font"] = ft
         Cancel_Button["fg"] = "#000000"
         Cancel_Button["justify"] = "center"
-        Cancel_Button["text"] = gettext("Cancel")
+        Cancel_Button["text"] = MSG.BUTTON_CANCEL
         Cancel_Button.place(x=125,y=250,width=125,height=30)
         Cancel_Button["command"] = self.Cancel_Button_command
 
@@ -67,7 +70,7 @@ class MissingView(tk.Toplevel):
         Label_Missing_Items["font"] = ft
         Label_Missing_Items["fg"] = "#333333"
         Label_Missing_Items["justify"] = "center"
-        Label_Missing_Items["text"] = gettext("Missing items")
+        Label_Missing_Items["text"] = MSG.TEXT_MISSING_ITEMS
         Label_Missing_Items.place(x=0,y=0,width=250,height=25)
 
         Listbox_Missing_Items=tk.Listbox(self)

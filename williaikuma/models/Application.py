@@ -19,13 +19,15 @@
 # -----------------------------------------------------------------------------
 
 import os
-import gettext as _gettext
+import gettext as gettext
 
 from datetime import datetime
 from locale import getlocale
 from babel import Locale
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.Session import Session
+from williaikuma.models.defaults import DEFAULT_LANGUAGE
 from williaikuma.models.utils import json_dump, json_read
 from williaikuma.utils import LOCAL_PATH
 
@@ -45,6 +47,7 @@ class Application(object):
         self._config = self._read_config()
         self._session_path = self.config.get('session_path', os.path.realpath('sessions'))
 
+        self.set_locale()
 
     @property
     def config(self):
@@ -75,16 +78,24 @@ class Application(object):
         if not lang_code:
             lang_code = self.config.get('language', Locale.parse(getlocale()[0]).language)
         else:
-            # Safe to do: if we are here this function has at least been executed once
-            self.update_config(language=lang_code if lang_code in self.get_locales()[1:] else 'en')
+            lang_list = [lc for lc, _ in self.get_locales()[1:]]
+            self.update_config(language=lang_code if lang_code in lang_list else DEFAULT_LANGUAGE)
 
-        local_gettext = _gettext.translation('base', localedir=LOCAL_PATH, languages=[lang_code], fallback=True)
+        local_gettext = gettext.translation('base', localedir=LOCAL_PATH, languages=[lang_code], fallback=True)
         local_gettext.install(names=['gettext'])
 
+        return lang_code
 
     def get_locales(self):
-        return [gettext('Default (English)')] + \
-               [lang for lang in os.listdir(LOCAL_PATH) if os.path.isdir(os.path.join(LOCAL_PATH, lang))]
+        langs = [lang for lang in os.listdir(LOCAL_PATH) if os.path.isdir(os.path.join(LOCAL_PATH, lang))]
+        langs = [DEFAULT_LANGUAGE] + langs if DEFAULT_LANGUAGE not in langs else langs
+        # Add whether the language is the currently activated one
+
+        return [(lang, lang==self.get_lang()) for lang in langs]
+
+    def get_lang(self):
+        return self.config.get('language', DEFAULT_LANGUAGE)
+
     #
     #   Session handler
     #
@@ -102,10 +113,9 @@ class Application(object):
             raise Exception(e)
 
     def session_start(self):
-        self.update_config(recent=self.session)
-
         try:
             self.session.start()
+            self.update_config(recent=self.session)
         except Exception as e:
             raise Exception(e)
 
@@ -145,4 +155,6 @@ class Application(object):
                                    key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True)
             else:
                 config[k] = v
+
+        self._config = config
         json_dump(self._config_file, config)

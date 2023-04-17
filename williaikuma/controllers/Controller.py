@@ -20,11 +20,13 @@
 import logging
 import os
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
 from williaikuma.models.utils import assert_recording_exists, now
 from williaikuma.models.Application import Application
 from williaikuma.audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
 from williaikuma.views.MainView import MainView
+from williaikuma.views import MessageBoxes
 
 class Controller(object):
 
@@ -43,16 +45,19 @@ class Controller(object):
         self._playing_status = False
         self._respeak_playing_status = False
 
+        self.__init_view__()
+
+    def __init_view__(self):
+        self.view.root.title(self.model.name)
         self.view.populate_recent(self.model.recent_sessions)
         self.view.populate_locale(self.model.get_locales())
-
 
     def start(self):
         try:
             self.model.session_start()
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("Unable to start the session!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_SESSION_START)
             return
 
         self.command_next()
@@ -113,10 +118,10 @@ class Controller(object):
     #
     def command_new(self, task):
         ext = 'txt' if task == TASKS.TEXT_ELICITATION else 'json'
-        data_path = self.view.action_open_file(file_type=ext)
+        data_path = MessageBoxes.action_open_file(file_type=ext)
         if not data_path: return
 
-        speaker = self.view.action_prompt(gettext("Speaker?"), gettext("Enter speaker's name"))
+        speaker = MessageBoxes.action_prompt(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_SPEAKER)
         if not speaker: return
 
         # Generate session directory
@@ -134,11 +139,11 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("Couldn't create this session!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_CREATE_SESSION)
 
 
     def command_open(self):
-        session = self.view.action_open_file(initial_dir=self.model.session_path,
+        session = MessageBoxes.action_open_file(initial_dir=self.model.session_path,
                                              file_type='json')
         if not session: return
 
@@ -147,7 +152,7 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_OPEN_SESSION)
 
 
     def command_recent_open(self, session):
@@ -156,18 +161,18 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("Couldn't open this session!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_OPEN_SESSION)
 
 
     def command_generate_textgrid(self):
         try:
             generated, failures = self.model.session.generate_textgrids()
-            self.view.action_notify(gettext("Information"), gettext("Done! ({} generated, {} failures)\n").format(
+            MessageBoxes.action_notify(MSG.TITLE_INFORMATION, MSG.TEXT_INFORMATION_GENERATE_TEXTGRID.format(
                 generated, len(failures), '\n'.join(failures)
             ))
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("There was a problem when generating the TextGrid files."))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_GENERATE_TEXTGRID)
 
     #
     #   Recording Panel Commands
@@ -199,7 +204,7 @@ class Controller(object):
                 self.recorder.start()
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("Unknown error!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNKNOWN)
 
         self.view_update()
 
@@ -213,7 +218,7 @@ class Controller(object):
 
 
     def command_delete(self):
-        yes_no = self.view.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
+        yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE_RECORDING)
         if not yes_no: return
 
         if assert_recording_exists(self.model.session.item_save_path()):
@@ -223,20 +228,30 @@ class Controller(object):
 
 
     def command_select_session_directory(self):
-        new_dir = self.view.action_choose_dir(self.model.session_path)
+        new_dir = MessageBoxes.action_choose_dir(self.model.session_path)
         if not new_dir: return
 
         self.model.session_path = new_dir
 
     def command_reset_recent(self):
-        yes_no = self.view.action_yes_no(gettext("Delete"), gettext("Delete this recording?"))
+        yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE_RECORDING)
         if not yes_no: return
 
         self.view_refresh_recent()
 
     def set_locale(self, lang_code):
+        original_lang = self.model.get_lang()
         self.model.set_locale(lang_code)
-        self.view.root.restart()
+
+        yes_no_cancel = MessageBoxes.action_yes_no_cancel(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_CHANGE_LOCALE)
+
+        # If cancel, restore old language
+        if yes_no_cancel == None:
+            self.model.set_locale(original_lang)
+            return
+
+        # Restart?
+        if yes_no_cancel: self.view.root.restart()
 
     def command_view_missing(self):
         missing_items = self.model.session.get_missing_items()
@@ -259,7 +274,7 @@ class Controller(object):
             del self.player
         except Exception as e:
             logging.exception(e)
-            self.view.action_error(gettext("Error!"), gettext("There is a problem with this recording!"))
+            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_READ_RECORDING)
 
         setattr(self, '{}playing_status'.format('{}_'.format(which) if which else ''), False)
         self.view_update()
@@ -274,7 +289,7 @@ class Controller(object):
         elif self.model.session.task == TASKS.RESPEAKING:
             self.view_respeaking_update()
         else:
-            ValueError(gettext("Unknown type of task `{}`.").format(self.model.session.task))
+            ValueError(MSG.EXCEPT_UNKNOWN_TASK.format(self.model.session.task))
 
 
     def view_respeaking_update(self):

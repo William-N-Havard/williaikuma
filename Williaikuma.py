@@ -33,15 +33,12 @@ class App(tk.Tk):
 
         # Get main model and set locale
         model = Application(version=__version__)
-        model.set_locale()
         # Get View
         view = MainView(self)
         # Get controller
         controller = Controller(model, view)
         # Attach controler to view
         view.set_controller(controller)
-        # Set title
-        self.title(model.name)
 
     def restart(self):
         self.wrapper.restart = True

@@ -20,6 +20,8 @@
 
 from enum import Enum, unique
 
+from williaikuma.models.Messages import MSG
+
 
 @unique
 class TASKS(Enum):
@@ -31,4 +33,4 @@ class TASKS(Enum):
         for tasks_const in list(TASKS):
             if tasks_const.value == label:
                 return tasks_const
-        raise ValueError(gettext("Unknown type of task `{}`.").format(label))
+        raise ValueError(MSG.EXCEPT_UNKNOWN_TASK.format(label))

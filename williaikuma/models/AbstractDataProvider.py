@@ -20,6 +20,8 @@
 
 import abc
 
+from williaikuma.models.Messages import MSG
+
 
 class AbstractDataProvider(abc.ABC):
     def __init__(self, path):
@@ -45,8 +47,8 @@ class AbstractDataProvider(abc.ABC):
 
     @index.setter
     def index(self, value):
-        assert type(value) == int, ValueError(gettext("Index can only be an integer!"))
-        assert value >= -1, ValueError(gettext("Index can't be negative ({})!").format(value))
+        assert type(value) == int, ValueError(MSG.EXCEPT_INDEX_NOT_INTEGER)
+        assert value >= -1, ValueError(MSG.EXCEPT_INDEX_NEGATIVE.format(value))
         self._index = value
 
     @abc.abstractmethod

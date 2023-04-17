@@ -1,0 +1,1 @@
+xgettext -a --no-location "$(dirname $(realpath "$0"))/../williaikuma/models/Messages.py" -o "$(dirname $(realpath "$0"))/../williaikuma/assets/locales/base.pot"

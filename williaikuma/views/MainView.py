@@ -20,12 +20,13 @@
 
 import tkinter as tk
 import tkinter.font as tkFont
-import tkinter.simpledialog
-import tkinter.filedialog
-from tkinter import PhotoImage, messagebox
+from tkinter import PhotoImage
+
+import babel
 from PIL import Image
 from PIL.ImageTk import PhotoImage
 
+from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
 from williaikuma.views.MissingView import MissingView
 from williaikuma.views.utils import TkinterButtons as TkButtons
@@ -66,36 +67,36 @@ class MainView(tk.Frame):
         # File Menu
         fileMenu = tk.Menu(menu, tearoff=False)
         self.newMenu = tk.Menu(fileMenu, tearoff=0)
-        self.newMenu.add_command(label=gettext("New Text Elicitation"), command=self.Menu_File_New_Text_commmand)
-        self.newMenu.add_command(label=gettext("New Respeaking"), command=self.Menu_File_New_Respeak_command)
-        fileMenu.add_cascade(label=gettext("New"), menu=self.newMenu)
-        fileMenu.add_command(label=gettext("Open"), command=self.Menu_File_Open_commmand)
+        self.newMenu.add_command(label=MSG.MENU_NEW_TEXT_ELICITATION, command=self.Menu_File_New_Text_commmand)
+        self.newMenu.add_command(label=MSG.MENU_NEW_RESPEAKING, command=self.Menu_File_New_Respeak_command)
+        fileMenu.add_cascade(label=MSG.MENU_NEW, menu=self.newMenu)
+        fileMenu.add_command(label=MSG.MENU_OPEN, command=self.Menu_File_Open_commmand)
         fileMenu.add_separator()
         self.recent_menu = tk.Menu(fileMenu, tearoff=0)
-        fileMenu.add_cascade(label=gettext("Recent"), menu=self.recent_menu)
+        fileMenu.add_cascade(label=MSG.MENU_RECENT, menu=self.recent_menu)
         fileMenu.add_separator()
-        fileMenu.add_command(label=gettext("Exit"), command=self.root.destroy)
-        menu.add_cascade(label=gettext("File"), menu=fileMenu)
+        fileMenu.add_command(label=MSG.MENU_EXIT, command=self.root.destroy)
+        menu.add_cascade(label=MSG.MENU_FILE, menu=fileMenu)
 
         # Preference Menu
         dataMenu = tk.Menu(menu, tearoff=False)
-        dataMenu.add_command(label=gettext("View Missing Items"), state=tk.DISABLED,
+        dataMenu.add_command(label=MSG.MENU_MISSING_ITEMS, state=tk.DISABLED,
                              command=self.Menu_Data_ViewMissing_Command)
         dataMenu.add_separator()
-        dataMenu.add_command(label=gettext("Generate TextGrid"), state=tk.DISABLED,
+        dataMenu.add_command(label=MSG.MENU_GENERATE_TEXTGRID, state=tk.DISABLED,
                              command=self.Menu_Data_Generate_TextGrid_Command)
         self.dataMenu = dataMenu
-        menu.add_cascade(label=gettext("Data"), menu=dataMenu)
+        menu.add_cascade(label=MSG.MENU_DATA, menu=dataMenu)
 
 
         # Preference Menu
         preferenceMenu = tk.Menu(menu, tearoff=False)
-        preferenceMenu.add_command(label=gettext("Default Session Directory"), command=self.Menu_Preference_Session_command)
-        menu.add_cascade(label=gettext("Preferences"), menu=preferenceMenu)
+        preferenceMenu.add_command(label=MSG.MENU_DEFAULT_SESSION_DIR, command=self.Menu_Preference_Session_command)
+        menu.add_cascade(label=MSG.MENU_PREFERENCES, menu=preferenceMenu)
 
         # Language selection
         self.locale_menu = tk.Menu(preferenceMenu, tearoff=0)
-        preferenceMenu.add_cascade(label=gettext("Language"), menu=self.locale_menu)
+        preferenceMenu.add_cascade(label=MSG.MENU_LANGUAGE, menu=self.locale_menu)
 
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
         Button_Record["bg"] = "#efefef"
@@ -103,7 +104,7 @@ class MainView(tk.Frame):
         Button_Record["font"] = ft
         Button_Record["fg"] = "#000000"
         Button_Record["justify"] = "center"
-        Button_Record["text"] = gettext("Record")
+        Button_Record["text"] = MSG.BUTTON_RECORD
         Button_Record.place(x=120,y=60,width=320,height=60)
         Button_Record["command"] = self.Button_Record_command
         self.Button_Record = Button_Record
@@ -136,7 +137,7 @@ class MainView(tk.Frame):
         Button_Delete["font"] = ft
         Button_Delete["fg"] = "#000000"
         Button_Delete["justify"] = "center"
-        Button_Delete["text"] = gettext("Delete")
+        Button_Delete["text"] = MSG.BUTTON_DETELE
         Button_Delete.place(x=120,y=120,width=320,height=60)
         Button_Delete["command"] = self.Button_Delete_Command
         self.Button_Delete = Button_Delete
@@ -147,7 +148,7 @@ class MainView(tk.Frame):
         Button_Listen["font"] = ft
         Button_Listen["fg"] = "#000000"
         Button_Listen["justify"] = "center"
-        Button_Listen["text"] = gettext("Play")
+        Button_Listen["text"] = MSG.BUTTON_PLAY
         Button_Listen.place(x=0,y=0,width=560,height=60)
         Button_Listen["command"] = self.Button_Listen_Command
         self.Button_Listen = Button_Listen
@@ -158,7 +159,7 @@ class MainView(tk.Frame):
         Button_Listen_Respeak["font"] = ft
         Button_Listen_Respeak["fg"] = "#000000"
         Button_Listen_Respeak["justify"] = "center"
-        Button_Listen_Respeak["text"] = gettext("Respeak")
+        Button_Listen_Respeak["text"] = MSG.BUTTON_RESPEAK
         Button_Listen_Respeak.place(x=0,y=220,width=560,height=230)
         Button_Listen_Respeak["command"] = self.Button_Listen_Respeak_Command
         self.Button_Listen_Respeak = Button_Listen_Respeak
@@ -188,11 +189,11 @@ class MainView(tk.Frame):
         Label_Sentence["font"] = ft
         Label_Sentence["fg"] = "#333333"
         Label_Sentence["justify"] = "center"
-        Label_Sentence["text"] = gettext("Create a new project or open an existing one.")
+        Label_Sentence["text"] = MSG.TEXT_EXPLANATION
         Label_Sentence.place(x=0,y=205,width=560,height=230)
         self.Label_Sentence = Label_Sentence
 
-        statusbar = tk.Label(root, text=gettext("Waiting..."), bd=1, relief=tk.SUNKEN, anchor=tk.W)
+        statusbar = tk.Label(root, text=MSG.STATUS_WAITING, bd=1, relief=tk.SUNKEN, anchor=tk.W)
         statusbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.statusbar = statusbar
 
@@ -276,7 +277,7 @@ class MainView(tk.Frame):
 
 
     def set_status_bar(self, index, speaker, session):
-        self.statusbar['text'] = gettext("Line: {} | Speaker: {} | Session: {}").format(index, speaker, session)
+        self.statusbar['text'] = MSG.STATUS_SESSION.format(index, speaker, session)
 
 
     def enable_directional_buttons(self):
@@ -376,10 +377,10 @@ class MainView(tk.Frame):
                         label=recent_name,
                         command=lambda path=recent_path: self.ctrl.command_recent_open(path))
 
-            if (idx_to_del:=self.recent_menu.index(gettext("None"))) != None:\
+            if (idx_to_del:=self.recent_menu.index(MSG.MENU_NONE)) != None:\
                 self.recent_menu.delete(idx_to_del)
 
-            self.recent_menu.entryconfigure(self.recent_menu.index(gettext("Reset")),
+            self.recent_menu.entryconfigure(self.recent_menu.index(MSG.MENU_RESET),
                                             state=tk.NORMAL)
         else:
             self.reset_recent_menu()
@@ -388,49 +389,30 @@ class MainView(tk.Frame):
         while (last_index := self.recent_menu.index(tk.END)) != None:
             self.recent_menu.delete(last_index)
 
-        self.recent_menu.add_command(label=gettext("None"), state=tk.DISABLED)
+        self.recent_menu.add_command(label=MSG.MENU_NONE, state=tk.DISABLED)
         self.recent_menu.add_separator()
-        self.recent_menu.add_command(label=gettext("Reset"), state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
+        self.recent_menu.add_command(label=MSG.MENU_RESET, state=tk.DISABLED, command=self.Menu_Recent_Reset_command)
 
 
     def populate_locale(self, locales):
         if locales:
-            for idx, lang_code in enumerate(locales, 1):
+            for idx, (lang_code, disable) in enumerate(locales, 1):
+                try:
+                    lang_name = babel.Locale.parse(lang_code).get_language_name()
+                except:
+                    lang_name = lang_code
+
                 self.locale_menu.insert_command(
                         index=idx,
-                        label=lang_code,
-                        command=lambda lc=lang_code: self.ctrl.set_locale(lc))
+                        label=lang_name if idx > 1 else MSG.MENU_LANGUAGE_DEFAULT.format(lang_name),
+                        state=tk.DISABLED if disable else tk.NORMAL,
+                        command=lambda lc=lang_code: self.ctrl.set_locale(str(lc)))
                 if idx == 1:
                     self.locale_menu.add_separator()
 
     #
     # Message boxes
     #
-    def action_open_file(self, initial_dir ="/home/", file_type='txt'):
-        return tkinter.filedialog.askopenfilename(initialdir=initial_dir,
-                                                  title=gettext("Choose a file"),
-                                                  filetypes=((gettext("Files"), "*.{}*".format(file_type)),))
-
-
-    def action_prompt(self, title, message):
-        return tk.simpledialog.askstring(title, message)
-
-
-    def action_error(self, title, message):
-        return tk.messagebox.showerror(title, message)
-
-
-    def action_notify(self, title, message):
-        return tk.messagebox.showinfo(title, message)
-
-
-    def action_choose_dir(self, initial_dir ='/home/'):
-        return tkinter.filedialog.askdirectory(initialdir=initial_dir)
-
-
-    def action_yes_no(self, title, message):
-        return tkinter.messagebox.askyesno(title, message, default="no")
-
 
     def show_missing(self, missing_items):
         selected_item = MissingView(self, missing_items=missing_items).show()
