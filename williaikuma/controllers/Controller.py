@@ -117,8 +117,7 @@ class Controller(object):
     #   Menu Commands
     #
     def command_new(self, task):
-        ext = 'txt' if task == TASKS.TEXT_ELICITATION else 'json'
-        data_path = MessageBoxes.action_open_file(file_type=ext)
+        data_path = MessageBoxes.action_open_file(file_type=task.extensions)
         if not data_path: return
 
         speaker = MessageBoxes.action_prompt(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_SPEAKER)

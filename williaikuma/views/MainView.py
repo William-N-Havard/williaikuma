@@ -50,15 +50,15 @@ class MainView(tk.Frame):
         root.tk.call('encoding', 'system', 'utf-8')
 
         # Images
-        self.image_record_on = self.load_resized_image(TkButtons.BUTTON_RECORD_ON.value)
-        self.image_record_off = self.load_resized_image(TkButtons.BUTTON_RECORD_OFF.value)
-        self.image_play_on = self.load_resized_image(TkButtons.BUTTON_PLAY_ON.value)
-        self.image_play_off = self.load_resized_image(TkButtons.BUTTON_PLAY_OFF.value)
-        self.image_left = self.load_resized_image(TkButtons.BUTTON_LEFT.value)
-        self.image_right = self.load_resized_image(TkButtons.BUTTON_RIGHT.value)
-        self.image_delete = self.load_resized_image(TkButtons.BUTTON_DELETE.value)
-        self.image_respeak_on = self.load_resized_image(TkButtons.BUTTON_RESPEAK.value)
-        self.image_respeak_off = self.load_resized_image(TkButtons.BUTTON_PLAY_OFF.value)
+        self.image_record_on = self.load_resized_image(TkButtons.BUTTON_RECORD_ON)
+        self.image_record_off = self.load_resized_image(TkButtons.BUTTON_RECORD_OFF)
+        self.image_play_on = self.load_resized_image(TkButtons.BUTTON_PLAY_ON)
+        self.image_play_off = self.load_resized_image(TkButtons.BUTTON_PLAY_OFF)
+        self.image_left = self.load_resized_image(TkButtons.BUTTON_LEFT)
+        self.image_right = self.load_resized_image(TkButtons.BUTTON_RIGHT)
+        self.image_delete = self.load_resized_image(TkButtons.BUTTON_DELETE)
+        self.image_respeak_on = self.load_resized_image(TkButtons.BUTTON_RESPEAK)
+        self.image_respeak_off = self.load_resized_image(TkButtons.BUTTON_PLAY_OFF)
 
         # Menus
         menu = tk.Menu(root)

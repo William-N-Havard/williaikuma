@@ -25,8 +25,19 @@ from williaikuma.models.Messages import MSG
 
 @unique
 class TASKS(Enum):
-    TEXT_ELICITATION = 'text-elicitation'
-    RESPEAKING = 'respeaking'
+
+    TEXT_ELICITATION = (('txt', 'csv'),)
+    RESPEAKING = (('json',))
+
+
+    def __new__(cls, *args):
+        obj = object.__new__(cls)
+        obj._value_ = None
+        return obj
+
+    def __init__(self, extensions):
+        self._value_ = self._name_.lower().replace('_', '-')
+        self.extensions = extensions
 
     @staticmethod
     def from_string(label):

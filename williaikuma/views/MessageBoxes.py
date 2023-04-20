@@ -26,10 +26,11 @@ from tkinter import messagebox
 from williaikuma.models.Messages import MSG
 
 
-def action_open_file(initial_dir="/home/", file_type='txt'):
+def action_open_file(initial_dir="/home/", file_type=['txt']):
+    filetypes = tuple([(MSG.TEXT_FILES, "*.{}".format(ext)) for ext in file_type])
     return tk.filedialog.askopenfilename(initialdir=initial_dir,
-                                              title=MSG.TITLE_CHOOSE_FILE,
-                                              filetypes=((MSG.TEXT_FILES, "*.{}*".format(file_type)),))
+                                         title=MSG.TITLE_CHOOSE_FILE,
+                                         filetypes=filetypes)
 
 
 def action_prompt(title, message):

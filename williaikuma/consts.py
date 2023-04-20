@@ -24,9 +24,9 @@ import sys
 # Do not change: design required by PyInstaller on Windows
 # Does not prevent the app from running on Linux fortunately!
 try:
-    wd = sys._MEIPASS
+    WORK_DIR = sys._MEIPASS
 except AttributeError:
-    wd = os.getcwd()
+    WORK_DIR = os.getcwd()
 
-IMAGE_PATH = os.path.join(wd, 'williaikuma', 'assets', 'images')
-LOCAL_PATH = os.path.join(wd, 'williaikuma', 'assets', 'locales')
+IMAGE_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'images')
+LOCAL_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'locales')

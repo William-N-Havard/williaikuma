@@ -28,7 +28,7 @@ from babel import Locale
 from williaikuma.models.Session import Session
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
 from williaikuma.models.utils import json_dump, json_read
-from williaikuma.utils import LOCAL_PATH
+from williaikuma.consts import LOCAL_PATH
 
 
 class Application(object):
