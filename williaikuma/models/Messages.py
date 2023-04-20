@@ -34,7 +34,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     EXCEPT_UNKNOWN_TASK      = "Unknown type of task `{}`."
     EXCEPT_METADATA_MISMATCH = 'Value between existing metadata file and '\
                                'new metadata differ ({} v. {})'
-    EXCEPT_CSV_FILE          = "Cannot read CSV file! Make sure field are encloded in `\"`"
+    EXCEPT_CSV_FILE          = "Cannot read CSV file! Make sure field are enclosed in `\"`"
     EXCEPT_CSV_COLUMN        = "Column 'sentence' and/or 'sentence_id' not found in CSV"
 
     MENU_DATA                 = "Data"
@@ -85,4 +85,4 @@ class MSG(Enum, metaclass=FrozenEnum):
 
     @classmethod
     def values(cls):
-        return (getattr(o, 'value') for o in list(cls))
+        return [o.value for o in list(cls)]

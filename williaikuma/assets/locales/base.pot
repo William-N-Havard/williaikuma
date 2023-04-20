@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-16 00:53+0200\n"
+"POT-Creation-Date: 2023-04-20 17:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,9 @@ msgstr ""
 msgid "Respeak"
 msgstr ""
 
-msgid "Couldn't create this session!"
+msgid ""
+"Couldn't create this session!\n"
+"{}"
 msgstr ""
 
 msgid "There was a problem when generating the TextGrid files."
@@ -47,13 +49,18 @@ msgstr ""
 msgid "There is a problem with this recording!"
 msgstr ""
 
-msgid "Unable to start the session!"
+msgid ""
+"Unable to start the session!\n"
+"{}"
 msgstr ""
 
 msgid "Unknown error!"
 msgstr ""
 
 msgid "Index can't be negative ({})!"
+msgstr ""
+
+msgid "Unknown file type (Accepted types: {})!"
 msgstr ""
 
 msgid "Index can only be an integer!"
@@ -69,6 +76,12 @@ msgid "Unknown type of task `{}`."
 msgstr ""
 
 msgid "Value between existing metadata file and new metadata differ ({} v. {})"
+msgstr ""
+
+msgid "Cannot read CSV file! Make sure field are enclosed in `\"`"
+msgstr ""
+
+msgid "Column 'sentence' and/or 'sentence_id' not found in CSV"
 msgstr ""
 
 msgid "Data"
@@ -119,6 +132,9 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
+msgid "Version"
+msgstr ""
+
 msgid "Line: {} | Speaker: {} | Session: {}"
 msgstr ""
 
@@ -144,6 +160,9 @@ msgid "Enter speaker's name"
 msgstr ""
 
 msgid "The application will have to restart to apply the changes. Restart?"
+msgstr ""
+
+msgid "Version: {}"
 msgstr ""
 
 msgid "Choose a file"
