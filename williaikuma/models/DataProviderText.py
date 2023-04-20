@@ -17,10 +17,11 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
+import csv
 
 from williaikuma.models.AbstractDataProvider import AbstractDataProvider
 from williaikuma.models.Messages import MSG
-from williaikuma.models.utils import text_read
+from williaikuma.models.utils import read_csv, text_read
 
 
 class DataProviderText(AbstractDataProvider):
@@ -28,10 +29,24 @@ class DataProviderText(AbstractDataProvider):
         super(DataProviderText, self).__init__(path=path)
 
     def load(self):
-        data = []
-        for i_line, line in enumerate(text_read(self.path), 1):
-            assert ' ## ' in line, ValueError(MSG.EXCEPT_MISSING_LINE_SEP.format(i_line))
-            data.append(line.split(' ## '))
+        # Different loading scheme depending on the file type
+        if self.path.endswith('.txt'):
+            data = []
+            for i_line, line in enumerate(text_read(self.path), 1):
+                assert ' ## ' in line, ValueError(MSG.EXCEPT_MISSING_LINE_SEP.format(i_line))
+                data.append(line.split(' ## '))
+        elif self.path.endswith('.csv'):
+            try:
+                data = read_csv(self.path)
+            except:
+                raise ValueError(MSG.EXCEPT_CSV_FILE)
+            try:
+                data = [(line['sentence'], line['sentence_id']) for line in data]
+            except:
+                raise ValueError(MSG.EXCEPT_CSV_COLUMN)
+        else:
+            raise MSG.EXCEPT_FILE_TYPES.format("txt, csv")
+
         self.data = data
 
 

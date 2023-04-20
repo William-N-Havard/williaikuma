@@ -17,7 +17,7 @@
 #   Description: 
 #       • 
 # -----------------------------------------------------------------------------
-
+import csv
 import json
 import os
 import wave
@@ -73,3 +73,10 @@ def create_praat_tg(rec_length, sentence, textgrid_path, raw_filename):
     tg.to_file(filepath=os.path.join(textgrid_path, '{}.TextGrid'.format(raw_filename)),
                codec='utf-8')
 
+
+def read_csv(path_csv):
+    with open(path_csv) as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(1024));
+        csv_file.seek(0)
+        data = csv.DictReader(csv_file, dialect=dialect)
+        return list(data)

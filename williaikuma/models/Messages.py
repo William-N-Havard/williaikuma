@@ -27,12 +27,15 @@ class MSG(Enum, metaclass=FrozenEnum):
     ERROR_UNKNOWN                  = "Unknown error!"
 
     EXCEPT_INDEX_NEGATIVE    = "Index can't be negative ({})!"
+    EXCEPT_FILE_TYPES        = "Unknown file type (Accepted types: {})!"
     EXCEPT_INDEX_NOT_INTEGER = "Index can only be an integer!"
     EXCEPT_MISSING_LINE_SEP  = "' ## ' not found on line {}."
     EXCEPT_READING_WAVE_FILE = "Error while reading the WAVE file. {}"
     EXCEPT_UNKNOWN_TASK      = "Unknown type of task `{}`."
     EXCEPT_METADATA_MISMATCH = 'Value between existing metadata file and '\
                                'new metadata differ ({} v. {})'
+    EXCEPT_CSV_FILE          = "Cannot read CSV file! Make sure field are encloded in `\"`"
+    EXCEPT_CSV_COLUMN        = "Column 'sentence' and/or 'sentence_id' not found in CSV"
 
     MENU_DATA                 = "Data"
     MENU_DEFAULT_SESSION_DIR  = "Default Session Directory"
