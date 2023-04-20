@@ -25,7 +25,6 @@ from datetime import datetime
 from locale import getlocale
 from babel import Locale
 
-from williaikuma.models.Messages import MSG
 from williaikuma.models.Session import Session
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
 from williaikuma.models.utils import json_dump, json_read

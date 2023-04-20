@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from enum import Enum, EnumMeta
+from enum import Enum
 
 import babel
 
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
-from williaikuma.models.utils import FrozenEnum
+from williaikuma.utilities.FrozenEnum import FrozenEnum
 
 
 # /!\ If ANY string is modified here, whatever the modification, localisation will not work anymore.

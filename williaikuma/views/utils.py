@@ -21,11 +21,12 @@
 import os
 from enum import Enum, unique
 
-from williaikuma.utils import IMAGE_PATH
+from williaikuma.utilities.FrozenEnum import FrozenEnum
+from williaikuma.consts import IMAGE_PATH
 
 
 @unique
-class TkinterButtons(Enum):
+class TkinterButtons(Enum, metaclass=FrozenEnum):
     BUTTON_RECORD_ON = os.path.join(IMAGE_PATH, 'record.png')
     BUTTON_RECORD_OFF = os.path.join(IMAGE_PATH, 'stop.png')
     BUTTON_PLAY_ON = os.path.join(IMAGE_PATH, 'play.png')
@@ -34,3 +35,6 @@ class TkinterButtons(Enum):
     BUTTON_LEFT = os.path.join(IMAGE_PATH, 'left-arrow.png')
     BUTTON_RIGHT = os.path.join(IMAGE_PATH, 'right-arrow.png')
     BUTTON_RESPEAK = os.path.join(IMAGE_PATH, 'music-note.png')
+
+    def _accessed(self):
+        return self.value
