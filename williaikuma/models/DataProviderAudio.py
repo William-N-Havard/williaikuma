@@ -53,7 +53,7 @@ class DataProviderAudio(AbstractDataProvider):
                 self.source_sentences = None
         except Exception as e:
             self.source_sentences = None
-            raise Exception(e)
+            raise e
 
 
     def __getitem__(self, index):

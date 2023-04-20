@@ -103,20 +103,20 @@ class Application(object):
             self.session = Session.load(session_json=session_json,
                                         version=self.version)
         except Exception as e:
-            raise Exception(e)
+            raise e
 
     def session_init(self, **kwargs):
         try:
             self.session = Session.init(**kwargs, version=self.version)
         except Exception as e:
-            raise Exception(e)
+            raise e
 
     def session_start(self):
         try:
             self.session.start()
             self.update_config(recent=self.session)
         except Exception as e:
-            raise Exception(e)
+            raise e
 
     #
     #   Application configuration

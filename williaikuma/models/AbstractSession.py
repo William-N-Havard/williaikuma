@@ -63,7 +63,7 @@ class AbstractSession(abc.ABC):
         try:
             self.data.load()
         except Exception as e:
-            raise Exception(e)
+            raise e
 
 
     def previous(self):

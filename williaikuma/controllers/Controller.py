@@ -57,7 +57,9 @@ class Controller(object):
             self.model.session_start()
         except Exception as e:
             logging.exception(e)
-            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_SESSION_START)
+            msg = MSG.ERROR_UNABLE_SESSION_START.format(str(e) if str(e) in MSG.values() else '')
+
+            MessageBoxes.action_error(MSG.TITLE_ERROR, msg)
             return
 
         self.command_next()
@@ -138,7 +140,9 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_CREATE_SESSION)
+            msg = MSG.ERROR_UNABLE_CREATE_SESSION.format(str(e) if str(e) in MSG.values() else '')
+
+            MessageBoxes.action_error(MSG.TITLE_ERROR, msg)
 
 
     def command_open(self):
@@ -151,7 +155,9 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_OPEN_SESSION)
+            msg = MSG.ERROR_UNABLE_OPEN_SESSION.format(str(e) if str(e) in MSG.values() else '')
+
+            MessageBoxes.action_error(MSG.TITLE_ERROR, msg)
 
 
     def command_recent_open(self, session):
@@ -160,7 +166,9 @@ class Controller(object):
             self.start()
         except Exception as e:
             logging.exception(e)
-            MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNABLE_OPEN_SESSION)
+            msg = MSG.ERROR_UNABLE_OPEN_SESSION.format(str(e) if str(e) in MSG.values() else '')
+
+            MessageBoxes.action_error(MSG.TITLE_ERROR, msg)
 
 
     def command_generate_textgrid(self):

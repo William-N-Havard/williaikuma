@@ -19,11 +19,11 @@ class MSG(Enum, metaclass=FrozenEnum):
     BUTTON_RECORD  = "Record"
     BUTTON_RESPEAK = "Respeak"
 
-    ERROR_UNABLE_CREATE_SESSION    = "Couldn't create this session!"
+    ERROR_UNABLE_CREATE_SESSION    = "Couldn't create this session!\n{}"
     ERROR_UNABLE_GENERATE_TEXTGRID = "There was a problem when generating the TextGrid files."
     ERROR_UNABLE_OPEN_SESSION      = "Couldn't open this session!"
     ERROR_UNABLE_READ_RECORDING    = "There is a problem with this recording!"
-    ERROR_UNABLE_SESSION_START     = "Unable to start the session!"
+    ERROR_UNABLE_SESSION_START     = "Unable to start the session!\n{}"
     ERROR_UNKNOWN                  = "Unknown error!"
 
     EXCEPT_INDEX_NEGATIVE    = "Index can't be negative ({})!"
@@ -79,3 +79,8 @@ class MSG(Enum, metaclass=FrozenEnum):
         #     and allows us to directly have access to the string value without having to use the
         #     str() function on the class member (allowing to directly format the string using str.format())
         return gettext(self.value) # noqa: Unresolved reference 'gettext'
+
+
+    @classmethod
+    def values(cls):
+        return (getattr(o, 'value') for o in list(cls))
