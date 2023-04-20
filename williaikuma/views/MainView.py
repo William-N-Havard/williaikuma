@@ -98,6 +98,11 @@ class MainView(tk.Frame):
         self.locale_menu = tk.Menu(preferenceMenu, tearoff=0)
         preferenceMenu.add_cascade(label=MSG.MENU_LANGUAGE, menu=self.locale_menu)
 
+        questionMenu = tk.Menu(menu, tearoff=False)
+        questionMenu.add_command(label=MSG.MENU_VERSION, command=self.Menu_Question_Version)
+        menu.add_cascade(label="?", menu=questionMenu)
+
+
         Button_Record=tk.Button(root, state = tk.DISABLED, image=self.image_record_on)
         Button_Record["bg"] = "#efefef"
         ft = tkFont.Font(family='Times',size=10)
@@ -237,6 +242,10 @@ class MainView(tk.Frame):
 
     def Menu_Data_ViewMissing_Command(self):
         self.ctrl.command_view_missing()
+
+
+    def Menu_Question_Version(self):
+        self.ctrl.command_version()
 
     def Button_Previous_command(self):
         self.ctrl.command_previous()

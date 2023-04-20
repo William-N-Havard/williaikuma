@@ -53,6 +53,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     MENU_PREFERENCES          = "Preferences"
     MENU_RECENT               = "Recent"
     MENU_RESET                = "Reset"
+    MENU_VERSION              = "Version"
 
     STATUS_SESSION = "Line: {} | Speaker: {} | Session: {}"
     STATUS_WAITING = "Waiting..."
@@ -64,6 +65,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     TEXT_PROMPT_DELETE_RECORDING       = "Delete this recording?"
     TEXT_PROMPT_SPEAKER                = "Enter speaker's name"
     TEXT_PROMPT_CHANGE_LOCALE          = "The application will have to restart to apply the changes. Restart?"
+    TEXT_VERSION                       = "Version: {}"
 
     TITLE_CHOOSE_FILE                  = "Choose a file"
     TITLE_DELETE                       = "Delete"
