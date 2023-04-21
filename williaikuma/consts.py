@@ -30,3 +30,12 @@ except AttributeError:
 
 IMAGE_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'images')
 LOCAL_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'locales')
+
+
+def project_dirs(project_path):
+    # Root project path
+    paths = [project_path]
+    # Data path used to store session's source sentences
+    paths.append(os.path.join(project_path, 'data'))
+
+    return paths

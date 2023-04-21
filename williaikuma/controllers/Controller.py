@@ -19,6 +19,7 @@
 # -----------------------------------------------------------------------------
 import logging
 import os
+import shutil
 
 from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
@@ -27,6 +28,7 @@ from williaikuma.models.Application import Application
 from williaikuma.audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
 from williaikuma.views.MainView import MainView
 from williaikuma.views import MessageBoxes
+from williaikuma.consts import project_dirs
 
 class Controller(object):
 
@@ -123,20 +125,33 @@ class Controller(object):
 
 
     def command_new(self, task):
+        # Prompt for data
         data_path = MessageBoxes.action_open_file(file_type=task.extensions)
         if not data_path: return
 
+        # Prompt for speaker
         speaker = MessageBoxes.action_prompt(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_SPEAKER)
         if not speaker: return
 
         # Generate session directory
         datetime_now = now().replace(' ', '_').replace('/', '').replace(':', '')
-        data_source_filename = os.path.basename(os.path.splitext(data_path)[0])
+        data_source_filename = os.path.basename(data_path)
+        data_source_filename_wo_ext = os.path.splitext(data_source_filename)[0]
 
         session_name = '{}_session_{}_{}_{}'.format(
-                        task.value, speaker, data_source_filename, datetime_now)
+                        task.value, speaker, data_source_filename_wo_ext, datetime_now)
         session_path = os.path.join(self.model.session_path, session_name)
-        os.makedirs(session_path)
+
+        # Create directory
+        session_dirs = project_dirs(session_path)
+        for p in session_dirs:
+            os.makedirs(p)
+
+        # From now on, session sentences will be stored inside the session directory
+            # First copy file
+        shutil.copyfile(data_path, os.path.join(session_path, 'data', data_source_filename))
+            # Then, make its path relative to the session's path
+        data_path = os.path.join('.', 'data', data_source_filename)
 
         try:
             self.model.session_init(name=session_name, path=session_path, data_path=data_path,
