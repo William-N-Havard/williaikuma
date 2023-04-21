@@ -23,12 +23,13 @@ import shutil
 
 from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
-from williaikuma.models.utils import assert_recording_exists, now
+from williaikuma.models.utils import assert_recording_exists
 from williaikuma.models.Application import Application
 from williaikuma.audio.ThreadedAudio import ThreadedRecorder, ThreadedPlayer
 from williaikuma.views.MainView import MainView
 from williaikuma.views import MessageBoxes
 from williaikuma.consts import project_dirs
+from williaikuma.controllers.utils import generate_session_path, get_parent_dir, select_writable_dir
 
 class Controller(object):
 
@@ -125,26 +126,36 @@ class Controller(object):
 
 
     def command_new(self, task):
+        #
         # Prompt for data
+        #
         data_path = MessageBoxes.action_open_file(initial_dir=self.model.recent_path_data,
                                                   file_type=task.extensions)
         if not data_path: return
-
         # Update recent path
         self.model.recent_path_data = os.path.split(data_path)[0]
 
+        #
+        # Prompt for session dir
+        #
+        yes_no = MessageBoxes.action_yes_no(MSG.TITLE_INFORMATION,
+                                            MSG.TEXT_SESSION_PATH.format(self.model.session_path))
+
+        # User wants to change directory
+        if yes_no:
+            session_root_dir = select_writable_dir(initial_dir=get_parent_dir(self.model.session_path))
+        else:
+            session_root_dir = self.model.session_path
+
+        #
         # Prompt for speaker
+        #
         speaker = MessageBoxes.action_prompt(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_SPEAKER)
         if not speaker: return
 
         # Generate session directory
-        datetime_now = now().replace(' ', '_').replace('/', '').replace(':', '')
         data_source_filename = os.path.basename(data_path)
-        data_source_filename_wo_ext = os.path.splitext(data_source_filename)[0]
-
-        session_name = '{}_session_{}_{}_{}'.format(
-                        task.value, speaker, data_source_filename_wo_ext, datetime_now)
-        session_path = os.path.join(self.model.session_path, session_name)
+        session_path, session_name = generate_session_path(data_path, task, speaker, session_root_dir)
 
         # Create directory
         session_dirs = project_dirs(session_path)

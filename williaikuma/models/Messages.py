@@ -36,6 +36,7 @@ class MSG(Enum, metaclass=FrozenEnum):
                                'new metadata differ ({} v. {})'
     EXCEPT_CSV_FILE          = "Cannot read CSV file! Make sure field are enclosed in `\"`"
     EXCEPT_CSV_COLUMN        = "Column 'sentence' and/or 'sentence_id' not found in CSV"
+    EXCEPT_PATH_NOT_WRITABLE = "Selected path is not writable. Select another one or leave default one."
 
     MENU_DATA                 = "Data"
     MENU_DEFAULT_SESSION_DIR  = "Default Session Directory"
@@ -66,6 +67,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     TEXT_PROMPT_SPEAKER                = "Enter speaker's name"
     TEXT_PROMPT_CHANGE_LOCALE          = "The application will have to restart to apply the changes. Restart?"
     TEXT_VERSION                       = "Version: {}"
+    TEXT_SESSION_PATH                  = "This session will be created in this directory {}.\nChange directory?"
 
     TITLE_CHOOSE_FILE                  = "Choose a file"
     TITLE_DELETE                       = "Delete"

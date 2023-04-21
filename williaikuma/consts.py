@@ -28,6 +28,7 @@ try:
 except AttributeError:
     WORK_DIR = os.getcwd()
 
+
 IMAGE_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'images')
 LOCAL_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'locales')
 
