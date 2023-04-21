@@ -293,6 +293,9 @@ class MainView(tk.Frame):
         self.enable_widget(self.Button_Previous)
         self.enable_widget(self.Button_Next)
 
+    def disable_directional_buttons(self):
+        self.disable_widget(self.Button_Previous)
+        self.disable_widget(self.Button_Next)
 
     def enable_recording(self):
         self.enable_widget(self.Button_Record)
