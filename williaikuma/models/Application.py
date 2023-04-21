@@ -25,6 +25,7 @@ from datetime import datetime
 from locale import getlocale
 from babel import Locale
 
+import williaikuma
 from williaikuma.models.Session import Session
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
 from williaikuma.models.utils import json_dump, json_read
@@ -32,17 +33,17 @@ from williaikuma.consts import LOCAL_PATH
 
 
 class Application(object):
-    def __init__(self, version):
+    def __init__(self):
         super(Application, self).__init__()
 
-        self.name = "Williaikuma"
-        self.version = version
+        self.name = williaikuma.__name__.title()
+        self.version = williaikuma.__version__
 
         # Session
         self.session = None
 
         # Other
-        self._config_file = '.williaikuma.json'
+        self._config_file = '.{}.json'.format(self.name.lower())
         self._config = self._read_config()
         self._session_path = self.config.get('session_path', os.path.realpath('sessions'))
 

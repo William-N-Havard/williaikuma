@@ -20,3 +20,4 @@
 
 __version__ = "0.1.4"
 __author__  = "William N. Havard"
+__email__   = "william.havard@gmail.com"

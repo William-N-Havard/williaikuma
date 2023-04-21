@@ -21,6 +21,7 @@ import logging
 import os
 import shutil
 
+import williaikuma
 from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
 from williaikuma.models.utils import assert_recording_exists
@@ -122,7 +123,9 @@ class Controller(object):
     #   Menu Commands
     #
     def command_version(self):
-        MessageBoxes.action_notify(MSG.TITLE_INFORMATION, MSG.TEXT_VERSION.format(self.model.version))
+        MessageBoxes.action_notify(MSG.TITLE_INFORMATION, MSG.TEXT_VERSION.format(williaikuma.__version__,
+                                                                                  williaikuma.__author__,
+                                                                                  williaikuma.__email__))
 
 
     def command_new(self, task):

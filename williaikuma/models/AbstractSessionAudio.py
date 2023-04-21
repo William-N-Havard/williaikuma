@@ -19,7 +19,6 @@
 # -----------------------------------------------------------------------------
 import os
 import abc
-from pympi import Praat
 
 from williaikuma.models.defaults import SAMPLING_RATE, NUM_CHANNELS
 from williaikuma.models.AbstractSession import AbstractSession

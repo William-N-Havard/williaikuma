@@ -20,7 +20,6 @@
 import os
 import tkinter as tk
 
-from williaikuma import __version__
 from williaikuma.controllers.Controller import Controller
 from williaikuma.views.MainView import MainView
 from williaikuma.models.Application import Application
@@ -32,7 +31,7 @@ class App(tk.Tk):
         self.wrapper = wrapper
 
         # Get main model and set locale
-        model = Application(version=__version__)
+        model = Application()
         # Get View
         view = MainView(self)
         # Get controller

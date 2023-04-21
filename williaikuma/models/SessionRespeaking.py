@@ -78,6 +78,5 @@ class SessionRespeaking(AbstractSessionAudio):
                 create_praat_tg(rec_length, sentence, self.textgrid_path, raw_filename)
                 done += 1
         except Exception as e:
-            print(e)
             errors.append(wav_file)
         return done, errors

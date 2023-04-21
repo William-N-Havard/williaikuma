@@ -66,7 +66,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     TEXT_PROMPT_DELETE_RECORDING       = "Delete this recording?"
     TEXT_PROMPT_SPEAKER                = "Enter speaker's name"
     TEXT_PROMPT_CHANGE_LOCALE          = "The application will have to restart to apply the changes. Restart?"
-    TEXT_VERSION                       = "Version: {}"
+    TEXT_VERSION                       = "Version: {}\nAuthor: {}\nContact: {}"
     TEXT_SESSION_PATH                  = "This session will be created in this directory {}.\nChange directory?"
 
     TITLE_CHOOSE_FILE                  = "Choose a file"
