@@ -17,7 +17,7 @@
 #   Description:
 #       •
 # -----------------------------------------------------------------------------
-
+import os.path
 import tkinter as tk
 import tkinter.simpledialog
 import tkinter.filedialog
@@ -26,7 +26,7 @@ from tkinter import messagebox
 from williaikuma.models.Messages import MSG
 
 
-def action_open_file(initial_dir="/home/", file_type=['txt']):
+def action_open_file(initial_dir=os.path.expanduser('~'), file_type=['txt']):
     filetypes = tuple([(MSG.TEXT_FILES, "*.{}".format(ext)) for ext in file_type])
     return tk.filedialog.askopenfilename(initialdir=initial_dir,
                                          title=MSG.TITLE_CHOOSE_FILE,
@@ -45,7 +45,7 @@ def action_notify(title, message):
     return tk.messagebox.showinfo(title, message)
 
 
-def action_choose_dir(initial_dir='/home/'):
+def action_choose_dir(initial_dir=os.path.expanduser('~')):
     return tk.filedialog.askdirectory(initialdir=initial_dir)
 
 

@@ -66,6 +66,18 @@ class Application(object):
         return [(name, path) for name, path, *_ in self.config['recent']]
 
 
+    @property
+    def recent_path_data(self):
+        recent_path_temp = self.config.get('recent_path_data', os.path.expanduser('~'))
+        recent_path_temp = recent_path_temp if os.path.exists(recent_path_temp) else os.path.expanduser('~')
+        return recent_path_temp
+
+
+    @recent_path_data.setter
+    def recent_path_data(self, recent_path_data):
+        self.update_config(recent_path_data=recent_path_data)
+
+
     def reset_recent_sessions(self):
         self.config['recent'] = []
         self.update_config()

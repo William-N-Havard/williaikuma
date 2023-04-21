@@ -126,8 +126,12 @@ class Controller(object):
 
     def command_new(self, task):
         # Prompt for data
-        data_path = MessageBoxes.action_open_file(file_type=task.extensions)
+        data_path = MessageBoxes.action_open_file(initial_dir=self.model.recent_path_data,
+                                                  file_type=task.extensions)
         if not data_path: return
+
+        # Update recent path
+        self.model.recent_path_data = os.path.split(data_path)[0]
 
         # Prompt for speaker
         speaker = MessageBoxes.action_prompt(MSG.TITLE_INFORMATION, MSG.TEXT_PROMPT_SPEAKER)
