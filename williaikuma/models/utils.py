@@ -75,7 +75,7 @@ def create_praat_tg(rec_length, sentence, textgrid_path, raw_filename):
 
 
 def read_csv(path_csv):
-    with open(path_csv) as csv_file:
+    with open(path_csv, encoding="utf-8") as csv_file:
         dialect = csv.Sniffer().sniff(csv_file.read(1024));
         csv_file.seek(0)
         data = csv.DictReader(csv_file, dialect=dialect)
