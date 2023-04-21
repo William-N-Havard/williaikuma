@@ -88,7 +88,10 @@ class Application(object):
     #
     def set_locale(self, lang_code=''):
         if not lang_code:
-            lang_code = self.config.get('language', Locale.parse(getlocale()[0]).language)
+            try:
+                lang_code = self.config.get('language', Locale.parse(getlocale()[0]).language)
+            except:
+                lang_code = DEFAULT_LANGUAGE
         else:
             lang_list = [lc for lc, _ in self.get_locales()[1:]]
             self.update_config(language=lang_code if lang_code in lang_list else DEFAULT_LANGUAGE)
