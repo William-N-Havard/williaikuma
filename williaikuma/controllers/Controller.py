@@ -170,7 +170,7 @@ class Controller(object):
 
     def command_open(self):
         session = MessageBoxes.action_open_file(initial_dir=self.model.session_path,
-                                             file_type='json')
+                                                file_type=['json'])
         if not session: return
 
         try:
