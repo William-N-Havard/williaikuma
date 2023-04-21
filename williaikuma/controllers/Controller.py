@@ -83,9 +83,11 @@ class Controller(object):
         if self.recording_status == False:
             self.view.disable_recording()
             self.view.update_recording_on()
+            self.view.enable_directional_buttons()
         else:
             self.view.enable_recording()
             self.view.update_recording_off()
+            self.view.disable_directional_buttons()
 
 
     @property
@@ -247,8 +249,17 @@ class Controller(object):
                                                  num_channels=self.model.session.num_channels)
                 self.recorder.start()
         except Exception as e:
+            try:
+                self.recorder.join()
+                del self.recorder
+            except:
+                del self.recorder
+
+            self.recording_status = False
+
             logging.exception(e)
             MessageBoxes.action_error(MSG.TITLE_ERROR, MSG.ERROR_UNKNOWN)
+            self.view.enable_directional_buttons()
 
         self.view_update()
 
