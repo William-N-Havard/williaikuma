@@ -30,6 +30,7 @@ class FrozenEnum(EnumMeta):
         classdict['__frozenenummeta_creating_class__'] = True
         enum = super().__new__(mcls, name, bases, classdict)
         del enum.__frozenenummeta_creating_class__
+
         return enum
 
     def __call__(cls, value, names=None, *, module=None, **kwargs):
@@ -61,6 +62,12 @@ class FrozenEnum(EnumMeta):
 
     def __getattribute__(cls, name):
         obj = super().__getattribute__(name)
+        if isinstance(obj, cls):
+            obj = obj._accessed()
+        return obj
+
+    def __getitem__(cls, name):
+        obj = super().__getitem__(name)
         if isinstance(obj, cls):
             obj = obj._accessed()
         return obj

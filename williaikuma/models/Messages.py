@@ -87,4 +87,5 @@ class MSG(Enum, metaclass=FrozenEnum):
 
     @classmethod
     def values(cls):
-        return [o.value for o in list(cls)]
+        # Require to access values that way (here) so as to get translated messages.
+        return [cls[o.name] for o in list(cls)]

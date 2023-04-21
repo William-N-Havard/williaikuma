@@ -45,7 +45,7 @@ class DataProviderText(AbstractDataProvider):
             except:
                 raise ValueError(MSG.EXCEPT_CSV_COLUMN)
         else:
-            raise MSG.EXCEPT_FILE_TYPES.format("txt, csv")
+            raise ValueError(MSG.EXCEPT_FILE_TYPES.format("txt, csv"))
 
         self.data = data
 

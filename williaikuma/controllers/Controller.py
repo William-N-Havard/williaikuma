@@ -61,6 +61,7 @@ class Controller(object):
             self.model.session_start()
         except Exception as e:
             logging.exception(e)
+
             msg = MSG.ERROR_UNABLE_SESSION_START.format(str(e) if str(e) in MSG.values() else '')
 
             MessageBoxes.action_error(MSG.TITLE_ERROR, msg)

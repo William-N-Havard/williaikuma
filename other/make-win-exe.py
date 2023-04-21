@@ -34,6 +34,7 @@ def make_win_exe():
         '--clean',
         '--onefile',
         '--windowed',
+        '--hidden-import', '"babel.numbers"',
         '--add-data', '"{};{}"'.format(os.path.join(this_files_path, 'williaikuma', 'assets'),
                                        os.path.join('.','williaikuma','assets')),
         '--specpath', '{}'.format(specs_path),
