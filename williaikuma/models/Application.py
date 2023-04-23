@@ -47,7 +47,7 @@ class Application(object):
         self._config = self._read_config()
         self._session_path = self.config.get('session_path', os.path.realpath('sessions'))
 
-        self.set_locale()
+        self.set_locale(self.config.get('language', ''))
 
     @property
     def config(self):
@@ -87,11 +87,13 @@ class Application(object):
     #   Internationalisation
     #
     def set_locale(self, lang_code=''):
+        try:
+            locale_lang = Locale.parse(getlocale()[0]).language
+        except:
+            locale_lang = DEFAULT_LANGUAGE
+
         if not lang_code:
-            try:
-                lang_code = self.config.get('language', Locale.parse(getlocale()[0]).language)
-            except:
-                lang_code = DEFAULT_LANGUAGE
+                lang_code = self.config.get('language', locale_lang)
         else:
             lang_list = [lc for lc, _ in self.get_locales()[1:]]
             self.update_config(language=lang_code if lang_code in lang_list else DEFAULT_LANGUAGE)

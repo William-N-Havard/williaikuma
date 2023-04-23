@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Williaikuma"
-#define MyAppVersion "0.1.5"
+#define MyAppVersion "0.1.5-beta"
 #define MyAppPublisher "LAAC-LSCP"
 #define MyAppURL "https://laac-lscp.github.io/"
 #define MyAppExeName "Williaikuma.exe"

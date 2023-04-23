@@ -307,7 +307,8 @@ class Controller(object):
             return
 
         # Restart?
-        if yes_no_cancel: self.view.root.restart()
+        if yes_no_cancel:
+            self.view.root.restart()
 
     def command_view_missing(self):
         missing_items = self.model.session.get_missing_items()
