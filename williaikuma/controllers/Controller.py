@@ -59,6 +59,7 @@ class Controller(object):
     def start(self):
         try:
             self.model.session_start()
+            self.view_refresh_recent()
         except Exception as e:
             logging.exception(e)
 
