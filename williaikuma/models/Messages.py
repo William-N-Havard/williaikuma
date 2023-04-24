@@ -64,6 +64,7 @@ class MSG(Enum, metaclass=FrozenEnum):
     TEXT_INFORMATION_GENERATE_TEXTGRID = "Done! ({} generated, {} failures)\n"
     TEXT_MISSING_ITEMS                 = "Missing items"
     TEXT_PROMPT_DELETE_RECORDING       = "Delete this recording?"
+    TEXT_PROMPT_DELETE                 = "Delete?"
     TEXT_PROMPT_SPEAKER                = "Enter speaker's name"
     TEXT_PROMPT_CHANGE_LOCALE          = "The application will have to restart to apply the changes. Restart?"
     TEXT_VERSION                       = "Version: {}\nAuthor: {}\nContact: {}"

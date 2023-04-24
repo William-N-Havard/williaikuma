@@ -308,9 +308,10 @@ class Controller(object):
         self.model.session_path = new_dir
 
     def command_reset_recent(self):
-        yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE_RECORDING)
+        yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE)
         if not yes_no: return
 
+        self.model.reset_recent_sessions()
         self.view_refresh_recent()
 
     def set_locale(self, lang_code):
