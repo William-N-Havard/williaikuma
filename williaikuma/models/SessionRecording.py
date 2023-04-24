@@ -47,11 +47,13 @@ class SessionRecording(AbstractSessionAudio):
 
     def item_recording_path(self):
         tentative_path = os.path.join(self.recordings_path,
-                                      'line-{}_sentid-{}_speaker-{}_at-{}.wav'.format(
+                                      'line-{}_sentid-{}_speaker-{}_at-{}_v-{}.wav'.format(
                                           self.index+1,
                                           self.current_sentence_id,
                                           self.speaker,
-                                          now_raw())
+                                          now_raw(),
+                                          self.recording_retakes.get(self.index, 0) + 1,
+                                        )
                                       )
         return self.recordings_list.get(self.index, tentative_path)
 
@@ -61,6 +63,21 @@ class SessionRecording(AbstractSessionAudio):
         # '_' can be trusted here as ID will always be first
         return int(filename.split('_')[0].split('-')[-1])-1
 
+
+    def item_retake_from_rec_name(self, recording_name):
+        filepath, filename = os.path.split(recording_name)
+        bare_filename, _ = os.path.splitext(filename)
+        split_filename = bare_filename.split('_')
+
+        # '_' CAN NOT be trusted here as sentid might contain "_"
+        # find index of items that start with "v-" in split_filename and keep the last
+        v_pos = [idx for idx, v in enumerate(split_filename) if v.startswith('v-')]
+        max_v_pos = max(v_pos) if v_pos else -1
+        if max_v_pos != -1:
+            retake_num = int(split_filename[max_v_pos].split('-')[-1])
+        else:
+            retake_num = 1 # if this function is called, it means a recording was deleted
+        return retake_num
 
     def get_missing_items(self):
         existing_recordings = [self.item_index_from_rec_name(item) for item in self.list_recordings()]

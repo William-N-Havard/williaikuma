@@ -24,7 +24,7 @@ from williaikuma.models.defaults import SAMPLING_RATE, NUM_CHANNELS
 from williaikuma.models.AbstractSession import AbstractSession
 
 class AbstractSessionAudio(AbstractSession, abc.ABC):
-    def __init__(self, sampling_rate=SAMPLING_RATE, num_channels=NUM_CHANNELS, **kwargs):
+    def __init__(self, sampling_rate=SAMPLING_RATE, num_channels=NUM_CHANNELS, recording_retakes=dict(), **kwargs):
         super(AbstractSessionAudio, self).__init__(**kwargs)
 
         # Recording metadata
@@ -32,6 +32,7 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         self.num_channels = num_channels
 
         self.recordings_list = {}
+        self.recording_retakes = {int(k):int(v) for k, v in recording_retakes.items()} # Restore int indices
 
         # Path metadata
         self.recordings_path = os.path.join(self.path, 'wavs')
@@ -57,9 +58,10 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         audio_metadata = {
             'sampling_rate': self.sampling_rate,
             'num_channels': self.num_channels,
+            'recording_retakes': self.recording_retakes
         }
 
-        super().save(audio_metadata)
+        super().save(audio_metadata, allowed_overwrite=['recording_retakes'])
 
 
     @property
@@ -69,9 +71,15 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
     def register_done_recording(self, recording_path):
         item_idx = self.item_index_from_rec_name(recording_path)
         self.recordings_list[item_idx] = recording_path
+        # Remove from retakes
+        if item_idx in self.recording_retakes:
+            del self.recording_retakes[item_idx]
 
     def register_removed_recording(self, recording_path):
         item_idx = self.item_index_from_rec_name(recording_path)
+        # Add retakes
+        self.recording_retakes[item_idx] = self.item_retake_from_rec_name(recording_path)
+        # Delete from list of recordings
         del self.recordings_list[item_idx]
 
     @property
@@ -88,6 +96,10 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
 
     @abc.abstractmethod
     def item_index_from_rec_name(self):
+        pass
+
+    @abc.abstractmethod
+    def item_retake_from_rec_name(self):
         pass
 
     @abc.abstractmethod

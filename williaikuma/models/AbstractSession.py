@@ -85,7 +85,9 @@ class AbstractSession(abc.ABC):
         pass
 
 
-    def save(self, other_metadata):
+    def save(self, other_metadata, allowed_overwrite=[]):
+        allowed_overwrite = allowed_overwrite + ['last_access', 'version']
+
         if os.path.exists(self.session_metadata_path):
             existing_metadata = json_read(self.session_metadata_path)
         else:
@@ -105,7 +107,7 @@ class AbstractSession(abc.ABC):
 
         if existing_metadata:
             for k, v in metadata.items():
-                if k in ['last_access', 'version']: continue
+                if k in allowed_overwrite: continue
                 assert existing_metadata.get(k, None) == v, \
                     ValueError(MSG.EXCEPT_METADATA_MISMATCH.format(existing_metadata[k], v))
                 if k not in metadata.keys():
