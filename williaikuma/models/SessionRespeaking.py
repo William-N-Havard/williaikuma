@@ -48,6 +48,7 @@ class SessionRespeaking(AbstractSessionAudio):
             raw_sentence_recording, self.speaker, now_raw()))
 
     def item_index_from_rec_name(self, recording_name):
+        # '_' can be trusted here as ID will always be first
         return int(recording_name.split('_')[0].split('-')[-1])-1
 
 
@@ -70,7 +71,7 @@ class SessionRespeaking(AbstractSessionAudio):
                 raw_filename = os.path.basename(os.path.splitext(wav_file)[0])
                 rec_length = get_recording_length(os.path.join(self.recordings_path, wav_file))
                 line_number = self.item_index_from_rec_name(wav_file)
-                sentence, _ = self.data.source_sentences[line_number - 1]
+                sentence, _ = self.data.source_sentences[line_number]
 
                 create_praat_tg(rec_length, sentence, self.textgrid_path, raw_filename)
                 done += 1
