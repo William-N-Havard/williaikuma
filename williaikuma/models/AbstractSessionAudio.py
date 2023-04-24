@@ -30,16 +30,11 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         # Recording metadata
         self.sampling_rate = sampling_rate
         self.num_channels = num_channels
-        self.recordings_done = 0
+        self.recordings_list = {}
 
         # Path metadata
         self.recordings_path = os.path.join(self.path, 'wavs')
         self.textgrid_path = os.path.join(self.path, 'textgrids')
-
-
-    @abc.abstractmethod
-    def update_current_data_item(self):
-        pass
 
 
     def start(self):
@@ -49,14 +44,13 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
             os.makedirs(self.recordings_path)
 
         found_recordings = self.list_recordings()
-        max_line = max([self.item_index(rec) for rec in found_recordings])-1 if found_recordings else -1
-        self.data.index = max_line
-        self.recordings_done = len(found_recordings)
 
+        self.recordings_list = {self.item_index_from_rec_name(rec): rec for rec in found_recordings}
+        self.data.index = max(self.recordings_list.keys()) if found_recordings else -1
 
     def list_recordings(self):
-        return [item for item in os.listdir(self.recordings_path) if item.endswith('.wav')]
-
+        return [os.path.join(self.recordings_path, item) for item in os.listdir(self.recordings_path)
+                if item.endswith('.wav')]
 
     def save(self):
         audio_metadata = {
@@ -66,6 +60,39 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
 
         super().save(audio_metadata)
 
+
+    @property
+    def recordings_done(self):
+        return len(self.recordings_list)
+
+    def register_done_recording(self, recording_path):
+        item_idx = self.item_index_from_rec_name(recording_path)
+        self.recordings_list[item_idx] = recording_path
+
+    def register_removed_recording(self, recording_path):
+        item_idx = self.item_index_from_rec_name(recording_path)
+        del self.recordings_list[item_idx]
+
     @property
     def index(self):
         return self.data.index
+
+    @abc.abstractmethod
+    def update_current_data_item(self):
+        pass
+
+    @abc.abstractmethod
+    def item_save_path(self):
+        pass
+
+    @abc.abstractmethod
+    def item_index_from_rec_name(self):
+        pass
+
+    @abc.abstractmethod
+    def get_missing_items(self):
+        pass
+
+    @abc.abstractmethod
+    def generate_textgrids(self):
+        pass

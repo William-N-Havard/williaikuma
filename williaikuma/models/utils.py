@@ -25,7 +25,10 @@ from datetime import datetime
 
 from pympi import Praat
 
-now = lambda: datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+from williaikuma.consts import DATE_FORMAT
+
+now = lambda: datetime.now().strftime(DATE_FORMAT)
+now_raw = lambda: now().replace(' ', '-').replace('/', '').replace(':', '')
 
 def resolve_relative_path(prefix_path, target_path):
     if os.path.isabs(target_path):

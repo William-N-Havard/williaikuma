@@ -77,7 +77,7 @@ class AbstractSession(abc.ABC):
 
 
     def override_index(self, value):
-        self.data.index = value - 1
+        self.data.index = value
         self.update_current_data_item()
 
     @abc.abstractmethod

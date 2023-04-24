@@ -29,7 +29,7 @@ import williaikuma
 from williaikuma.models.Session import Session
 from williaikuma.models.defaults import DEFAULT_LANGUAGE
 from williaikuma.models.utils import json_dump, json_read
-from williaikuma.consts import LOCAL_PATH
+from williaikuma.consts import DATE_FORMAT, LOCAL_PATH
 
 
 class Application(object):
@@ -148,10 +148,14 @@ class Application(object):
         config = json_read(self._config_file)
         config['recent'] = [[name, path, date] for name, path, date in config['recent'] if os.path.exists(path)]
         config['recent'] = list(sorted(config['recent'],
-                                       key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True))
+                                       key=lambda tup: datetime.strptime(tup[-1], DATE_FORMAT), reverse=True))
         json_dump(self._config_file, config)
 
         return config
+
+
+    def save_config(self):
+        self.update_config()
 
     def update_config(self, **kwargs):
         config = self.config
@@ -169,9 +173,19 @@ class Application(object):
                     config[k][idx][-1] = cur_sess.last_access
 
                 config[k] = sorted(config[k][:5],
-                                   key=lambda tup: datetime.strptime(tup[-1], "%d/%m/%Y %H:%M:%S"), reverse=True)
+                                   key=lambda tup: datetime.strptime(tup[-1], DATE_FORMAT), reverse=True)
             else:
                 config[k] = v
 
         self._config = config
         json_dump(self._config_file, config)
+
+
+    def save(self):
+        # On save, dump config and save session if any
+        try:
+            self.save_config()
+            if self.session:
+                self.session.save()
+        except:
+            pass

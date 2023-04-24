@@ -21,12 +21,12 @@
 import os
 
 from williaikuma.models.Messages import MSG
-from williaikuma.models.utils import now
+from williaikuma.models.utils import now_raw
 from williaikuma.views import MessageBoxes
 
 
 def generate_session_path(data_path, task, speaker, session_dir):
-    datetime_now = now().replace(' ', '_').replace('/', '').replace(':', '')
+    datetime_now = now_raw()
     data_source_filename = os.path.basename(data_path)
     data_source_filename_wo_ext = os.path.splitext(data_source_filename)[0]
 

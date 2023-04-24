@@ -21,6 +21,9 @@
 import os
 import sys
 
+
+DATE_FORMAT = "%d/%m/%Y %H:%M:%S"
+
 # Do not change: design required by PyInstaller on Windows
 # Does not prevent the app from running on Linux fortunately!
 try:

@@ -236,13 +236,19 @@ class Controller(object):
 
     def command_record(self):
         try:
+            # Recording
             if self.recording_status:
+                # Stop recorder
                 self.recorder.stop()
                 self.recorder.join()
-                del self.recorder
-
                 self.recording_status = False
-                self.model.session.recordings_done += 1
+
+                # Register this recording to the model
+                if os.path.exists(self.recorder.audio_path):
+                    self.model.session.register_done_recording(self.recorder.audio_path)
+                # Delete recorder
+                del self.recorder
+            # Not recording
             else:
                 self.recording_status = True
                 self.recorder = ThreadedRecorder(self.model.session.item_save_path(),
@@ -251,9 +257,19 @@ class Controller(object):
                 self.recorder.start()
         except Exception as e:
             try:
+                self.recorder.stop()
                 self.recorder.join()
+                self.recording_status = False
+
+                # Register this recording to the model
+                if os.path.exists(self.recorder.audio_path):
+                    self.model.session.register_done_recording(self.recorder.audio_path)
+
                 del self.recorder
             except:
+                if os.path.exists(self.recorder.audio_path):
+                    self.model.session.register_done_recording(self.recorder.audio_path)
+
                 del self.recorder
 
             self.recording_status = False
@@ -277,9 +293,11 @@ class Controller(object):
         yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE_RECORDING)
         if not yes_no: return
 
-        if assert_recording_exists(self.model.session.item_save_path()):
-            os.remove(self.model.session.item_save_path())
-            self.model.session.recordings_done -= 1
+        recording_path = self.model.session.item_save_path()
+
+        if assert_recording_exists(recording_path):
+            os.remove(recording_path)
+            self.model.session.register_removed_recording(recording_path)
         self.view_update()
 
 
@@ -312,9 +330,9 @@ class Controller(object):
 
     def command_view_missing(self):
         missing_items = self.model.session.get_missing_items()
-        selected_missing_item = self.view.show_missing(missing_items=missing_items)
+        selected_missing_item = self.view.show_missing(missing_items=map(lambda i:i+1,missing_items)) # Hack to have ln num
         if selected_missing_item:
-            self.model.session.override_index(selected_missing_item)
+            self.model.session.override_index(selected_missing_item-1) # -1 to have real index
         self.view_update()
 
     #

@@ -19,11 +19,9 @@
 # -----------------------------------------------------------------------------
 import os
 
-from pympi import Praat
-
 from williaikuma.models.AbstractSessionAudio import AbstractSessionAudio
 from williaikuma.models.DataProviderText import DataProviderText
-from williaikuma.models.utils import create_praat_tg, get_recording_length, json_read
+from williaikuma.models.utils import create_praat_tg, get_recording_length, now_raw
 
 
 class SessionRecording(AbstractSessionAudio):
@@ -48,17 +46,24 @@ class SessionRecording(AbstractSessionAudio):
 
 
     def item_save_path(self):
-        return os.path.join(self.recordings_path, 'line-{}_sentid-{}_speaker-{}.wav'.format(
-            self.data.index+1, self.current_sentence_id, self.speaker))
+        tentative_path = os.path.join(self.recordings_path,
+                                      'line-{}_sentid-{}_speaker-{}_at-{}.wav'.format(
+                                          self.index+1,
+                                          self.current_sentence_id,
+                                          self.speaker,
+                                          now_raw())
+                                      )
+        return self.recordings_list.get(self.index, tentative_path)
 
 
-    def item_index(self, recording_name):
-        return int(recording_name.split('_')[0].split('-')[-1])
+    def item_index_from_rec_name(self, recording_name):
+        filepath, filename = os.path.split(recording_name)
+        return int(filename.split('_')[0].split('-')[-1])-1
 
 
     def get_missing_items(self):
-        existing_recordings = [self.item_index(item) for item in self.list_recordings()]
-        missing_indices = sorted([i for i in range(1,len(self.data)+1) if i not in existing_recordings], reverse=True)
+        existing_recordings = [self.item_index_from_rec_name(item) for item in self.list_recordings()]
+        missing_indices = sorted([i for i in range(0,len(self.data)) if i not in existing_recordings], reverse=True)
         return missing_indices
 
 
@@ -72,7 +77,7 @@ class SessionRecording(AbstractSessionAudio):
             for wav_file in self.list_recordings():
                 raw_filename = os.path.basename(os.path.splitext(wav_file)[0])
                 rec_length = get_recording_length(os.path.join(self.recordings_path, wav_file))
-                line_number = self.item_index(wav_file)
+                line_number = self.item_index_from_rec_name(wav_file)
                 sentence, _ = self.data[line_number-1]
 
                 create_praat_tg(rec_length, sentence, self.textgrid_path, raw_filename)
