@@ -31,11 +31,11 @@ class App(tk.Tk):
         self.wrapper = wrapper
 
         # Get main model and set locale
-        model = Application()
+        self.model = Application()
         # Get View
         view = MainView(self)
         # Get controller
-        controller = Controller(model, view)
+        controller = Controller(self.model, view)
         # Attach controler to view
         view.set_controller(controller)
 
@@ -52,8 +52,15 @@ class AppWrapper:
     def run(self):
         while self.restart:
             if self.restart: self.restart = False
+
+            # Run app
             app = self.app(self)
             app.mainloop()
+            # Save state on exit
+            try:
+                app.model.save()
+            except:
+                pass
 
 
 if __name__ == "__main__":
