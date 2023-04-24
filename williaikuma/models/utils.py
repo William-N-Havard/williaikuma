@@ -46,7 +46,7 @@ def assert_recording_readable(path):
 
 
 def text_read(txt_path):
-    with open(txt_path, 'r') as in_file:
+    with open(txt_path, 'r', encoding='utf-8') as in_file:
         lines = map(str.strip, in_file.readlines())
     return lines
 
