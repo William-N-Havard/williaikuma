@@ -30,6 +30,7 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         # Recording metadata
         self.sampling_rate = sampling_rate
         self.num_channels = num_channels
+
         self.recordings_list = {}
 
         # Path metadata
@@ -82,7 +83,7 @@ class AbstractSessionAudio(AbstractSession, abc.ABC):
         pass
 
     @abc.abstractmethod
-    def item_save_path(self):
+    def item_recording_path(self):
         pass
 
     @abc.abstractmethod

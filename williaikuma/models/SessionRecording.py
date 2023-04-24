@@ -45,7 +45,7 @@ class SessionRecording(AbstractSessionAudio):
         return self.current_sentence_text
 
 
-    def item_save_path(self):
+    def item_recording_path(self):
         tentative_path = os.path.join(self.recordings_path,
                                       'line-{}_sentid-{}_speaker-{}_at-{}.wav'.format(
                                           self.index+1,

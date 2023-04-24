@@ -251,7 +251,7 @@ class Controller(object):
             # Not recording
             else:
                 self.recording_status = True
-                self.recorder = ThreadedRecorder(self.model.session.item_save_path(),
+                self.recorder = ThreadedRecorder(self.model.session.item_recording_path(),
                                                  sampling_rate=self.model.session.sampling_rate,
                                                  num_channels=self.model.session.num_channels)
                 self.recorder.start()
@@ -282,7 +282,7 @@ class Controller(object):
 
 
     def command_listen(self):
-        self._listen(self.model.session.item_save_path())
+        self._listen(self.model.session.item_recording_path())
 
 
     def command_listen_respeak(self):
@@ -293,7 +293,7 @@ class Controller(object):
         yes_no = MessageBoxes.action_yes_no(MSG.TITLE_DELETE, MSG.TEXT_PROMPT_DELETE_RECORDING)
         if not yes_no: return
 
-        recording_path = self.model.session.item_save_path()
+        recording_path = self.model.session.item_recording_path()
 
         if assert_recording_exists(recording_path):
             os.remove(recording_path)
@@ -400,7 +400,7 @@ class Controller(object):
 
 
     def view_audio_session_player_switch(self):
-        if not assert_recording_exists(self.model.session.item_save_path()):
+        if not assert_recording_exists(self.model.session.item_recording_path()):
             self.view.enable_recording()
             self.view.disable_play()
             self.view.disable_delete()

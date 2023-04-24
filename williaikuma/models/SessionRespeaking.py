@@ -41,7 +41,7 @@ class SessionRespeaking(AbstractSessionAudio):
         self.current_sentence_recording_name = sentence_recording_name
 
 
-    def item_save_path(self):
+    def item_recording_path(self):
         raw_sentence_recording = os.path.basename(os.path.splitext(self.current_sentence_recording)[0])
 
         return os.path.join(self.recordings_path, '{}_respeak-speaker-{}_at-{}.wav'.format(
