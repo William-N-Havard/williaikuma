@@ -29,7 +29,8 @@ DATE_FORMAT = "%d/%m/%Y %H:%M:%S"
 try:
     WORK_DIR = sys._MEIPASS
 except AttributeError:
-    WORK_DIR = os.getcwd()
+    debug_dir = '/home/whavard/CODE/OTHER/williaikuma'
+    WORK_DIR = os.getcwd() if not os.path.exists(debug_dir) else debug_dir
 
 
 IMAGE_PATH = os.path.join(WORK_DIR, 'williaikuma', 'assets', 'images')
