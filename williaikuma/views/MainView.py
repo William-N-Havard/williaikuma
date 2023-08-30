@@ -29,7 +29,7 @@ from PIL.ImageTk import PhotoImage
 from williaikuma.models.Messages import MSG
 from williaikuma.models.Tasks import TASKS
 from williaikuma.views.MissingView import MissingView
-from williaikuma.views.utils import TkinterButtons as TkButtons
+from williaikuma.views.utils import ImagesButtons as TkButtons
 
 class MainView(tk.Frame):
     def __init__(self, root):

@@ -19,14 +19,17 @@
 # -----------------------------------------------------------------------------
 
 import os
+
 from enum import Enum, unique
+
+import wx
 
 from williaikuma.utilities.FrozenEnum import FrozenEnum
 from williaikuma.consts import IMAGE_PATH
 
 
 @unique
-class TkinterButtons(Enum, metaclass=FrozenEnum):
+class ImagesButtons(Enum, metaclass=FrozenEnum):
     BUTTON_RECORD_ON = os.path.join(IMAGE_PATH, 'record.png')
     BUTTON_RECORD_OFF = os.path.join(IMAGE_PATH, 'stop.png')
     BUTTON_PLAY_ON = os.path.join(IMAGE_PATH, 'play.png')
